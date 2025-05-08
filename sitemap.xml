@@ -2,22 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://jgaga.tk/posts/</loc>
+    <loc>http://10.20.20.116:1313/posts/</loc>
     <lastmod>2025-05-07T23:30:18+08:00</lastmod>
   </url><url>
-    <loc>http://jgaga.tk/posts/vyos-qiaojie-4kou/</loc>
+    <loc>http://10.20.20.116:1313/posts/vyos-qiaojie-4kou/</loc>
     <lastmod>2025-05-07T23:30:18+08:00</lastmod>
   </url><url>
-    <loc>http://jgaga.tk/</loc>
+    <loc>http://10.20.20.116:1313/</loc>
     <lastmod>2025-05-07T23:30:18+08:00</lastmod>
   </url><url>
-    <loc>http://jgaga.tk/about/</loc>
+    <loc>http://10.20.20.116:1313/about/</loc>
     <lastmod>2025-05-07T21:20:00+08:00</lastmod>
   </url><url>
-    <loc>http://jgaga.tk/categories/</loc>
+    <loc>http://10.20.20.116:1313/categories/</loc>
   </url><url>
-    <loc>http://jgaga.tk/series/</loc>
+    <loc>http://10.20.20.116:1313/series/</loc>
   </url><url>
-    <loc>http://jgaga.tk/tags/</loc>
+    <loc>http://10.20.20.116:1313/tags/</loc>
   </url>
 </urlset>
