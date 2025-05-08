@@ -115,7 +115,7 @@ vm运行后, 用vyos:vyos登录. 用下面命令安装:</p>
 </span></span><span style="display:flex;"><span>set interfaces bridge br0 member interface <span style="color:#e6db74">&#39;eth2&#39;</span>
 </span></span></code></pre></div><h2 id="3--lan-配置-dhcp">3. 、 LAN 配置 DHCP</h2>
 <p>3.1 启用 LAN 口的 DHCP server
-LAN 的网段是 10.0.0.0/24，DHCP 的分配 IP 范围是 10.0.0.100-200，同时下发了 dns server 和 ntp server。</p>
+LAN 的网段是 10.20.20.0/24，DHCP 的分配 IP 范围是 10.20.20.100-200，同时下发了 dns server 和 ntp server。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>set service dhcp<span style="color:#f92672">-</span>server hostfile<span style="color:#f92672">-</span>update
 </span></span><span style="display:flex;"><span>set service dhcp<span style="color:#f92672">-</span>server shared<span style="color:#f92672">-</span>network<span style="color:#f92672">-</span>name LAN_br0 authoritative
 </span></span><span style="display:flex;"><span>set service dhcp<span style="color:#f92672">-</span>server shared<span style="color:#f92672">-</span>network<span style="color:#f92672">-</span>name LAN_br0 option ntp<span style="color:#f92672">-</span>server <span style="color:#e6db74">&#39;10.20.20.1&#39;</span>
