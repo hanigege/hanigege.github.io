@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on user</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on user</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <copyright>© ros &amp; vyos &amp; opesense.</copyright>
+    <lastBuildDate>Wed, 07 May 2025 23:30:18 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vyos多网口小主机桥接口家用配置</title>
+      <link>http://localhost:1313/posts/vyos-qiaojie-4kou/</link>
+      <pubDate>Wed, 07 May 2025 23:30:18 +0800</pubDate>
+      <guid>http://localhost:1313/posts/vyos-qiaojie-4kou/</guid>
+      <description>&lt;h3 id=&#34;一基本上网配置&#34;&gt;一.基本上网配置&lt;/h3&gt;&#xA;&lt;h3 id=&#34;vyos的命令行界面是基于shell的没有图形界面-但是可以用tab自动补全&#34;&gt;vyos的命令行界面是基于shell的，没有图形界面, 但是可以用tab自动补全&lt;/h3&gt;&#xA;&lt;p&gt;本文的vyos命令是基于vyos的vyos-rolling-nightly-builds的1.5.x版本.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
