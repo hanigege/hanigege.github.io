@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>首页 on user</title>
-    <link>http://localhost:1313/</link>
+    <link>https://hanigege.github.io/</link>
     <description>Recent content in 首页 on user</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
     <copyright>© ros &amp; vyos &amp; opesense.</copyright>
     <lastBuildDate>Wed, 07 May 2025 23:30:18 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://hanigege.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>vyos多网口小主机桥接口家用配置</title>
-      <link>http://localhost:1313/posts/vyos-qiaojie-4kou/</link>
+      <link>https://hanigege.github.io/posts/vyos-qiaojie-4kou/</link>
       <pubDate>Wed, 07 May 2025 23:30:18 +0800</pubDate>
-      <guid>http://localhost:1313/posts/vyos-qiaojie-4kou/</guid>
+      <guid>https://hanigege.github.io/posts/vyos-qiaojie-4kou/</guid>
       <description>&lt;h3 id=&#34;一基本上网配置&#34;&gt;一.基本上网配置&lt;/h3&gt;&#xA;&lt;h3 id=&#34;vyos的命令行界面是基于shell的没有图形界面-但是可以用tab自动补全&#34;&gt;vyos的命令行界面是基于shell的，没有图形界面, 但是可以用tab自动补全&lt;/h3&gt;&#xA;&lt;p&gt;本文的vyos命令是基于vyos的vyos-rolling-nightly-builds的1.5.x版本.&lt;/p&gt;</description>
     </item>
     <item>
       <title>About</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://hanigege.github.io/about/</link>
       <pubDate>Wed, 07 May 2025 21:20:00 +0800</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://hanigege.github.io/about/</guid>
       <description>&lt;h2&gt;🌿 人生的感悟&lt;/h2&gt;&#xA;&lt;br&gt;&#xA;&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;人生就像一场没有彩排的演出，每一幕都真实而珍贵。&lt;/p&gt;&#xA;&lt;p&gt;💡 有些人教会我们如何去爱，有些事让我们学会放下。遗憾、挫折乃至跌倒，都是人生的养分。&lt;/p&gt;&#xA;&lt;p&gt;⏳ 时间不会为任何人停留，唯有把握当下，才能不负此生。愿我们都能活成自己喜欢的模样。&lt;/p&gt;&#xA;&lt;blockquote&gt;“人生没有标准答案，但有无限种可能。”&lt;/blockquote&gt;</description>
     </item>
   </channel>
