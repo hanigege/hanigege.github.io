@@ -57,19 +57,19 @@
         <h2 id="rootsms-source-myenvbinactivate">root@sms:~# source myenv/bin/activate</h2>
 <h2 id="激活虚拟环境">激活虚拟环境</h2>
 <pre tabindex="0"><code>source myenv/bin/activate 
-</code></pre><pre tabindex="0"><code>(myenv) root@sms:~# nohup python sms3.py &gt; sms.log 2&gt;&amp;1 &amp;
-</code></pre><p>后台启动sms3.py</p>
-<pre tabindex="0"><code>nohup python sms3.py &gt; sms.log 2&gt;&amp;1 &amp;
+</code></pre><pre tabindex="0"><code>(myenv) root@sms:~# nohup python sms.py &gt; sms.log 2&gt;&amp;1 &amp;
+</code></pre><p>后台启动sms.py</p>
+<pre tabindex="0"><code>nohup python sms.py &gt; sms.log 2&gt;&amp;1 &amp;
 or
 nohup python sms.py &gt; sms.log 2&gt;&amp;1 &amp;
 (myenv) root@sms:~#
 </code></pre><p>上面的两条命令能不能做成脚本，设置为开机自启动</p>
-<p>可以的，你可以创建一个 systemd 服务 或者 编写一个 shell 脚本 来实现 Python 虚拟环境的激活 并 运行 sms3.py 脚本，同时设置为 开机自启动。</p>
+<p>可以的，你可以创建一个 systemd 服务 或者 编写一个 shell 脚本 来实现 Python 虚拟环境的激活 并 运行 sms.py 脚本，同时设置为 开机自启动。</p>
 <p>方法 1：使用 systemd (推荐)
 适用于 Debian/Ubuntu 及大多数 Linux 发行版。</p>
 <p>步骤 1：创建 systemd 服务文件
-运行以下命令，创建 sms3.service：</p>
-<pre tabindex="0"><code>nano /etc/systemd/system/sms3.service
+运行以下命令，创建 sms.service：</p>
+<pre tabindex="0"><code>nano /etc/systemd/system/sms.service
 </code></pre><p>填入以下内容：</p>
 <pre tabindex="0"><code>[Unit]
 Description=SMS Python Service
@@ -78,7 +78,7 @@ After=network.target
 [Service]
 User=root
 WorkingDirectory=/root
-ExecStart=/root/myenv/bin/python /root/sms3.py
+ExecStart=/root/myenv/bin/python /root/sms.py
 Restart=always
 StandardOutput=append:/root/sms.log
 StandardError=append:/root/sms.log
@@ -86,16 +86,16 @@ StandardError=append:/root/sms.log
 [Install]
 WantedBy=multi-user.target
 </code></pre><p>⚠ 注意：</p>
-<p><code>WorkingDirectory=/root</code> 需要修改成你的 Python 虚拟环境和 sms3.py 所在目录。</p>
-<p><code>ExecStart=/root/myenv/bin/python /root/sms3.py</code> 确保路径正确。</p>
+<p><code>WorkingDirectory=/root</code> 需要修改成你的 Python 虚拟环境和 sms.py 所在目录。</p>
+<p><code>ExecStart=/root/myenv/bin/python /root/sms.py</code> 确保路径正确。</p>
 <p>Restart=always 让进程崩溃后自动重启。</p>
 <p>步骤 2：启用并启动服务</p>
 <pre tabindex="0"><code>systemctl daemon-reload
-systemctl enable sms3
-systemctl start sms3
+systemctl enable sms
+systemctl start sms
 查看运行状态：
 
-systemctl status sms3
+systemctl status sms
 如果 显示 active (running) 说明成功。
 </code></pre>
 <div id="utterances-comments">
