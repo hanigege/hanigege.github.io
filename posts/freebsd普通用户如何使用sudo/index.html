@@ -54,7 +54,8 @@
         <h1>Freebsd普通用户如何使用sudo</h1>
     </header>
     <div class="content__body">
-        <p>你看到的提示：</p>
+        <h2 id="安装freebsd时已经添加好普通用户的可以直接从下面可以用-visudo-打开-sudo-配置文件-这里直接修改配置文件就可以了">安装freebsd时已经添加好普通用户的，可以直接从下面<code>可以用 visudo 打开 sudo 配置文件</code> 这里直接修改配置文件就可以了。</h2>
+<p>你看到的提示：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gary is not in the sudoers file.
 </span></span><span style="display:flex;"><span>This incident has been reported to the administrator.
 </span></span></code></pre></div><p>意思是：当前用户 gary 没有权限使用 sudo，因此不能安装软件或执行需要管理员权限的操作。</p>
@@ -140,6 +141,7 @@
 	    On this page:
 	    <nav id="TableOfContents">
   <ol>
+    <li><a href="#安装freebsd时已经添加好普通用户的可以直接从下面可以用-visudo-打开-sudo-配置文件-这里直接修改配置文件就可以了">安装freebsd时已经添加好普通用户的，可以直接从下面<code>可以用 visudo 打开 sudo 配置文件</code> 这里直接修改配置文件就可以了。</a></li>
     <li><a href="#可以用-visudo-打开-sudo-配置文件默认vi命令打开">可以用 visudo 打开 sudo 配置文件：（默认vi命令打开）</a></li>
     <li><a href="#指定vim命令打开visudo文件">指定vim命令打开visudo文件：</a></li>
     <li><a href="#确保有以下内容没有注释-">确保有以下内容（没有注释 #）：</a></li>
