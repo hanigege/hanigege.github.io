@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+    <head><title>让freebsd在终端下换源 &ndash; 代碼倉庫</title>
+<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+
+</head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <header class="content__header">
+        <h1>让freebsd在终端下换源</h1>
+    </header>
+    <div class="content__body">
+        <br>
+<h2 id="pkg-换源">pkg 换源</h2>
+<p>若要获取滚动更新的包，请将 quarterly 修改为 latest。二者区别见 FreeBSD 手册。请注意，CURRENT 版本只有 latest。</p>
+<p>使用命令修改系统级 pkg 源使用 latest：</p>
+<pre tabindex="0"><code>sed -i &#39;&#39; &#39;s/quarterly/latest/g&#39; /etc/pkg/FreeBSD.conf
+</code></pre><p>创建用户级源目录和文件：</p>
+<pre tabindex="0"><code># mkdir -p /usr/local/etc/pkg/repos
+# nano /usr/local/etc/pkg/repos/mirrors.conf
+</code></pre><p>中国科学技术大学开源软件镜像站（USTC）</p>
+<p>写入以下内容：</p>
+<pre tabindex="0"><code>ustc: {
+url: &#34;http://mirrors.ustc.edu.cn/freebsd-pkg/${ABI}/latest&#34;,
+}
+FreeBSD: { enabled: no }
+</code></pre><p>南京大学开源镜像站</p>
+<p>写入以下内容：</p>
+<pre tabindex="0"><code>nju: {
+url: &#34;http://mirrors.nju.edu.cn/freebsd-pkg/${ABI}/latest&#34;,
+}
+FreeBSD: { enabled: no }
+</code></pre><p>网易开源镜像站</p>
+<p>写入以下内容：</p>
+<pre tabindex="0"><code>163: {
+url: &#34;http://mirrors.163.com/freebsd-pkg/${ABI}/latest&#34;,
+}
+FreeBSD: { enabled: no }
+</code></pre><h2 id="ports-源以源代码方式编译安装软件的包管理器">ports 源：以源代码方式编译安装软件的包管理器</h2>
+<p>下载 ports
+这个源是下载 ports 本身的源。等同于以前的 portsnap。</p>
+<p>Git 方法
+须提前安装 git：</p>
+<pre tabindex="0"><code># pkg install git
+</code></pre><p>或</p>
+<pre tabindex="0"><code># cd /usr/ports/devel/git
+# make install clean
+</code></pre><p>然后：(如果已经安装了ports，直接运行下面的命令会报错，请继续往下看）</p>
+<pre tabindex="0"><code># git clone  --filter=tree:0 https://mirrors.ustc.edu.cn/freebsd-ports/ports.git /usr/ports
+</code></pre><p>注意</p>
+<p>&ndash;depth 1 会给服务器带来较大计算压力，请尽量使用参数 &ndash;filter=tree:0。</p>
+<p>你收到的错误信息表明，目标路径 /usr/ports 已经存在，并且该目录不是空的。这意味着在尝试 git clone 时，Git 发现目标目录已经有内容，因此无法执行克隆操作。</p>
+<p>解决方法：
+你可以选择以下几种方法来解决这个问题：</p>
+<p><strong>删除现有的 /usr/ports 目录</strong>
+如果你确认 /usr/ports 目录中的内容不再需要，可以删除该目录并重新执行 git clone：</p>
+<pre tabindex="0"><code>rm -rf /usr/ports
+git clone --filter=tree:0 https://mirrors.ustc.edu.cn/freebsd-ports/ports.git /usr/ports
+</code></pre><p>注意： 删除目录前请确保该目录中的内容不再需要，因为这会完全清除目录及其内容。</p>
+<ol start="2">
+<li>使用已有的 /usr/ports 目录
+如果 /usr/ports 目录已经包含了一部分内容（比如已经存在的 Ports 树），你可以选择直接在该目录中进行 Git 更新，而不是重新克隆。</li>
+</ol>
+<p>首先，进入 <code>/usr/ports </code>目录：</p>
+<p><code>cd /usr/ports</code>
+然后，运行 Git 拉取更新：</p>
+<p><code>git fetch --all</code>
+这将更新现有的 Ports 树，而不是重新克隆。</p>
+<ol start="3">
+<li>使用一个不同的目录作为目标
+如果你希望保留 <code>/usr/ports</code> 中的现有内容，可以将 Ports 树克隆到另一个目录，避免冲突。例如：</li>
+</ol>
+<pre tabindex="0"><code>git clone --filter=tree:0 https://mirrors.ustc.edu.cn/freebsd-ports/ports.git /path/to/another/directory
+</code></pre><p>这样，你就可以在新的目录中获取 Ports 树，而不影响现有的 /usr/ports。</p>
+<p>总结：
+如果 /usr/ports 目录的内容不再需要，可以删除并重新克隆。</p>
+<p>如果想保留现有内容，可以使用 Git 更新已有的仓库。</p>
+<p>如果不想影响现有内容，可以将 Ports 树克隆到另一个目录。</p>
+
+<div id="utterances-comments">
+  <script src="https://utteranc.es/client.js"
+      repo="hanigege/blog-comments"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+  </script>
+</div>
+
+
+
+
+    </div>
+    <footer class="content__footer"></footer>
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <span class="about__logo" role="img">🍚</span>&nbsp;
+    
+<h1 class="about__title">喂饭</h1>
+<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
+</div>
+
+
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="mailto:hanigege911@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2025-05-11
+        </p>
+    
+
+    
+	    <hr>
+	    On this page:
+	    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#pkg-换源">pkg 换源</a></li>
+    <li><a href="#ports-源以源代码方式编译安装软件的包管理器">ports 源：以源代码方式编译安装软件的包管理器</a></li>
+  </ol>
+</nav>
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer">
+ <p class="copyright">© <strong>石榴</strong>.</p>
+ <p class="advertisement">Powered by <a>大佬們</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
+</html>
