@@ -71,8 +71,6 @@
 <p>因为Matrix只是个框架，可以有很多实现，本文使用的synapse就是其中一个服务端实现。</p>
 <p>除了安装服务端，本文还有安装element web端的步骤。</p>
 <p>搭一个demo并不耗资源，加上postgresql数据库才用了200MB内存不到，如果用默认的sqlite数据库会更省内存。</p>
-<p>大致效果：</p>
-<p><img src="media/17469476961641/CleanShot%202025-05-11%20at%2015.38.59@2x.png" alt="CleanShot 2025-05-11 at 15.38.59@2x"></p>
 <h1 id="安装服务端">安装服务端</h1>
 <h2 id="更新环境">更新环境</h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt update -y  <span style="color:#f92672">&amp;&amp;</span> apt upgrade -y <span style="color:#f92672">&amp;&amp;</span> apt install -y curl wget sudo socat
