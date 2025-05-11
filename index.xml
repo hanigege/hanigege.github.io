@@ -84,7 +84,7 @@
       <link>https://hanigege.github.io/downloads/</link>
       <pubDate>Sun, 11 May 2025 11:50:45 +0800</pubDate>
       <guid>https://hanigege.github.io/downloads/</guid>
-      <description>&lt;h2 id=&#34;三汇smg4004-4lc的升级文件及查看imei入口&#34;&gt;三汇SMG4004-4LC的升级文件及查看IMEI入口&lt;/h2&gt;&#xA;&lt;br&gt;&#xA;&lt;p&gt;1、先升级web固件包&#xA;&lt;a href=&#34;#&#34;&gt;install4_2.2.8_2020092516.tar.gz&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;2、再升级底层固件包&#xA;&lt;a href=&#34;#&#34;&gt;install4_FPGA_1.11_2.11_3.032018122015.tar.gz&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;虚拟机承接三汇和telegram收发短信的机器人启动文件&#34;&gt;虚拟机承接三汇和telegram收发短信的机器人启动文件&lt;/h2&gt;&#xA;&lt;br&gt;&#xA;&lt;p&gt;记的修改启动文件中的参数，里面有标注。&lt;a href=&#34;#&#34;&gt;sms.py&lt;/a&gt;&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;三汇smg4004-4lc的升级文件及查看imei入口&#34;&gt;三汇SMG4004-4LC的升级文件及查看IMEI入口&lt;/h2&gt;&#xA;&lt;br&gt;&#xA;&lt;p&gt;1、先升级web固件包&#xA;&lt;a href=&#34;https://drive.google.com/file/d/1NApkdy91PhARGWWxVDafBiDEFvK0_8G2/view?usp=sharing&#34;&gt;install4_2.2.8_2020092516.tar.gz&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;2、再升级底层固件包&#xA;&lt;a href=&#34;https://drive.google.com/file/d/1vYljqzx4Zi0f0cRjymoxKoxWMq-LJbNN/view?usp=sharing&#34;&gt;install4_FPGA_1.11_2.11_3.032018122015.tar.gz&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;虚拟机承接三汇和telegram收发短信的机器人启动文件&#34;&gt;虚拟机承接三汇和telegram收发短信的机器人启动文件&lt;/h2&gt;&#xA;&lt;br&gt;&#xA;&lt;p&gt;记的修改启动文件中的参数，里面有标注。&lt;a href=&#34;https://drive.google.com/file/d/1yJ5ZFjRru2csSIyduJ700zOy8zPUis7G/view?usp=sharing&#34;&gt;sms.py&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>出国自建voip(二.2)三汇SMG4004-4LC的配置方法测试电话呼叫</title>
