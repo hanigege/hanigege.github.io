@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+    <head><title>Alpine Linux搭建sing-box服务端 &ndash; 代碼倉庫</title>
+<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+
+</head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Alpine Linux搭建sing-box服务端</h1>
+    </header>
+    <div class="content__body">
+        <br>
+现在有很多便宜NAT鸡因为配置较低，使用的是Alpine Linux,且性能奇差，因此传统的一键安装V2Ray脚本就不太好用了，所以我就随便写了个教程方便使用。
+<h2 id="安装依赖">安装依赖</h2>
+<p>首先先安装singbox,还有vim（方便编辑）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing&#34;</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">/</span>etc<span style="color:#f92672">/</span>apk<span style="color:#f92672">/</span>repositories
+</span></span><span style="display:flex;"><span>apk add sing<span style="color:#f92672">-</span>box<span style="color:#a6e22e">@testing</span>
+</span></span><span style="display:flex;"><span>apk add vim
+</span></span><span style="display:flex;"><span>rc<span style="color:#f92672">-</span>update add sing<span style="color:#f92672">-</span>box default
+</span></span></code></pre></div><h2 id="设置自启">设置自启.</h2>
+<h4 id="1这里要说明一下上面安装好后默认会自动生成启动文件etcinitdsing-box-">1.这里要说明一下，上面安装好后默认会自动生成启动文件<code>/etc/init.d/sing-box </code>,</h4>
+<p>配置文件在
+<code>/etc/sing-box/config.json</code></p>
+<h4 id="2如果用下面自建的默认的就不用启动就行了更不要设置自启动以免冲突当然也可以不用下面在自建">2.如果用下面自建的，默认的就不用启动就行了，更不要设置自启动，以免冲突。当然也可以不用下面在自建）</h4>
+<p>编辑这个文件：<code>vim /etc/init.d/singbox</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/sbin/openrc-run
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>command<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/usr/bin/sing-box&#34;</span>
+</span></span><span style="display:flex;"><span>command_args<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;run -c /root/config.json&#34;</span> <span style="color:#75715e">#是您的配置文件位置</span>
+</span></span><span style="display:flex;"><span>description<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;singbox service&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>depend<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  need net
+</span></span><span style="display:flex;"><span>  use logger
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>start<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  ebegin <span style="color:#e6db74">&#34;Starting singbox&#34;</span>
+</span></span><span style="display:flex;"><span>  start-stop-daemon --start --background --exec $command -- $command_args
+</span></span><span style="display:flex;"><span>  eend $?
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>stop<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  ebegin <span style="color:#e6db74">&#34;Stopping singbox&#34;</span>
+</span></span><span style="display:flex;"><span>  start-stop-daemon --stop --exec $command
+</span></span><span style="display:flex;"><span>  eend $?
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>然后加入OpenRC自启动</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>chmod +x /etc/init.d/singbox
+</span></span><span style="display:flex;"><span>rc-update add singbox default
+</span></span><span style="display:flex;"><span>service singbox start
+</span></span></code></pre></div><p>自签证书，注意路径：</p>
+<pre tabindex="0"><code>mkdir -p /etc/hysteria &amp;&amp; openssl ecparam -genkey -name prime256v1 -out /etc/hysteria/private.key &amp;&amp; openssl req -new -x509 -days 3650 -key /etc/hysteria/private.key -out /etc/hysteria/cert.pem -subj &#34;/CN=bing.com&#34;
+</code></pre><h2 id="配置hy2入站服务端">配置hy2入站服务端：</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;log&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;level&#34;</span>: <span style="color:#e6db74">&#34;info&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;dns&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;servers&#34;</span>: [
+</span></span><span style="display:flex;"><span>            {<span style="color:#e6db74">&#34;address&#34;</span>: <span style="color:#e6db74">&#34;8.8.8.8&#34;</span>},
+</span></span><span style="display:flex;"><span>            {<span style="color:#e6db74">&#34;address&#34;</span>: <span style="color:#e6db74">&#34;1.1.1.1&#34;</span>}
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;inbounds&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;hysteria2&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;listen&#34;</span>: <span style="color:#e6db74">&#34;::&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;listen_port&#34;</span>: <span style="color:#ae81ff">449</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;users&#34;</span>: [
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;your-strong-random-password-123&#34;</span>
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            ],
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;tls&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;enabled&#34;</span>: true,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;alpn&#34;</span>: [<span style="color:#e6db74">&#34;h3&#34;</span>],
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;certificate_path&#34;</span>: <span style="color:#e6db74">&#34;/etc/hysteria/cert.pem&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;key_path&#34;</span>: <span style="color:#e6db74">&#34;/etc/hysteria/private.key&#34;</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;outbounds&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;direct&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;route&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;rules&#34;</span>: [
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;protocol&#34;</span>: <span style="color:#e6db74">&#34;dns&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;action&#34;</span>: <span style="color:#e6db74">&#34;direct&#34;</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="配置hy2出站客务端">配置hy2出站客务端：</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;sg-hy2&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;server&#34;</span>: <span style="color:#e6db74">&#34;IP地址或者域名&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;server_port&#34;</span>: <span style="color:#ae81ff">449</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;up_mbps&#34;</span>: <span style="color:#ae81ff">50</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;down_mbps&#34;</span>: <span style="color:#ae81ff">500</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;hysteria2&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;密码&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;tls&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;insecure&#34;</span>: true,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;enabled&#34;</span>: true,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;server_name&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;tcp_fast_open&#34;</span>: false
+</span></span><span style="display:flex;"><span>    },
+</span></span></code></pre></div>
+<div id="utterances-comments">
+  <script src="https://utteranc.es/client.js"
+      repo="hanigege/blog-comments"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+  </script>
+</div>
+
+
+
+
+    </div>
+    <footer class="content__footer"></footer>
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <span class="about__logo" role="img">🍚</span>&nbsp;
+    
+<h1 class="about__title">喂饭</h1>
+<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
+</div>
+
+
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="mailto:hanigege911@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2025-05-11
+        </p>
+    
+
+    
+	    <hr>
+	    On this page:
+	    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#安装依赖">安装依赖</a></li>
+    <li><a href="#设置自启">设置自启.</a>
+      <ol>
+        <li></li>
+      </ol>
+    </li>
+    <li><a href="#配置hy2入站服务端">配置hy2入站服务端：</a></li>
+    <li><a href="#配置hy2出站客务端">配置hy2出站客务端：</a></li>
+  </ol>
+</nav>
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer">
+ <p class="copyright">© <strong>石榴</strong>.</p>
+ <p class="advertisement">Powered by <a>大佬們</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
+</html>
