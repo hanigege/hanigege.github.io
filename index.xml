@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>zh-CN</language>
     <copyright>© **石榴**.</copyright>
-    <lastBuildDate>Sun, 11 May 2025 16:42:06 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 11 May 2025 17:44:04 +0800</lastBuildDate>
     <atom:link href="https://hanigege.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Freebsd普通用户如何使用sudo</title>
+      <link>https://hanigege.github.io/posts/freebsd%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8sudo/</link>
+      <pubDate>Sun, 11 May 2025 17:44:04 +0800</pubDate>
+      <guid>https://hanigege.github.io/posts/freebsd%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8sudo/</guid>
+      <description>&lt;p&gt;你看到的提示：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;gary is not in the sudoers file.&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;This incident has been reported to the administrator.&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;意思是：当前用户 gary 没有权限使用 sudo，因此不能安装软件或执行需要管理员权限的操作。&lt;/p&gt;&#xA;&lt;p&gt;解决办法（需要 root 用户操作）&#xA;你需要切换到 root 用户，然后把 gary 添加到 sudo 权限组。步骤如下：&lt;/p&gt;&#xA;&lt;p&gt;✅ 1. 用 root 用户登录，或者用 su 切换到 root：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;su -&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;系统会提示你输入 root 的密码，不是 gary 的密码。&lt;/p&gt;&#xA;&lt;p&gt;✅ 2. 安装 sudo（如果还没装）：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pkg install sudo&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;✅ 3. 把 gary 用户添加到 wheel 组：(如果安装系统时已加入wheel组就不需要下面的再次操作）&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pw usermod gary -G wheel&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;默认 FreeBSD 的 sudoers 文件允许 wheel 组的用户使用 sudo。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>家庭聊天服务器系列（3）coturn服务搭建</title>
       <link>https://hanigege.github.io/posts/%E5%AE%B6%E5%BA%AD%E8%81%8A%E5%A4%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E5%88%973coturn%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/</link>
