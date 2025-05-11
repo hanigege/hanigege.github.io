@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 
-    <head><title>Posts &ndash; 代碼倉庫</title>
+    <head><title>出国自建voip(二）创建 Telegram 机器人 &ndash; 代碼倉庫</title>
 <meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +27,6 @@
 
 
 
-<link rel="alternate" type="application/rss+xml" href="https://hanigege.github.io/posts/index.xml" title="代碼倉庫">
 
 </head>
 
@@ -41,7 +40,7 @@
     
     <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
     
-    <li class="main-nav__item"><a class="nav-main-item active" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
     
     </ul>
 </nav>
@@ -49,44 +48,37 @@
 </header>
 
             <section class="page__body">
-    <h1 id="posts">Posts</h1>
+    <header class="content__header">
+        <h1>出国自建voip(二）创建 Telegram 机器人</h1>
+    </header>
+    <div class="content__body">
+        <p>要通过 Telegram 机器人 对接 三汇语音网关（SMG4000-C1LC） 的短信功能，您需要完成以下几个步骤：</p>
+<h2 id="步骤-1">步骤 1：</h2>
+<p>打开 Telegram，搜索并与 BotFather 聊天。</p>
+<p>发送命令 /newbot 来创建一个新的机器人。</p>
+<p>给机器人起个名字并设置用户名。</p>
+<p>BotFather 会给你一个 API Token，用来与 Telegram 机器人进行交互。保存好这个 <code>Token</code>。</p>
+<p>步骤 2：配置三汇网关发送短信
+三汇语音网关一般支持通过 HTTP API 或 SMTP 发送短信。首先，确保三汇网关的短信服务已经启用，并且能够通过接口发送短信。</p>
+<p>步骤 3：编写 Telegram 机器人和三汇网关的对接脚本 （本站有提供下载）
+你需要编写一个脚本，使用 Telegram 机器人获取信息，并通过 HTTP 请求将短信发送到三汇网关。</p>
+<p>步骤 3.1：安装 Telegram Bot 库（例如 Python 的 python-telegram-bot）（详情，请看voip出国系列三）</p>
 
-    
+<div id="utterances-comments">
+  <script src="https://utteranc.es/client.js"
+      repo="hanigege/blog-comments"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+  </script>
+</div>
 
-    <ul>
-    
-        <li><a href="https://hanigege.github.io/posts/sanhui-smg4004-4lc-set/">出国自建voip(二.2)三汇SMG4004-4LC的配置方法测试电话呼叫</a></li>
 
-    
-        <li><a href="https://hanigege.github.io/posts/sanhui-telegram-bot-4/">出国自建voip(二）创建 Telegram 机器人</a></li>
 
-    
-        <li><a href="https://hanigege.github.io/posts/freepbx16-set-all-1/">出国自建voip(一)Freepbx16配置</a></li>
 
-    
-        <li><a href="https://hanigege.github.io/posts/telegram-sms-bot2/">出国自建voip(三.2）Telegram机器人连接程序自启动（补充篇）</a></li>
-
-    
-        <li><a href="https://hanigege.github.io/posts/telegram-sms-bot/">出国自建voip(三）连接Telegram机器人本地安装</a></li>
-
-    
-        <li><a href="https://hanigege.github.io/posts/vyos-jiqiao-3/">Vyos上网系统之-vyos命令技巧集(3)</a></li>
-
-    
-        <li><a href="https://hanigege.github.io/posts/vyos-fakeip-2/">Vyos上网系列之-Fakeip配置(2)</a></li>
-
-    
-        <li><a href="https://hanigege.github.io/posts/vyos-jibenshangwang-1/">Vyos上网系列之-上网配置（1）</a></li>
-
-    
-        <li><a href="https://hanigege.github.io/posts/ros-ipv6-set/">RosIPV6配置方案</a></li>
-
-    
-        <li><a href="https://hanigege.github.io/posts/vyos-qiaojie-4kou/">vyos多网口小主机桥接配置(完整）</a></li>
-
-    
-    </ul>
-
+    </div>
+    <footer class="content__footer"></footer>
 
             </section>
 
@@ -110,6 +102,22 @@
 </div>
                 <hr>
                 <div class="aside__content">
+    
+    
+        <p>
+            
+            2025-05-11
+        </p>
+    
+
+    
+	    <hr>
+	    On this page:
+	    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#步骤-1">步骤 1：</a></li>
+  </ol>
+</nav>
     
 
                 </div>
