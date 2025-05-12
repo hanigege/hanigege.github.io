@@ -285,8 +285,11 @@
 </span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></div><h2 id="6-运行-sing-box">6. 运行 Sing-Box</h2>
 <p>配置好后，可以通过以下命令启动 sing-box：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sing-box run -C /usr/local/etc/sing-box/
-</span></span></code></pre></div><h2 id="7-设置为服务可选">7. 设置为服务（可选）</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># root用户</span>
+</span></span><span style="display:flex;"><span>sing-box run -C /usr/local/etc/sing-box/
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 普通用户</span>
+</span></span><span style="display:flex;"><span>sing-box run -C ~/.usr/local/etc/sing-box/
+</span></span></code></pre></div><h2 id="7-root用户下设置为服务可选">7. root用户下设置为服务（可选）</h2>
 <p>如果你希望将 sing-box 设置为系统服务，方便开机启动，你可以创建一个服务脚本。以下是一个简单的 rc.d 服务脚本示例：</p>
 <p>创建服务脚本文件 <code>/usr/local/etc/rc.d/sing-box</code>：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nano /usr/local/etc/rc.d/sing-box
@@ -342,7 +345,7 @@
 你可以通过以下命令检查服务状态：</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>service sing-box status
-</span></span></code></pre></div><h2 id="普通用户启动管理">普通用户启动管理</h2>
+</span></span></code></pre></div><h2 id="普通用户启动管理可选">普通用户启动管理（可选）</h2>
 <p>FreeBSD 下的普通用户可以为放在用户目录下的 sing-box 设置用户级别的启动服务，更标准做法是使用 cron @reboot 或 login.conf 启动机制。</p>
 <p>不过，FreeBSD 并不像 Linux（有 systemd 的 &ndash;user 模式）那样对用户服务支持那么标准化，但你可以使用以下两种方式实现：</p>
 <p>✅ 方法一：使用 crontab 实现开机自启</p>
@@ -356,7 +359,39 @@
 <p>✅ 方法二：写个用户自启脚本放到  .login</p>
 <p>例如，如果你登录使用的是终端，可以在 ~/.login 加一行：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$HOME/.usr/local/opt/go/bin/sing-box run -c $HOME.usr/local/etc/sing-box/config.json &gt; $HOME/.sing-box.log 2&gt;&amp;<span style="color:#ae81ff">1</span> &amp;
-</span></span></code></pre></div><h2 id="总结">总结：</h2>
+</span></span></code></pre></div><h2 id="附普通用户启动程序知识点">附普通用户启动程序知识点：</h2>
+<h4 id="查看进程">查看进程：</h4>
+<pre tabindex="0"><code>pgrep -a sing-box
+</code></pre><p>如果在运行会看用ID，杀行进程命令：</p>
+<pre tabindex="0"><code>kill -9 ID
+</code></pre><p>要将
+<code>sing-box run -C ~/.usr/local/etc/sing-box</code>
+命令改为<strong>后台运行</strong>，你可以有几种方式选择：</p>
+<hr>
+<h3 id="-方法-1加--直接后台运行">✅ 方法 1：加 <code>&amp;</code> 直接后台运行</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sing-box run -C ~/.usr/local/etc/sing-box &amp;
+</span></span></code></pre></div><p>这会将进程放到后台运行，但<strong>关闭终端后会退出</strong>，不推荐用于长期服务。</p>
+<hr>
+<h3 id="-方法-2使用-nohup-保持后台运行推荐">✅ 方法 2：使用 <code>nohup</code> 保持后台运行（推荐）</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nohup sing-box run -C ~/.usr/local/etc/sing-box &gt; ~/sing-box.log 2&gt;&amp;<span style="color:#ae81ff">1</span> &amp;
+</span></span></code></pre></div><p>解释：</p>
+<ul>
+<li><code>nohup</code>：防止进程随终端退出；</li>
+<li><code>&gt; ~/sing-box.log</code>：将输出保存到日志文件；</li>
+<li><code>2&gt;&amp;1</code>：合并标准错误输出；</li>
+<li><code>&amp;</code>：后台运行。</li>
+</ul>
+<p><code>---</code></p>
+<h3 id="-方法-3使用-tmux-或-screen-管理后台任务适合调试">✅ 方法 3：使用 <code>tmux</code> 或 <code>screen</code> 管理后台任务（适合调试）</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>tmux new -s singbox
+</span></span><span style="display:flex;"><span>sing-box run -C ~/.usr/local/etc/sing-box
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 按 Ctrl+B 然后 D 可后台 detach</span>
+</span></span></code></pre></div><p>这样你可以随时恢复控制台查看运行状态。</p>
+<p><code>---</code></p>
+<h3 id="-方法-4写入-crontab-reboot-启动你之前提到过">✅ 方法 4：写入 <code>crontab @reboot</code> 启动（你之前提到过）</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>@reboot nohup $HOME/.usr/local/bin/sing-box run -C $HOME/.usr/local/etc/sing-box &gt; $HOME/sing-box.log 2&gt;&amp;<span style="color:#ae81ff">1</span> &amp;
+</span></span></code></pre></div><p>`&mdash;</p>
+<h2 id="总结">总结：</h2>
 <p>安装依赖工具（git 和 go）。</p>
 <p>克隆 sing-box 源代码并编译。</p>
 <p>将二进制文件安装到 /usr/local/bin/。</p>
@@ -473,11 +508,20 @@
     <li><a href="#4-配置-sing-box">4. 配置 Sing-Box</a></li>
     <li><a href="#socks配置实例">socks配置实例：</a></li>
     <li><a href="#6-运行-sing-box">6. 运行 Sing-Box</a></li>
-    <li><a href="#7-设置为服务可选">7. 设置为服务（可选）</a></li>
+    <li><a href="#7-root用户下设置为服务可选">7. root用户下设置为服务（可选）</a></li>
     <li><a href="#有重定向日志功能">有重定向日志功能</a></li>
     <li><a href="#无日志重定向版本">无日志重定向版本：</a></li>
     <li><a href="#设置脚本为可执行">设置脚本为可执行：</a></li>
-    <li><a href="#普通用户启动管理">普通用户启动管理</a></li>
+    <li><a href="#普通用户启动管理可选">普通用户启动管理（可选）</a></li>
+    <li><a href="#附普通用户启动程序知识点">附普通用户启动程序知识点：</a>
+      <ol>
+        <li></li>
+        <li><a href="#-方法-1加--直接后台运行">✅ 方法 1：加 <code>&amp;</code> 直接后台运行</a></li>
+        <li><a href="#-方法-2使用-nohup-保持后台运行推荐">✅ 方法 2：使用 <code>nohup</code> 保持后台运行（推荐）</a></li>
+        <li><a href="#-方法-3使用-tmux-或-screen-管理后台任务适合调试">✅ 方法 3：使用 <code>tmux</code> 或 <code>screen</code> 管理后台任务（适合调试）</a></li>
+        <li><a href="#-方法-4写入-crontab-reboot-启动你之前提到过">✅ 方法 4：写入 <code>crontab @reboot</code> 启动（你之前提到过）</a></li>
+      </ol>
+    </li>
     <li><a href="#总结">总结：</a></li>
     <li><a href="#--c-指定配置文件路径">✅ -c <file>：指定配置文件路径</a></li>
   </ol>
