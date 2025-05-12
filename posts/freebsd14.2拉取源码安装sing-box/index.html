@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+    <head><title>Freebsd14.2拉取源码安装sing Box &ndash; 代碼倉庫</title>
+<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+
+</head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Freebsd14.2拉取源码安装sing Box</h1>
+    </header>
+    <div class="content__body">
+        <h4 id="在-freebsd-上编译并安装-sing-box可以按照以下步骤进行操作我们将使用-git-拉取源代码并编译以下是详细步骤">在 FreeBSD 上编译并安装 sing-box，可以按照以下步骤进行操作。我们将使用 git 拉取源代码并编译，以下是详细步骤：</h4>
+<h2 id="1-安装依赖工具">1. 安装依赖工具</h2>
+<p>首先，你需要安装一些基础工具，例如 git 和 go（Go 语言环境），以便能编译和构建 sing-box。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pkg update
+</span></span><span style="display:flex;"><span>pkg install git
+</span></span></code></pre></div><p>点击安装最新版本go1.23.1</p>
+<h2 id="2-获取-sing-box-源代码">2. 获取 Sing-Box 源代码</h2>
+<p>然后，使用 git 克隆 sing-box 的源码库：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir /opt
+</span></span><span style="display:flex;"><span>git clone https://github.com/SagerNet/sing-box.git /opt/sing-box
+</span></span><span style="display:flex;"><span>cd /opt/sing-box
+</span></span></code></pre></div><h2 id="3-编译-sing-box">3. 编译 Sing-Box</h2>
+<p>确保你的系统上安装了 Go 语言环境后，运行以下命令来编译 sing-box：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go build -tags <span style="color:#e6db74">&#34;with_quic with_dhcp with_wireguard with_ech with_utls with_reality_server with_acme with_clash_api with_gvisor with_grpc with_v2ray_api&#34;</span> ./cmd/sing-box
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># make后，sing-box二进制文件就生成了，就在当前目录下</span>
+</span></span><span style="display:flex;"><span>make
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 如果接着使用下面的命令会自动把sing-box安装到/bin/sing-box</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># make install clean </span>
+</span></span></code></pre></div><p>这会编译 sing-box 并启用 QUIC协议支持。</p>
+<p>这将使用 Makefile 来构建 sing-box。编译完成后，二进制文件 sing-box 将会出现在当前目录下。</p>
+<h2 id="4-安装-sing-box-指定安装到usrlocalbinsing-box-">4. 安装 Sing-Box （指定安装到/usr/local/bin/sing-box ）</h2>
+<p>编译完成后，你可以将 sing-box 二进制文件复制到系统的可执行文件目录，以便全局使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /opt/sing-box
+</span></span><span style="display:flex;"><span>cp sing-box /usr/local/bin/
+</span></span><span style="display:flex;"><span>chmod +x /usr/local/bin/sing-box
+</span></span></code></pre></div><h2 id="5-配置-sing-box">5. 配置 Sing-Box</h2>
+<p>你需要配置 sing-box，通常可以将配置文件放置在 <code>~/.config/sing-box</code>/ 或 <code>/usr/local/etc/sing-box/ </code>目录下。你可以在 sing-box 配置文件文档 中找到详细的配置说明。</p>
+<p>创建配置目录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p  /usr/local/etc/sing-box <span style="color:#f92672">&amp;&amp;</span> echo <span style="color:#e6db74">&#34;{}&#34;</span> &gt;  /usr/local/etc/sing-box/config.json
+</span></span></code></pre></div><p>将配置文件放到该目录下，或者根据实际情况自定义配置。</p>
+<h2 id="socks配置实例">socks配置实例：</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;log&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;disabled&#34;</span>: false,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;level&#34;</span>: <span style="color:#e6db74">&#34;info&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;timestamp&#34;</span>: true
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;dns&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;servers&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;alidns&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;address&#34;</span>: <span style="color:#e6db74">&#34;https://223.5.5.5/dns-query&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;strategy&#34;</span>: <span style="color:#e6db74">&#34;ipv4_only&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;detour&#34;</span>: <span style="color:#e6db74">&#34;direct&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;cloudflare&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;address&#34;</span>: <span style="color:#e6db74">&#34;https://1.1.1.1/dns-query&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;strategy&#34;</span>: <span style="color:#e6db74">&#34;ipv4_only&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;detour&#34;</span>: <span style="color:#e6db74">&#34;proxy&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;block&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;address&#34;</span>: <span style="color:#e6db74">&#34;rcode://success&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;rules&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;outbound&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;any&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;server&#34;</span>: <span style="color:#e6db74">&#34;alidns&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;domain_suffix&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;.cn&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;server&#34;</span>: <span style="color:#e6db74">&#34;alidns&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;rule_set&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;geosite-cn&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;server&#34;</span>: <span style="color:#e6db74">&#34;alidns&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;rule_set&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;geosite-category-ads-all&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;server&#34;</span>: <span style="color:#e6db74">&#34;block&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;final&#34;</span>: <span style="color:#e6db74">&#34;cloudflare&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;strategy&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;disable_cache&#34;</span>: false,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;disable_expire&#34;</span>: false
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;inbounds&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;socks&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;socks-in&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;listen&#34;</span>: <span style="color:#e6db74">&#34;0.0.0.0&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;listen_port&#34;</span>: 1080,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;users&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;outbounds&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">{</span>   
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;proxy&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;server&#34;</span>: <span style="color:#e6db74">&#34;167.232&#34;</span>,  // 改地址
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;server_port&#34;</span>: 449,   //改端口
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;up_mbps&#34;</span>: 50, 
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;down_mbps&#34;</span>: 500,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;hysteria2&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;iry&#34;</span>,  //改密码
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;tls&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;insecure&#34;</span>: true,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;enabled&#34;</span>: true,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;server_name&#34;</span>: <span style="color:#e6db74">&#34;bing.com&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,  
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;tcp_fast_open&#34;</span>: false
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;direct&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;direct&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;route&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;rules&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;action&#34;</span>: <span style="color:#e6db74">&#34;sniff&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;protocol&#34;</span>: <span style="color:#e6db74">&#34;dns&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;action&#34;</span>: <span style="color:#e6db74">&#34;hijack-dns&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;ip_is_private&#34;</span>: true,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;outbound&#34;</span>: <span style="color:#e6db74">&#34;direct&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;domain_suffix&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;.cn&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;outbound&#34;</span>: <span style="color:#e6db74">&#34;direct&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;rule_set&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;geoip-cn&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;geosite-cn&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;geosite-private&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;outbound&#34;</span>: <span style="color:#e6db74">&#34;direct&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;rule_set&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;geosite-category-ads-all&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;action&#34;</span>: <span style="color:#e6db74">&#34;reject&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;rule_set&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;geoip-cn&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;remote&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;format&#34;</span>: <span style="color:#e6db74">&#34;binary&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;url&#34;</span>: <span style="color:#e6db74">&#34;https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;download_detour&#34;</span>: <span style="color:#e6db74">&#34;proxy&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;geosite-cn&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;remote&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;format&#34;</span>: <span style="color:#e6db74">&#34;binary&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;url&#34;</span>: <span style="color:#e6db74">&#34;https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;download_detour&#34;</span>: <span style="color:#e6db74">&#34;proxy&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;geosite-private&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;remote&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;format&#34;</span>: <span style="color:#e6db74">&#34;binary&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;url&#34;</span>: <span style="color:#e6db74">&#34;https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-private.srs&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;download_detour&#34;</span>: <span style="color:#e6db74">&#34;proxy&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;tag&#34;</span>: <span style="color:#e6db74">&#34;geosite-category-ads-all&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;remote&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;format&#34;</span>: <span style="color:#e6db74">&#34;binary&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;url&#34;</span>: <span style="color:#e6db74">&#34;https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-ads-all.srs&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;download_detour&#34;</span>: <span style="color:#e6db74">&#34;proxy&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;auto_detect_interface&#34;</span>: true,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;final&#34;</span>: <span style="color:#e6db74">&#34;proxy&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;experimental&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;cache_file&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;enabled&#34;</span>: true,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;path&#34;</span>: <span style="color:#e6db74">&#34;cache.db&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;cache_id&#34;</span>: <span style="color:#e6db74">&#34;mycacheid&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;store_fakeip&#34;</span>: true
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="6-运行-sing-box">6. 运行 Sing-Box</h2>
+<p>配置好后，可以通过以下命令启动 sing-box：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sing-box run -C /usr/local/etc/sing-box/
+</span></span></code></pre></div><h2 id="7-设置为服务可选">7. 设置为服务（可选）</h2>
+<p>如果你希望将 sing-box 设置为系统服务，方便开机启动，你可以创建一个服务脚本。以下是一个简单的 rc.d 服务脚本示例：</p>
+<p>创建服务脚本文件 <code>/usr/local/etc/rc.d/sing-box</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nano /usr/local/etc/rc.d/sing-box
+</span></span></code></pre></div><p>添加以下内容：</p>
+<h2 id="有重定向日志功能">有重定向日志功能</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># PROVIDE: sing_box</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># REQUIRE: NETWORKING</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># KEYWORD: shutdown</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>. /etc/rc.subr
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sing_box&#34;</span>
+</span></span><span style="display:flex;"><span>rcvar<span style="color:#f92672">=</span>sing_box_enable
+</span></span><span style="display:flex;"><span>command<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/usr/local/bin/sing-box&#34;</span>
+</span></span><span style="display:flex;"><span>pidfile<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/var/run/</span><span style="color:#e6db74">${</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">.pid&#34;</span>
+</span></span><span style="display:flex;"><span>command_args<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;run -C /usr/local/etc/sing-box/ &gt;&gt; /var/log/singbox.log 2&gt;&amp;1 &amp; echo \$! &gt; </span><span style="color:#e6db74">${</span>pidfile<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>load_rc_config $name
+</span></span><span style="display:flex;"><span>: <span style="color:#e6db74">${</span>sing_box_enable:=<span style="color:#e6db74">&#34;NO&#34;</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>run_rc_command <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><h2 id="无日志重定向版本">无日志重定向版本：</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># PROVIDE: sing_box</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># REQUIRE: NETWORKING</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># KEYWORD: shutdown</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>. /etc/rc.subr
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sing_box&#34;</span>
+</span></span><span style="display:flex;"><span>rcvar<span style="color:#f92672">=</span>sing_box_enable
+</span></span><span style="display:flex;"><span>command<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/usr/local/bin/sing-box&#34;</span>
+</span></span><span style="display:flex;"><span>pidfile<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/var/run/</span><span style="color:#e6db74">${</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">.pid&#34;</span>
+</span></span><span style="display:flex;"><span>command_args<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;run -C /usr/local/etc/sing-box/ &amp; echo \$! &gt; </span><span style="color:#e6db74">${</span>pidfile<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>load_rc_config $name
+</span></span><span style="display:flex;"><span>: <span style="color:#e6db74">${</span>sing_box_enable:=<span style="color:#e6db74">&#34;NO&#34;</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>run_rc_command <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p><code>load_rc_config $name</code> 用于加载服务的配置文件，而 <code>${sing_box_enable:=&quot;NO&quot;} </code>是为变量设置默认值。这里的逻辑是：</p>
+<p>⦁ 必须添加：否则在 sing_box_enable 未明确设置为 YES 时，脚本会因变量缺失导致启动失败（如 /etc/rc 错误提示）</p>
+<h2 id="设置脚本为可执行">设置脚本为可执行：</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>chmod +x /usr/local/etc/rc.d/sing-box
+</span></span></code></pre></div><p>启用服务：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sysrc sing_box_enable<span style="color:#f92672">=</span>YES
+</span></span></code></pre></div><p>启动服务：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>service sing-box start
+</span></span></code></pre></div><ol start="8">
+<li>检查服务状态
+你可以通过以下命令检查服务状态：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>service sing-box status
+</span></span></code></pre></div><h2 id="总结">总结：</h2>
+<p>安装依赖工具（git 和 go）。</p>
+<p>克隆 sing-box 源代码并编译。</p>
+<p>将二进制文件安装到 /usr/local/bin/。</p>
+<p>配置并运行 sing-box。</p>
+<p>sing-box 中 -C 和 -c 是不同的参数，它们的作用如下：</p>
+<h2 id="--c-指定配置文件路径">✅ -c <file>：指定配置文件路径</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sing-box run -c /usr/local/etc/sing-box/config.json
+</span></span></code></pre></div><p>这是最常用的参数。</p>
+<p>直接告诉 sing-box 你要用哪个配置文件来启动。</p>
+
+<div id="utterances-comments">
+  <script src="https://utteranc.es/client.js"
+      repo="hanigege/blog-comments"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+  </script>
+</div>
+
+
+
+
+    </div>
+    <footer class="content__footer"></footer>
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <span class="about__logo" role="img">🍚</span>&nbsp;
+    
+<h1 class="about__title">喂饭</h1>
+<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
+</div>
+
+
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="mailto:purodn@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2025-05-12
+        </p>
+    
+
+    
+	    <hr>
+	    On this page:
+	    <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li></li>
+      </ol>
+    </li>
+    <li><a href="#1-安装依赖工具">1. 安装依赖工具</a></li>
+    <li><a href="#2-获取-sing-box-源代码">2. 获取 Sing-Box 源代码</a></li>
+    <li><a href="#3-编译-sing-box">3. 编译 Sing-Box</a></li>
+    <li><a href="#4-安装-sing-box-指定安装到usrlocalbinsing-box-">4. 安装 Sing-Box （指定安装到/usr/local/bin/sing-box ）</a></li>
+    <li><a href="#5-配置-sing-box">5. 配置 Sing-Box</a></li>
+    <li><a href="#socks配置实例">socks配置实例：</a></li>
+    <li><a href="#6-运行-sing-box">6. 运行 Sing-Box</a></li>
+    <li><a href="#7-设置为服务可选">7. 设置为服务（可选）</a></li>
+    <li><a href="#有重定向日志功能">有重定向日志功能</a></li>
+    <li><a href="#无日志重定向版本">无日志重定向版本：</a></li>
+    <li><a href="#设置脚本为可执行">设置脚本为可执行：</a></li>
+    <li><a href="#总结">总结：</a></li>
+    <li><a href="#--c-指定配置文件路径">✅ -c <file>：指定配置文件路径</a></li>
+  </ol>
+</nav>
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer">
+ <p class="copyright">© <strong>石榴</strong>.</p>
+ <p class="advertisement">Powered by <a>大佬們</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
+</html>
