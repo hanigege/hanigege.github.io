@@ -71,6 +71,7 @@
 </span></span></code></pre></div><p>方法 2：手动安装最新版本 Go</p>
 <p>从 Go 官方网站下载最新版本的 Go 语言：</p>
 <p>访问 Go 语言官网 下载最新版本的 Go。选择适合 FreeBSD 的版本，例如 go1.23.1.freebsd-amd64.tar.gz。</p>
+<h2 id="root用户的两种安装方法">root用户的两种安装方法：</h2>
 <p>解压并安装：</p>
 <p>原方式：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>fetch https://golang.org/dl/go1.23.1.freebsd-amd64.tar.gz 
@@ -80,15 +81,24 @@
 </span></span><span style="display:flex;"><span>fetch -o /usr/local/opt/go1.23.1.freebsd-amd64.tar.gz https://golang.org/dl/go1.23.1.freebsd-amd64.tar.gz
 </span></span><span style="display:flex;"><span>cd /usr/local/opt/
 </span></span><span style="display:flex;"><span>tar -C /usr/local/opt/ -xzf go1.23.1.freebsd-amd64.tar.gz
+</span></span></code></pre></div><h2 id="普通用户的安装方法只能在自己目录中操作好处安全隔离推荐">普通用户的安装方法：(只能在自己目录中操作，好处:安全，隔离）{推荐}</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p .usr/local/opt/
+</span></span><span style="display:flex;"><span>fetch -o .usr/local/opt/go1.23.1.freebsd-amd64.tar.gz https://golang.org/dl/go1.23.1.freebsd-amd64.tar.gz
+</span></span><span style="display:flex;"><span>cd .usr/local/opt/
+</span></span><span style="display:flex;"><span>tar -C ~/.usr/local/opt/ -xzf go1.23.1.freebsd-amd64.tar.gz
 </span></span></code></pre></div><p>设置 Go 环境变量：</p>
 <p>打开<code>~/.profile</code> 文件，添加 Go 的环境变量：</p>
 <p>原方式：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export PATH<span style="color:#f92672">=</span>$PATH:/usr/local/go/bin
 </span></span></code></pre></div><p>改路径后：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export PATH<span style="color:#f92672">=</span>$PATH:/usr/local/opt/go/bin
+</span></span></code></pre></div><h2 id="普通用户下在bash_profile-文件中添加变量普通用户已改为bash指令如用提sh指令那就在profile文件中改">普通用户下：在.bash_profile 文件中添加变量（普通用户已改为bash指令）如用提sh指令，那就在.profile文件中改：</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export PATH<span style="color:#f92672">=</span>$PATH:~/.usr/local/opt/go/bin
 </span></span></code></pre></div><p>刷新配置或重启终端：在 FreeBSD 中，默认使用的 shell 是 sh，而 sh 不支持 source 命令。相反，sh 使用 . 来代替 source。因此，如果你使用的是 sh，需要改为使用以下命令来加载配置文件：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>. ~/.profile
-</span></span></code></pre></div><p>验证 Go 版本是否更新成功：</p>
+</span></span></code></pre></div><p>or</p>
+<pre tabindex="0"><code>. .bash_profile
+</code></pre><p>验证 Go 版本是否更新成功：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go version
 </span></span></code></pre></div><p>输出应显示最新的 Go 版本，例如：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go version go1.23.1 freebsd/amd64
@@ -153,6 +163,9 @@
 	    <nav id="TableOfContents">
   <ol>
     <li><a href="#1-安装依赖">1. 安装依赖</a></li>
+    <li><a href="#root用户的两种安装方法">root用户的两种安装方法：</a></li>
+    <li><a href="#普通用户的安装方法只能在自己目录中操作好处安全隔离推荐">普通用户的安装方法：(只能在自己目录中操作，好处:安全，隔离）{推荐}</a></li>
+    <li><a href="#普通用户下在bash_profile-文件中添加变量普通用户已改为bash指令如用提sh指令那就在profile文件中改">普通用户下：在.bash_profile 文件中添加变量（普通用户已改为bash指令）如用提sh指令，那就在.profile文件中改：</a></li>
     <li><a href="#总结">总结：</a></li>
   </ol>
 </nav>
