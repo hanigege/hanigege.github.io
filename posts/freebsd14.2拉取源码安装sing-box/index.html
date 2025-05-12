@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 
-    <head><title>Freebsd14.2拉取源码安装sing Box &ndash; 代碼倉庫</title>
+    <head><title>Freebsd14.2拉取源码安装sing-Box(包含pf防火墙配置） &ndash; 代碼倉庫</title>
 <meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -51,7 +51,7 @@
 
             <section class="page__body">
     <header class="content__header">
-        <h1>Freebsd14.2拉取源码安装sing Box</h1>
+        <h1>Freebsd14.2拉取源码安装sing-Box(包含pf防火墙配置）</h1>
     </header>
     <div class="content__body">
         <h4 id="在-freebsd-上编译并安装-sing-box可以按照以下步骤进行操作我们将使用-git-拉取源代码并编译以下是详细步骤">在 FreeBSD 上编译并安装 sing-box，可以按照以下步骤进行操作。我们将使用 git 拉取源代码并编译，以下是详细步骤：</h4>
@@ -319,6 +319,49 @@
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sing-box run -c /usr/local/etc/sing-box/config.json
 </span></span></code></pre></div><p>这是最常用的参数。</p>
 <p>直接告诉 sing-box 你要用哪个配置文件来启动。</p>
+<h1 id="附pf防火墙启用">附：PF防火墙启用～</h1>
+<h2 id="编辑-pf-配置文件">编辑 pf 配置文件</h2>
+<p>打开 <code>/etc/pf.conf</code> 文件，添加以下内容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 定义接口</span>
+</span></span><span style="display:flex;"><span>ext_if <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;em0&#34;</span>  <span style="color:#75715e"># 你的外网接口名称，通常为 em0 或者 eth0，具体看你的系统</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许流量通过loopback接口</span>
+</span></span><span style="display:flex;"><span>set skip on lo0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 默认拒绝所有入站连接</span>
+</span></span><span style="display:flex;"><span>block all
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许所有出站流量</span>
+</span></span><span style="display:flex;"><span>pass out all
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许来自本地网络的流量到达22端口和1080端口</span>
+</span></span><span style="display:flex;"><span>pass in on $ext_if proto tcp from any to any port <span style="color:#ae81ff">22</span> keep state
+</span></span><span style="display:flex;"><span>pass in on $ext_if proto tcp from any to any port <span style="color:#ae81ff">1080</span> keep state
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许其他已经建立的连接的数据包通过</span>
+</span></span><span style="display:flex;"><span>pass in all keep state
+</span></span></code></pre></div><h2 id="启用-pf-防火墙">启用 pf 防火墙</h2>
+<p>配置文件完成后，启用 pf 防火墙并应用规则：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pfctl -f /etc/pf.conf  <span style="color:#75715e"># 加载 pf 配置文件</span>
+</span></span><span style="display:flex;"><span>pfctl -e              <span style="color:#75715e"># 启用 pf 防火墙</span>
+</span></span></code></pre></div><h2 id="验证-pf-配置">验证 pf 配置</h2>
+<p>使用以下命令检查防火墙规则是否已成功加载：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pfctl -sr
+</span></span></code></pre></div><h2 id="确认连接">确认连接</h2>
+<p><code>允许 22 端口</code>：你可以通过 ssh 连接到这台机器，确认 22 端口是否开放。</p>
+<p><code>允许 1080 端口</code>：你可以通过 SOCKS 客户端连接到你的 SOCKS 代理，确认 1080 端口是否开放。</p>
+<p><code>其他端口</code>：其他端口的连接会被阻止。</p>
+<h2 id="配置解释">配置解释：</h2>
+<h4 id="允许所有出站流量">允许所有出站流量：</h4>
+<p>pass out all 规则放行所有从本机出去的流量。这样你就可以自由访问外部网络。</p>
+<h4 id="允许进站流量的限制">允许进站流量的限制：</h4>
+<p>pass in on $ext_if proto tcp from any to any port 22 keep state 只允许外部访问 22 端口（SSH）。</p>
+<p>pass in on $ext_if proto tcp from any to any port 1080 keep state 只允许外部访问 1080 端口（你的 SOCKS 服务）。</p>
+<h4 id="默认阻止所有入站流量">默认阻止所有入站流量：</h4>
+<p>block all 这条规则阻止所有未被明确允许的入站流量，确保服务器更加安全。</p>
+<h4 id="保持连接状态">保持连接状态：</h4>
+<p>keep state 保证了允许的连接状态（如 SSH 和 SOCKS）的持续性。意味着你建立的连接不会因为防火墙规则的变动而被意外中断。</p>
+<p>这样，你的防火墙会允许外部的 SSH 和 SOCKS 流量，但拒绝其他端口的访问，同时允许所有的出站流量。</p>
 
 <div id="utterances-comments">
   <script src="https://utteranc.es/client.js"
@@ -389,6 +432,18 @@
     <li><a href="#设置脚本为可执行">设置脚本为可执行：</a></li>
     <li><a href="#总结">总结：</a></li>
     <li><a href="#--c-指定配置文件路径">✅ -c <file>：指定配置文件路径</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#编辑-pf-配置文件">编辑 pf 配置文件</a></li>
+    <li><a href="#启用-pf-防火墙">启用 pf 防火墙</a></li>
+    <li><a href="#验证-pf-配置">验证 pf 配置</a></li>
+    <li><a href="#确认连接">确认连接</a></li>
+    <li><a href="#配置解释">配置解释：</a>
+      <ol>
+        <li></li>
+      </ol>
+    </li>
   </ol>
 </nav>
     
