@@ -88,7 +88,7 @@
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># 你现在应该可以在当前目录看到可执行文件了</span>
 </span></span><span style="display:flex;"><span>ls -lh sing-box
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 如果你还想把它安装到系统路径中（我装在了之前go的bin文件夹里，可以执行：</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 我装在了之前go的bin文件夹里，可以执行：</span>
 </span></span><span style="display:flex;"><span>install -m <span style="color:#ae81ff">755</span> sing-box ~/.usr/local/opt/go/bin/sing-box 
 </span></span></code></pre></div><h2 id="或者明白原理装哪里就随心所欲了">或者：（明白原理，装哪里就随心所欲了）</h2>
 <p>如果你是 普通用户（非 root）并想不使用 sudo 安装 sing-box，可以将其安装到你自己的 $HOME 目录下的 bin/ 子目录中，这是 Unix 系统常用的做法之一。</p>
@@ -346,7 +346,8 @@
 </ol>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>service sing-box status
 </span></span></code></pre></div><h2 id="普通用户启动管理可选">普通用户启动管理（可选）</h2>
-<p>FreeBSD 下的普通用户可以为放在用户目录下的 sing-box 设置用户级别的启动服务，更标准做法是使用 cron @reboot 或 login.conf 启动机制。</p>
+<br>
+FreeBSD 下的普通用户可以为放在用户目录下的 sing-box 设置用户级别的启动服务，更标准做法是使用 cron @reboot 或 login.conf 启动机制。
 <p>不过，FreeBSD 并不像 Linux（有 systemd 的 &ndash;user 模式）那样对用户服务支持那么标准化，但你可以使用以下两种方式实现：</p>
 <p>✅ 方法一：使用 crontab 实现开机自启</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 系统默认的是vi</span>
