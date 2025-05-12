@@ -62,9 +62,9 @@
 </span></span></code></pre></div><p>点击安装最新版本go1.23.1</p>
 <h2 id="2-获取-sing-box-源代码">2. 获取 Sing-Box 源代码</h2>
 <p>然后，使用 git 克隆 sing-box 的源码库：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir /opt
-</span></span><span style="display:flex;"><span>git clone https://github.com/SagerNet/sing-box.git /opt/sing-box
-</span></span><span style="display:flex;"><span>cd /opt/sing-box
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir /usr/local/opt
+</span></span><span style="display:flex;"><span>git clone https://github.com/SagerNet/sing-box.git /usr/local/opt/sing-box
+</span></span><span style="display:flex;"><span>cd /usr/local/opt/sing-box
 </span></span></code></pre></div><h2 id="3-编译-sing-box">3. 编译 Sing-Box</h2>
 <p>确保你的系统上安装了 Go 语言环境后，运行以下命令来编译 sing-box：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go build -tags <span style="color:#e6db74">&#34;with_quic with_dhcp with_wireguard with_ech with_utls with_reality_server with_acme with_clash_api with_gvisor with_grpc with_v2ray_api&#34;</span> ./cmd/sing-box
@@ -78,7 +78,7 @@
 <p>这将使用 Makefile 来构建 sing-box。编译完成后，二进制文件 sing-box 将会出现在当前目录下。</p>
 <h2 id="4-安装-sing-box-指定安装到usrlocalbinsing-box-">4. 安装 Sing-Box （指定安装到/usr/local/bin/sing-box ）</h2>
 <p>编译完成后，你可以将 sing-box 二进制文件复制到系统的可执行文件目录，以便全局使用：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /opt/sing-box
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /usr/local/opt/sing-box
 </span></span><span style="display:flex;"><span>cp sing-box /usr/local/bin/
 </span></span><span style="display:flex;"><span>chmod +x /usr/local/bin/sing-box
 </span></span></code></pre></div><h2 id="5-配置-sing-box">5. 配置 Sing-Box</h2>
