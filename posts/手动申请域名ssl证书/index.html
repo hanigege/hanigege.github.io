@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+    <head><title>手动申请域名ssl证书 &ndash; 代碼倉庫</title>
+<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+
+</head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <header class="content__header">
+        <h1>手动申请域名ssl证书</h1>
+    </header>
+    <div class="content__body">
+        <h1 id="acmesh脚本申请cloudflare的证书-支持泛域名">acme.sh脚本申请cloudflare的证书 支持泛域名</h1>
+<p>前言：<code>acme.sh</code>是一个非常好用的用于申请证书的脚本，它开源在Github，它极大地降低了申请证书的难度，支持使用cloudflare api等多种api来申请证书。</p>
+<p>本文主要介绍使用此脚本来申请 ssl 证书，给你的http请求加把锁，具体可以用来cloudflare api介绍。</p>
+<h2 id="准备条件">准备条件：</h2>
+<p>一台被分配了公网IP的主机</p>
+<p>一个域名(建议购买收费域名)</p>
+<p>电脑ssh客户端</p>
+<p>能解决个体的问题</p>
+<h2 id="一全球api申请证书">一、全球API申请证书</h2>
+<p>1.1、安装脚本文件
+以root用户ssh连接到主机，使用下面的命令安装脚本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt update <span style="color:#f92672">&amp;&amp;</span> apt -y install socat //更新源并安装socat
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>wget -qO- get.acme.sh | bash //安装此脚本
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>source ~/.bashrc //让别名生效，此后无论在哪里直接使用acme.sh，不用输绝对路径
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 由于最新acme.sh脚本默认ca变成了zerossl，现## 执行下面命令修改脚本默认ca为letsencrypt</span>
+</span></span><span style="display:flex;"><span>acme.sh --set-default-ca --server letsencrypt
+</span></span></code></pre></div><p>1.2、证书配置
+1.2.1 获取Cloudflare api key
+注册好cloudflare账号，把域名解析的解析权限锁定cloudflare处理，这样以后只需要在cloudflare这里配置解析记录。按照图标获取cloudflare api key。
+<img src="assets/CleanShot%202025-05-12%20at%2008.24.26@2x.png" alt="CleanShot 2025-05-12 at 08.24.26@2x">
+1.2.2 申请证书（二选一）
+这里假设您的域名是yourdomain.com，执行下面命令申请证书：</p>
+<p>1.2.2.1 dns方式验证</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export CF_Key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;slfjksjffjfhfhkjhfksjf&#34;</span> //此处替换成你自己的Key
+</span></span><span style="display:flex;"><span>export CF_Email<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;yourcloudflare@gmail.com&#34;</span> //此处填写你给Cloudflare绑定的邮箱账号
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>acme.sh --issue --dns dns_cf -d yourdomain.com -d www.yourdomain.com -k ec-256
+</span></span></code></pre></div><p>说明：Cloudflare 目前不支持.tk .cf .ml等免费申请来的域名后缀使用此 DNS 验证方式，付费域名才受支持，免费域名使用低于 2.2.2 方式。脚本申请到的证书和密钥都放在目录下~/.acme.sh/yourdomain.com_ecc。</p>
+<p>1.2.2.2 http方式验证
+执行下面命令前请保证你80端口没有被其他程序使用，如果有，kill掉，执行下面命令前需要你先在cloudflare dns那里添加好一条记录可以，开启cloudflare cdn（cdn此时http方式验证无）影响）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>acme.sh --issue --standalone -d yourdomain.com -d www.yourdomain.com -k ec-256
+</span></span></code></pre></div><p>说明：跟上面一样，脚本申请到的证书放在<code>~/.acme.sh/yourdomain.com_ecc</code>目录下</p>
+<p>1.2.3 安装证书到指定位置
+如果linux主机里已有/root/ssl目录，现在已经把证书和密钥安装到这个目录下，那么执行下面的命令即可：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>acme.sh --installcert -d yourdomain.com -d www.yourdomain.com --fullchain-file /root/ssl/web.crt --key-file /root/ssl/web.key --ecc
+</span></span></code></pre></div><p>1.3、证书更新
+但从letscncrypt申请证书到的程度是90天，脚本会每60天到证书进行更新，后续可能会持续这个时间，都是自动的。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 手动强制更新证书</span>
+</span></span><span style="display:flex;"><span>acme.sh --renew -d yourdomain.com -d www.yourdomain.com --force --ecc
+</span></span></code></pre></div><p>二、局部API
+本文主要以Debian10为例，介绍使用新的cloudflare api令牌来申请证书，免费域名已不受cloudflare第一方式来申请证书，请使用付费域名。</p>
+<h2 id="21安装配置acmesh脚本">2.1、安装配置acme.sh脚本</h2>
+<p>以root用户ssh登陆到主机，使用下面命令安装配置脚本：</p>
+<h1 id="更新源并安装socat">更新源并安装socat</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt update <span style="color:#f92672">&amp;&amp;</span> apt -y install socat
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 安装脚本</span>
+</span></span><span style="display:flex;"><span>wget -qO- get.acme.sh | bash
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 让脚本在.bashrc文件追加的一行环境变量生效，以后无论在哪里直接使用acme.sh，不用输绝对路径</span>
+</span></span><span style="display:flex;"><span>source ~/.bashrc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 由于最新acme.sh脚本默认ca变成了zerossl，现执行下面命令修改脚本默认ca为letsencrypt</span>
+</span></span><span style="display:flex;"><span>acme.sh --set-default-ca --server letsencrypt
+</span></span></code></pre></div><p>2.2、配置Cloudflare积分令牌
+2.2.1 创建代币
+根据acme.sh作者脚本提供的文档：使用新的cloudflare api令牌，需要新创建此令牌方可使用：
+<img src="assets/CleanShot%202025-05-12%20at%2008.27.04@2x.png" alt="CleanShot 2025-05-12 at 08.27.04@2x">
+<img src="assets/CleanShot%202025-05-12%20at%2008.27.13@2x.png" alt="CleanShot 2025-05-12 at 08.27.13@2x">
+<img src="assets/CleanShot%202025-05-12%20at%2008.27.22@2x.png" alt="CleanShot 2025-05-12 at 08.27.22@2x">
+其中图片设置即可，选择添加区域-DNS-编辑和区域-区域-读取权限，区域资源里面包括-账户的所有区域-你的账户
+<img src="assets/CleanShot%202025-05-12%20at%2008.27.38@2x.png" alt="CleanShot 2025-05-12 at 08.27.38@2x">
+配置好以后，点击创建令牌，注意此令牌token只会出现一次，切记保存，切记保存，切记保存！！！</p>
+<p>2.2.2 获取账户ID和区域ID
+根据acme.sh文档，申请证书可能还需要提供两个ID，其中账户ID必须，区域ID可有无，根据下图方法获取这两个ID：
+<img src="assets/CleanShot%202025-05-12%20at%2008.27.57@2x.png" alt="CleanShot 2025-05-12 at 08.27.57@2x">
+下拉，找到API区域：</p>
+<p><img src="assets/CleanShot%202025-05-12%20at%2008.28.09@2x.png" alt="CleanShot 2025-05-12 at 08.28.09@2x">
+至此，即准备好申请证书所需的材料：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 上面第一步创建的令牌，即为token</span>
+</span></span><span style="display:flex;"><span>CF_Token<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxx&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 根据上图分别获取账户ID和区域ID</span>
+</span></span><span style="display:flex;"><span>CF_Account_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;aaaaaaaa&#34;</span>
+</span></span><span style="display:flex;"><span>CF_Zone_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;bbbbbbbbb&#34;</span>   //此项非必须
+</span></span></code></pre></div><h2 id="23申请配置证书">2.3、申请配置证书</h2>
+<p>2.3.1 申请证书
+如果您的域名是example.com，执行下面命令申请证书，非root用户也执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 执行此命令设置变量的值，acme.sh脚本执行过程会读取</span>
+</span></span><span style="display:flex;"><span>export CF_Token<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxx&#34;</span>
+</span></span><span style="display:flex;"><span>export CF_Account_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;aaaaaaa&#34;</span>
+</span></span><span style="display:flex;"><span>export CF_Zone_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;bbbbbbbb&#34;</span>   //此项非必须，上面两项需要提供
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 申请证书</span>
+</span></span><span style="display:flex;"><span>acme.sh --issue -d example.com -d *.example.com --dns dns_cf -k ec-256
+</span></span></code></pre></div><h2 id="232-安装证书到指定位置">2.3.2 安装证书到指定位置</h2>
+<p>如果linux主机里已有/etc/ssl目录，现在已经把证书和密钥安装到这个目录下，那么执行下面的命令即可：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>acme.sh --installcert -d example.com -d *.example.com --fullchain-file /etc/ssl/web.crt --key-file /etc/ssl/web.key --ecc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用--reloadcmd指定安装证书后的命令</span>
+</span></span><span style="display:flex;"><span>acme.sh --installcert -d example.com -d *.example.com --fullchain-file /etc/ssl/web.crt --key-file /etc/ssl/web.key --ecc --reloadcmd <span style="color:#e6db74">&#34;systemctl restart webserver&#34;</span>
+</span></span></code></pre></div><p>说明：脚本更新完证书后，会自动遵循上面指定的绝对路径将证书和密钥安装到指定位置，并根据&ndash;reloadcmd执行相应的操作。</p>
+<p><code>------------------------</code></p>
+<h2 id="例我的ssl目录路径为">例：我的ssl目录路径为：</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#nginxg配置文件里的证书路径，只限于我自己使用，你们随意</span>
+</span></span><span style="display:flex;"><span>   ssl_certificate /etc/nginx/certs/web.crt;
+</span></span><span style="display:flex;"><span>   ssl_certificate_key /etc/nginx/certs/web.key;
+</span></span><span style="display:flex;"><span>acme.sh --installcert -d 29.xyz -d *.29.xyz --fullchain-file /root/data/docker_data/nginx/certs/web.crt --key-file /root/data/docker_data/nginx/certs/web.key --ecc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#安装到我指定的路径</span>
+</span></span></code></pre></div><p><code>-------------------------</code></p>
+<p>2.3.3 证书更新
+从letsencrypt申请到的证书有效期是90天，脚本每60天将进行证书更新，你也可以手动强制更新：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 查询域名申请证书信息</span>
+</span></span><span style="display:flex;"><span>acme.sh --list
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 自动更新证书</span>
+</span></span><span style="display:flex;"><span>~/.acme.sh/acme.sh --upgrade --auto-upgrade
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 手动强制更新证书</span>
+</span></span><span style="display:flex;"><span>acme.sh --renew -d example.com -d *.example.com --force --ecc
+</span></span><span style="display:flex;"><span>acme.sh --renew -d example.com -d *.example.com --force //非ECC证书使用此命令
+</span></span></code></pre></div><h2 id="附一份nginxconf完整的反向代理配置文件供参考">附一份nginx.conf完整的反向代理配置文件供参考：</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>events <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    worker_connections 1024;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>http <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    client_max_body_size 4096m;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    server <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        listen 80;
+</span></span><span style="display:flex;"><span>        listen <span style="color:#f92672">[</span>::<span style="color:#f92672">]</span>:80;
+</span></span><span style="display:flex;"><span>        server_name 29.xyz;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">301</span> https://$host$request_uri;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    server <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        listen <span style="color:#ae81ff">443</span> ssl;
+</span></span><span style="display:flex;"><span>        listen <span style="color:#f92672">[</span>::<span style="color:#f92672">]</span>:443 ssl;
+</span></span><span style="display:flex;"><span>        server_name 29.xyz;
+</span></span><span style="display:flex;"><span>        ssl_certificate /etc/nginx/certs/web.crt;
+</span></span><span style="display:flex;"><span>        ssl_certificate_key /etc/nginx/certs/web.key;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        location / <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            proxy_pass http://192.168.8.8:8008;
+</span></span><span style="display:flex;"><span>            proxy_set_header Host $host;
+</span></span><span style="display:flex;"><span>            proxy_set_header X-Real-IP $remote_addr;
+</span></span><span style="display:flex;"><span>            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    server <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        listen 80;
+</span></span><span style="display:flex;"><span>        listen <span style="color:#f92672">[</span>::<span style="color:#f92672">]</span>:80;
+</span></span><span style="display:flex;"><span>        server_name s.29.xyz;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">301</span> https://$host$request_uri;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    server <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        listen <span style="color:#ae81ff">443</span> ssl;
+</span></span><span style="display:flex;"><span>        listen <span style="color:#f92672">[</span>::<span style="color:#f92672">]</span>:443 ssl;
+</span></span><span style="display:flex;"><span>        server_name s.29.xyz;
+</span></span><span style="display:flex;"><span>        ssl_certificate /etc/nginx/certs/web.crt;
+</span></span><span style="display:flex;"><span>        ssl_certificate_key /etc/nginx/certs/web.key;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        location / <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            proxy_pass http://192.168.8.8:12332;
+</span></span><span style="display:flex;"><span>            proxy_set_header Host $host;
+</span></span><span style="display:flex;"><span>            proxy_set_header X-Real-IP $remote_addr;
+</span></span><span style="display:flex;"><span>            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#html静态网页</span>
+</span></span><span style="display:flex;"><span>server <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    listen 80;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    server_name hp.29.xyz;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">301</span> https://$server_name$request_uri;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>server <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    listen <span style="color:#ae81ff">443</span> ssl;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    server_name hp.29.xyz;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ssl_certificate /etc/nginx/certs/web.crt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ssl_certificate_key /etc/nginx/certs/web.key;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    charset utf-8;  <span style="color:#75715e"># 添加这行来指定编码</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    location / <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#解决css.js加载</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        include mime.types;  
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        default_type application/octet-stream;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##解决css.js完毕  </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        root /usr/share/nginx/html;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        index index.html;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##静态网页完</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
+<div id="utterances-comments">
+  <script src="https://utteranc.es/client.js"
+      repo="hanigege/blog-comments"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+  </script>
+</div>
+
+
+
+
+    </div>
+    <footer class="content__footer"></footer>
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <span class="about__logo" role="img">🍚</span>&nbsp;
+    
+<h1 class="about__title">喂饭</h1>
+<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
+</div>
+
+
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="mailto:purodn@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2025-05-12
+        </p>
+    
+
+    
+	    <hr>
+	    On this page:
+	    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#准备条件">准备条件：</a></li>
+    <li><a href="#一全球api申请证书">一、全球API申请证书</a></li>
+    <li><a href="#21安装配置acmesh脚本">2.1、安装配置acme.sh脚本</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#23申请配置证书">2.3、申请配置证书</a></li>
+    <li><a href="#232-安装证书到指定位置">2.3.2 安装证书到指定位置</a></li>
+    <li><a href="#例我的ssl目录路径为">例：我的ssl目录路径为：</a></li>
+    <li><a href="#附一份nginxconf完整的反向代理配置文件供参考">附一份nginx.conf完整的反向代理配置文件供参考：</a></li>
+  </ol>
+</nav>
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer">
+ <p class="copyright">© <strong>石榴</strong>.</p>
+ <p class="advertisement">Powered by <a>大佬們</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
+</html>

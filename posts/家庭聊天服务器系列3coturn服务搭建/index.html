@@ -189,7 +189,7 @@
 </span></span></code></pre></div><p>这些端口需要在Coturn服务器配置中指定，并且相应的防火墙规则也需要配置，以允许流量通过这些端口。确保在配置Coturn服务器时参考文档，因为实际端口配置可能因特定用例和安全需求而有所不同。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Matrix Synapse Default Communication Port <span style="color:#f92672">(</span>TCP<span style="color:#f92672">)</span>: <span style="color:#ae81ff">8448</span>
 </span></span></code></pre></div><p>确保在配置防火墙规则时，这些端口是开放的，以确保Synapse和Coturn能够相互通信。</p>
-<h2 id="第二种方案优选">第二种方案：（优选）</h2>
+<h2 id="第二种方案优选推荐使用这一种方案">第二种方案：（优选，推荐使用这一种方案）</h2>
 <p>关于日志输入等级，常见的选项包括：</p>
 <p>verbose：冗余的输出，通常包含了非常详细的信息，用于调试和排查问题。</p>
 <p>debug：调试级别的输出，提供比较详细但不如 verbose 那么冗余的信息。</p>
@@ -253,8 +253,8 @@
 </span></span><span style="display:flex;"><span>min-port<span style="color:#f92672">=</span><span style="color:#ae81ff">64000</span>
 </span></span><span style="display:flex;"><span>max-port<span style="color:#f92672">=</span><span style="color:#ae81ff">65535</span>
 </span></span></code></pre></div><p>最终实例：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 冗余的日志输出 或者参数为 info （可选）</span>
-</span></span><span style="display:flex;"><span>verbose
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 日志输出参数</span>
+</span></span><span style="display:flex;"><span>info
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># 启用认证</span>
 </span></span><span style="display:flex;"><span>use-auth-secret
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># 值为认证时使用的密钥</span>
@@ -273,7 +273,7 @@
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#限定最小最大端口</span>
 </span></span><span style="display:flex;"><span>min-port<span style="color:#f92672">=</span><span style="color:#ae81ff">64000</span>
 </span></span><span style="display:flex;"><span>max-port<span style="color:#f92672">=</span><span style="color:#ae81ff">65535</span>
-</span></span></code></pre></div><p>配置证书： 和域名生成标准证书一样，略</p>
+</span></span></code></pre></div><h2 id="上面配置里的证书-和域名生成标准证书一样本站有提供教程此证书为coturn服务器域名的证书">上面配置里的证书： 和域名生成标准证书一样，本站有提供教程。此证书为coturn服务器域名的证书</h2>
 <h2 id="测试启动命令没有加-d-后台运行-测试没问题了再加还有最后的rm去除掉退出自动删除容器的意思">测试启动命令：(没有加-d （后台运行） 测试没问题了，再加,还有最后的&ndash;rm去除掉，退出自动删除容器的意思）</h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --network<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
@@ -301,6 +301,12 @@
 </span></span><span style="display:flex;"><span>            - /root/data/docker_data/coturn/var/run/turnserver.pid:/var/run/turnserver.pid
 </span></span></code></pre></div><p>使用以下命令来后台运行容器：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker-compose up -d
+</span></span></code></pre></div><h2 id="在synapse配置文件datahomeserveryaml里加入">在synapse配置文件<code>data/homeserver.yaml</code>里加入</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#turnserver#</span>
+</span></span><span style="display:flex;"><span>turn_uris: <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;turn:cotu10.xyz?transport=udp&#34;</span>, <span style="color:#e6db74">&#34;turn:coturnc10.xyz?transport=tcp&#34;</span> <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>turn_shared_secret: <span style="color:#e6db74">&#34;ynojlAOWksiyk1SEBrJ6VjFHNyjJiyZRnnMUQ0WKAsSzGdMhL8he&#34;</span>
+</span></span><span style="display:flex;"><span>turn_user_lifetime: <span style="color:#ae81ff">86400000</span>
+</span></span><span style="display:flex;"><span>turn_allow_guests: True
 </span></span></code></pre></div>
 <div id="utterances-comments">
   <script src="https://utteranc.es/client.js"
@@ -361,10 +367,12 @@
       </ol>
     </li>
     <li><a href="#调试日志说明">调试日志说明</a></li>
-    <li><a href="#第二种方案优选">第二种方案：（优选）</a></li>
+    <li><a href="#第二种方案优选推荐使用这一种方案">第二种方案：（优选，推荐使用这一种方案）</a></li>
     <li><a href="#自行安装好docker及docker-compose">自行安装好docker及docker-compose</a></li>
     <li><a href="#开始操作">开始操作</a></li>
+    <li><a href="#上面配置里的证书-和域名生成标准证书一样本站有提供教程此证书为coturn服务器域名的证书">上面配置里的证书： 和域名生成标准证书一样，本站有提供教程。此证书为coturn服务器域名的证书</a></li>
     <li><a href="#测试启动命令没有加-d-后台运行-测试没问题了再加还有最后的rm去除掉退出自动删除容器的意思">测试启动命令：(没有加-d （后台运行） 测试没问题了，再加,还有最后的&ndash;rm去除掉，退出自动删除容器的意思）</a></li>
+    <li><a href="#在synapse配置文件datahomeserveryaml里加入">在synapse配置文件<code>data/homeserver.yaml</code>里加入</a></li>
   </ol>
 </nav>
     
