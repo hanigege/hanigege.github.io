@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+    <head><title>Freebsd安装Hysteria2服务端 &ndash; 代碼倉庫</title>
+<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+
+</head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Freebsd安装Hysteria2服务端</h1>
+    </header>
+    <div class="content__body">
+        <h2 id="freebsd14下配置服务器端hysteria2">FreeBSD14下配置服务器端Hysteria2</h2>
+<p>我的系统是FreeBSD14的，官方提供的无法正常运行，不知道，是什么原因。</p>
+<p>只好在自己的build一个，不过还好很简单。建议用好一点的VPS来build，用国内的，各种time out。</p>
+<p>准备</p>
+<h2 id="1软件准备">1，软件准备</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pkg install python39 go121 git
+</span></span></code></pre></div><p>注意go版本一定要121的，前面我安装120，不行，只能重新安装121版本的。(我后期用的是自编译1.23的go)</p>
+<p>还要记得建个链拉，要不，系统老提示Go没安装</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /usr/local/bin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ln -s go121 go
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 2，同步代码</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
+</span></span><span style="display:flex;"><span>git clone https://github.com/apernet/hysteria.git
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 3,编译</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>进入源代码目录执行：
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
+</span></span><span style="display:flex;"><span>python hyperbole.py build
+</span></span></code></pre></div><p>等待几分钟，就OK了，编译的程序在build目录下面。</p>
+<h1 id="配置服务器端">配置服务器端</h1>
+<h4 id="1配置configyaml">1，配置config.yaml</h4>
+<p>只要创建一个config.yaml文件，输入相关信息，然后把文件放到/usr/local/etc目录下面。</p>
+<p>config.yaml信息如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># listen: :443</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tls:
+</span></span><span style="display:flex;"><span>  cert: 改成你的cert路径 
+</span></span><span style="display:flex;"><span>  key: 改成你的Key路径
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>auth:
+</span></span><span style="display:flex;"><span>  type: password
+</span></span><span style="display:flex;"><span>  password: 改成你的密码
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bandwidth:
+</span></span><span style="display:flex;"><span>  up: <span style="color:#ae81ff">1</span> gbps <span style="color:#75715e">#改成你的VPS上行带宽</span>
+</span></span><span style="display:flex;"><span>  down: <span style="color:#ae81ff">1</span> gbps <span style="color:#75715e">#改成你PVS下行带宽</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>masquerade:
+</span></span><span style="display:flex;"><span>  type: proxy
+</span></span><span style="display:flex;"><span>  proxy:
+</span></span><span style="display:flex;"><span>    url: https://www.bing.com/ <span style="color:#75715e">#改成你伪装的网站</span>
+</span></span><span style="display:flex;"><span>    rewriteHost: true
+</span></span><span style="display:flex;"><span>  listenHTTP: :80        <span style="color:#75715e">#官方的解释：本功能仅为执着于 &#34;做戏做全套&#34; 的用户提供。既然要 &#34;做戏做全套&#34;，就没有理由将 HTTP/HTTPS 监听在 80/443 之外的自定义端口上（虽然 Hysteria 允许自定义监听地址）。</span>
+</span></span><span style="display:flex;"><span>  listenHTTPS: :443
+</span></span><span style="display:flex;"><span>  forceHTTPS: true
+</span></span></code></pre></div><h4 id="2-配置自动启动脚本">2, 配置自动启动脚本</h4>
+<p>我不会写，也没去找，随便找了个系统脚本乱改一气。记得脚本要放到/usr/local/etc/rc.d目录下</p>
+<p>注意：编译的文件名是：hysteria-freebsd-amd64，我嫌它太长了，拷贝了份短文件名的来用:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp hysteria-freebsd-amd64 hysteria
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cp hysteria /usr/local/bin
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># PROVIDE: hysteria</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># REQUIRE: LOGIN</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># KEYWORD: shutdown</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Add these lines to /etc/rc.conf.local or /etc/rc.conf to enable `hysteria&#39;:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># hysteria_enable (bool):          Set to &#34;NO&#34; by default.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#                               Set it to &#34;YES&#34; to enable hysteria</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># hysteria_config (path):          Set to &#34;/usr/local/etc/hysteria/config.json&#34; by default</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#                               Set it to the hysteria server config</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># hysteria_logdir (path):            Set to &#34;/var/log/hysteria&#34; by default.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#                               Set it to the directory of hysteria log files</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># hysteria_env (str):                Set to &#34;&#34; by default.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#                               Set it to the desired environment variables</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>. /etc/rc.subr
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hysteria&#34;</span>
+</span></span><span style="display:flex;"><span>rcvar<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">_enable&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>: <span style="color:#e6db74">${</span>hysteria_enable=<span style="color:#e6db74">&#34;NO&#34;</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>: <span style="color:#e6db74">${</span>hysteria_logdir=<span style="color:#e6db74">&#34;/var/log/</span><span style="color:#e6db74">${</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>: <span style="color:#e6db74">${</span>hysteria_env=<span style="color:#e6db74">&#34;&#34;</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>: <span style="color:#e6db74">${</span>hysteria_user=<span style="color:#e6db74">&#34;root&#34;</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>: <span style="color:#e6db74">${</span>hysteria_group=<span style="color:#e6db74">&#34;wheel&#34;</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pidfile<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/var/run/</span>$name<span style="color:#e6db74">.pid&#34;</span>
+</span></span><span style="display:flex;"><span>procname<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/usr/local/bin/</span>$name<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>command<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/usr/sbin/daemon&#34;</span>
+</span></span><span style="display:flex;"><span>command_args<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-c -p </span><span style="color:#e6db74">${</span>pidfile<span style="color:#e6db74">}</span><span style="color:#e6db74"> /usr/bin/env </span><span style="color:#e6db74">${</span>asset_env<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">${</span>hysteria_env<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">${</span>procname<span style="color:#e6db74">}</span><span style="color:#e6db74"> server -c /usr/local/etc/config.yaml&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>start_precmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hysteria_startprecmd&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>hysteria_startprecmd<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        touch <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>pidfile<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        chown <span style="color:#e6db74">${</span>hysteria_user<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>hysteria_group<span style="color:#e6db74">}</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>pidfile<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>load_rc_config <span style="color:#e6db74">&#34;</span>$name<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>run_rc_command <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><h4 id="3-设置自动启动">3， 设置自动启动</h4>
+<p>sysrc hysteria_enable=&ldquo;YES&rdquo;</p>
+<h4 id="4-启动服务">4, 启动服务</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>service hysteria start
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
+</span></span><span style="display:flex;"><span>如果输出以下信息，就说明服务启动了：
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
+</span></span><span style="display:flex;"><span>Starting hysteria.
+</span></span><span style="display:flex;"><span>root@vps:~/HY <span style="color:#75715e"># 2024-03-03T10:37:15+08:00       INFO    server mode</span>
+</span></span><span style="display:flex;"><span>2024-03-03T10:37:15+08:00       INFO    server up and running   <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;listen&#34;</span>: <span style="color:#e6db74">&#34;:443&#34;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>2024-03-03T10:37:15+08:00       INFO    masquerade HTTPS server up and running  <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;listen&#34;</span>: <span style="color:#e6db74">&#34;:443&#34;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>2024-03-03T10:37:15+08:00       INFO    masquerade HTTP server up and running   <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;listen&#34;</span>: <span style="color:#e6db74">&#34;:80&#34;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Linux下的服务器端配置</span>
+</span></span><span style="display:flex;"><span>官方有自动脚本，这个就省心多了。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>我试了下Debian12。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>安装或升级到最新版本：
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
+</span></span><span style="display:flex;"><span>bash &lt;<span style="color:#f92672">(</span>curl -fsSL https://get.hy2.sh/<span style="color:#f92672">)</span> 
+</span></span></code></pre></div><p>等待一会，就自动安装好了，config.yaml和FreeBSSD的一样。按脚本最后输出的信息来启动服务器就OK了。</p>
+<h2 id="客户端配置">客户端配置</h2>
+<p>Windows配置V2rayN
+1，根据服务器信息，先创建个客户端配置文件，文件名随便起一个，内容如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>server: 改成你服务器的域名:端口号
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>auth: 改成你服务器的密码
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bandwidth: 
+</span></span><span style="display:flex;"><span>  up: <span style="color:#ae81ff">0</span> mbps  <span style="color:#75715e">#0 mbps表示，不限速</span>
+</span></span><span style="display:flex;"><span>  down: <span style="color:#ae81ff">0</span> mbps
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tls:
+</span></span><span style="display:flex;"><span>  sni: 改成你服务器域名
+</span></span><span style="display:flex;"><span>  insecure: false
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>socks5:
+</span></span><span style="display:flex;"><span>  listen: 127.0.0.1:1080 <span style="color:#75715e">#这个和下面的默认就好</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>http:
+</span></span><span style="display:flex;"><span>  listen: 127.0.0.1:8080 
+</span></span></code></pre></div><p>2，配置V2rayN</p>
+<p>1)点击V2rayN左上角的”服务器”。</p>
+<p>2)选择”添加自定义服务器”。</p>
+<p>3)服务器”别名”，起个自己只喜欢的，比如HY。</p>
+<p>“地址”，点击浏览，找到刚才我们创建的客户端配置文档，windows下默认是txt文件，所以要选择(All .)才能看到文件。</p>
+<p>“Core类型”,选择”hysteria2”。</p>
+<p>“Socks端口”，填上前面指定的1080</p>
+<p>3, 添加完服务器，只要激活服务器，系统代理选”自动配置系统代理”，路由先你喜欢的，我要测速，选了”全局”。</p>
+<p>输出以下信息说明大功告成了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">[</span>Custom<span style="color:#f92672">]</span> HY
+</span></span><span style="display:flex;"><span>启动服务<span style="color:#f92672">(</span>2024/03/03 10:55:27<span style="color:#f92672">)</span>...
+</span></span><span style="display:flex;"><span>2024-03-03T10:55:27+08:00   <span style="color:#f92672">[</span>34mINFO<span style="color:#f92672">[</span>0m client mode
+</span></span><span style="display:flex;"><span>2024-03-03T10:55:27+08:00   <span style="color:#f92672">[</span>34mINFO<span style="color:#f92672">[</span>0m connected to server <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;udpEnabled&#34;</span>: true, <span style="color:#e6db74">&#34;tx&#34;</span>: 0, <span style="color:#e6db74">&#34;count&#34;</span>: 1<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>2024-03-03T10:55:27+08:00   <span style="color:#f92672">[</span>34mINFO<span style="color:#f92672">[</span>0m use this URI to share your server   <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;uri&#34;</span>: <span style="color:#e6db74">&#34;***&#34;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>2024-03-03T10:55:27+08:00   <span style="color:#f92672">[</span>34mINFO<span style="color:#f92672">[</span>0m HTTP proxy server listening <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;addr&#34;</span>: <span style="color:#e6db74">&#34;127.0.0.1:8080&#34;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>2024-03-03T10:55:27+08:00   <span style="color:#f92672">[</span>34mINFO<span style="color:#f92672">[</span>0m SOCKS5 server listening <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;addr&#34;</span>: <span style="color:#e6db74">&#34;127.0.0.1:1080&#34;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>2024/03/03 10:55:29 系统代理设置改变ForcedChange
+</span></span></code></pre></div><p>安卓手机端
+我原来用的V2rayNG不支持，官方列表中推荐的NekoBox。很不错，界面和v2rayNG差不多。</p>
+<p>FreeBSD14系统，不想自己build的兄弟，可以下载，我编译好的。</p>
+<h4 id="老梁提供">老梁提供</h4>
+<p><a href="https://b.awei.pub/files/other/hysteria.tar.bz2">hysteria.tar.bz2</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>░█░█░█░█░█▀▀░▀█▀░█▀▀░█▀▄░▀█▀░█▀█░░░▀▀▄
+</span></span><span style="display:flex;"><span>░█▀█░░█░░▀▀█░░█░░█▀▀░█▀▄░░█░░█▀█░░░▄▀░
+</span></span><span style="display:flex;"><span>░▀░▀░░▀░░▀▀▀░░▀░░▀▀▀░▀░▀░▀▀▀░▀░▀░░░▀▀▀
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a powerful, lightning fast and censorship resistant proxy
+</span></span><span style="display:flex;"><span>Aperture Internet Laboratory &lt;https://github.com/apernet&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Version:        v2.2.4-11-g84d72ef
+</span></span><span style="display:flex;"><span>BuildDate:      2024-03-02T12:20:39Z
+</span></span><span style="display:flex;"><span>BuildType:      dev
+</span></span><span style="display:flex;"><span>CommitHash:     84d72ef0b37a2a261cf89e0307bd966afdc1be3b
+</span></span><span style="display:flex;"><span>Platform:       freebsd
+</span></span><span style="display:flex;"><span>Architecture:   amd64
+</span></span></code></pre></div>
+<div id="utterances-comments">
+  <script src="https://utteranc.es/client.js"
+      repo="hanigege/blog-comments"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+  </script>
+</div>
+
+
+
+
+    </div>
+    <footer class="content__footer"></footer>
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <span class="about__logo" role="img">🍚</span>&nbsp;
+    
+<h1 class="about__title">喂饭</h1>
+<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
+</div>
+
+
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="mailto:purodn@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2025-05-12
+        </p>
+    
+
+    
+	    <hr>
+	    On this page:
+	    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#freebsd14下配置服务器端hysteria2">FreeBSD14下配置服务器端Hysteria2</a></li>
+    <li><a href="#1软件准备">1，软件准备</a></li>
+  </ol>
+
+  <ol>
+    <li>
+      <ol>
+        <li></li>
+      </ol>
+    </li>
+    <li><a href="#客户端配置">客户端配置</a>
+      <ol>
+        <li></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer">
+ <p class="copyright">© <strong>石榴</strong>.</p>
+ <p class="advertisement">Powered by <a>大佬們</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
+</html>
