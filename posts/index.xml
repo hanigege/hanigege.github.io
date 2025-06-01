@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>zh-CN</language>
     <copyright>© **石榴**.</copyright>
-    <lastBuildDate>Mon, 12 May 2025 16:09:56 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 01 Jun 2025 20:42:39 +0800</lastBuildDate>
     <atom:link href="https://hanigege.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vyos Wireguard Ipv4</title>
+      <link>https://hanigege.github.io/posts/vyos-wireguard-ipv4/</link>
+      <pubDate>Sun, 01 Jun 2025 20:42:39 +0800</pubDate>
+      <guid>https://hanigege.github.io/posts/vyos-wireguard-ipv4/</guid>
+      <description>&lt;h1 id=&#34;vyos上配置wireguard-ipv4&#34;&gt;vyos上配置wireguard （IPV4）&lt;/h1&gt;&#xA;&lt;h2 id=&#34;1-生成-wireguard-密钥&#34;&gt;1. 生成 WireGuard 密钥&lt;/h2&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;wg genkey | tee privatekey | wg pubkey &amp;gt; publickey&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;• privatekey 文件中存储 私钥&lt;/p&gt;&#xA;&lt;p&gt;• publickey 文件中存储 公钥&lt;/p&gt;&#xA;&lt;p&gt;然后使用：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cat privatekey&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;把私钥填入 第一步 的 &amp;lt;服务器私钥&amp;gt; 位置。&lt;/p&gt;&#xA;&lt;p&gt;配置wireguard:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;set interfaces wireguard wg0 address  &amp;#39;10.20.30.1/24&amp;#39;&#xA;set interfaces wireguard wg0 port &amp;#39;11133&amp;#39;&#xA;set interfaces wireguard wg0 private-key &amp;#39;private-key&amp;#39;&#xA;set interfaces wireguard wg0 peer iphone allowed-ips &amp;#39;10.20.30.2/32&amp;#39;&#xA;set interfaces wireguard wg0 peer iphone public-key &amp;#39;public-key&amp;#39;&#xA;set interfaces wireguard wg0 peer iphone preshared-key &amp;#39;preshared-key&amp;#39;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面这是添加过peer的。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CK佬的wg-Easy一键脚本程序</title>
       <link>https://hanigege.github.io/posts/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link>
