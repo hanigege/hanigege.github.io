@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 
-    <head><title>家庭聊天服务器系列（3）coturn服务搭建 &ndash; 代碼倉庫</title>
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=56883&amp;path=livereload" data-no-instant defer></script><title>家庭聊天服务器系列（3）coturn服务搭建 &ndash; 代碼倉庫</title>
 <meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
-<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
+<link rel="stylesheet" href="http://localhost:56883/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="http://localhost:56883/css/risotto.css">
+<link rel="stylesheet" href="http://localhost:56883/css/custom.css">
 
 
 
@@ -35,14 +35,14 @@
 
             <header class="page__header"><nav class="page__nav main-nav">
     <ul>
-      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
+      <li class="nomarker"><h1 class="page__logo"><a href="http://localhost:56883/" class="page__logo-inner">代碼倉庫</a></h1></li>
     
     
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="http://localhost:56883/about/" title="">About</a></li>
     
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="http://localhost:56883/posts/" title="">Posts</a></li>
     
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="http://localhost:56883/downloads/" title="">Downlaods</a></li>
     
     </ul>
 </nav>
@@ -71,28 +71,28 @@
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span> docker pull coturn/coturn
 </span></span></code></pre></div><p>直接host方式运行</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>     docker run -d --network<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/var:/var <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>       coturn/coturn
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/var:/var <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>       coturn/coturn
 </span></span></code></pre></div><p>运行时不加 -d 先看输入有错误吗！
 同时查看var下的log看相关的问题
 调试启动命令：停止容器后会自动图删除容器，命令如下：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --network<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/var:/var <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           --rm <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>       coturn/coturn
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/var:/var <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           --rm <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>       coturn/coturn
 </span></span></code></pre></div><p>哪果去掉了配置文件里的指定log，停用cli功能，下面有说明，可以用下面的启动命令：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span> docker run -d --network<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -e DETECT_EXTERNAL_IP<span style="color:#f92672">=</span>yes <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -e DETECT_RELAY_IP<span style="color:#f92672">=</span>yes <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/var:/var <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>       coturn/coturn <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -n --log-file<span style="color:#f92672">=</span>stdout  
+</span></span></span><span style="display:flex;"><span>           -e DETECT_EXTERNAL_IP<span style="color:#f92672">=</span>yes <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -e DETECT_RELAY_IP<span style="color:#f92672">=</span>yes <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/var:/var <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>       coturn/coturn <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -n --log-file<span style="color:#f92672">=</span>stdout  
 </span></span></code></pre></div><p>你之后不要1~65535全都开放 实行白名单放行模式</p>
 <p>比如coturn只开放以下</p>
 <p>3478</p>
@@ -276,11 +276,11 @@
 </span></span></code></pre></div><h2 id="上面配置里的证书-和域名生成标准证书一样本站有提供教程此证书为coturn服务器域名的证书">上面配置里的证书： 和域名生成标准证书一样，本站有提供教程。此证书为coturn服务器域名的证书</h2>
 <h2 id="测试启动命令没有加-d-后台运行-测试没问题了再加还有最后的rm去除掉退出自动删除容器的意思">测试启动命令：(没有加-d （后台运行） 测试没问题了，再加,还有最后的&ndash;rm去除掉，退出自动删除容器的意思）</h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --network<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>		   -v /root/data/docker_data/coturn/var/run/turnserver.pid:/var/run/turnserver.pid <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>           --rm <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>       coturn/coturn
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>		   -v /root/data/docker_data/coturn/var/run/turnserver.pid:/var/run/turnserver.pid <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>           --rm <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>       coturn/coturn
 </span></span></code></pre></div><p>(小提醒:域名证书生成后按照配置文件路役放入运行后，可能会提示key文件权限不够，给他个other读权限，重启即可）
 正式启动命令：</p>
 <pre tabindex="0"><code>docker run -d --network=host \

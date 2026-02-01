@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on 代碼倉庫</title>
-    <link>https://hanigege.github.io/tags/</link>
+    <link>http://localhost:56883/tags/</link>
     <description>Recent content in Tags on 代碼倉庫</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
     <copyright>© **石榴**.</copyright>
-    <atom:link href="https://hanigege.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:56883/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

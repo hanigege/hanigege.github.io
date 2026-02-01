@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 
-    <head><title>RosIPV6配置方案 &ndash; 代碼倉庫</title>
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=56883&amp;path=livereload" data-no-instant defer></script><title>RosIPV6配置方案 &ndash; 代碼倉庫</title>
 <meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
-<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
+<link rel="stylesheet" href="http://localhost:56883/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="http://localhost:56883/css/risotto.css">
+<link rel="stylesheet" href="http://localhost:56883/css/custom.css">
 
 
 
@@ -35,14 +35,14 @@
 
             <header class="page__header"><nav class="page__nav main-nav">
     <ul>
-      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
+      <li class="nomarker"><h1 class="page__logo"><a href="http://localhost:56883/" class="page__logo-inner">代碼倉庫</a></h1></li>
     
     
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="http://localhost:56883/about/" title="">About</a></li>
     
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="http://localhost:56883/posts/" title="">Posts</a></li>
     
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="http://localhost:56883/downloads/" title="">Downlaods</a></li>
     
     </ul>
 </nav>
@@ -88,25 +88,25 @@
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input connection-state<span style="color:#f92672">=</span>established,related,untracked
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input connection-state<span style="color:#f92672">=</span>invalid
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward connection-state<span style="color:#f92672">=</span><span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    established,related,untracked
+</span></span></span><span style="display:flex;"><span>    established,related,untracked
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward src-address<span style="color:#f92672">=</span>fd88::/64
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;defconf: drop invalid&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    connection-state<span style="color:#f92672">=</span>invalid
+</span></span></span><span style="display:flex;"><span>    connection-state<span style="color:#f92672">=</span>invalid
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accept ICMPv6&#34;</span> protocol<span style="color:#f92672">=</span>icmpv6
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accept ICMPv6&#34;</span> protocol<span style="color:#f92672">=</span>icmpv6
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input dst-port<span style="color:#f92672">=</span><span style="color:#ae81ff">546</span> protocol<span style="color:#f92672">=</span>udp src-address<span style="color:#f92672">=</span>fe80::/10 
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward dst-port<span style="color:#f92672">=</span><span style="color:#ae81ff">546</span> protocol<span style="color:#f92672">=</span>udp src-address<span style="color:#f92672">=</span>fe80::/10
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop malformed packet&#34;</span> protocol<span style="color:#f92672">=</span>tcp <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    tcp-flags<span style="color:#f92672">=</span>fin,!syn,!rst,!ack
+</span></span></span><span style="display:flex;"><span>    tcp-flags<span style="color:#f92672">=</span>fin,!syn,!rst,!ack
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop TCP scan&#34;</span> protocol<span style="color:#f92672">=</span>tcp tcp-flags<span style="color:#f92672">=</span><span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    fin,syn
+</span></span></span><span style="display:flex;"><span>    fin,syn
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop TCP syn/rst scan&#34;</span> protocol<span style="color:#f92672">=</span>tcp <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    tcp-flags<span style="color:#f92672">=</span>syn,rst
+</span></span></span><span style="display:flex;"><span>    tcp-flags<span style="color:#f92672">=</span>syn,rst
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop TCP fin/rst scan&#34;</span> protocol<span style="color:#f92672">=</span>tcp <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    tcp-flags<span style="color:#f92672">=</span>fin,rst
+</span></span></span><span style="display:flex;"><span>    tcp-flags<span style="color:#f92672">=</span>fin,rst
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input connection-state<span style="color:#f92672">=</span>new in-interface<span style="color:#f92672">=</span>!bridge1
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop all other input traffic&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    in-interface<span style="color:#f92672">=</span>pppoe-out1
+</span></span></span><span style="display:flex;"><span>    in-interface<span style="color:#f92672">=</span>pppoe-out1
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>/ipv6 firewall mangle
 </span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>change-mss chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;defconf: fix IPv6 mss for WAN&#34;</span> new-mss<span style="color:#f92672">=</span>clamp-to-pmtu passthrough<span style="color:#f92672">=</span>yes protocol<span style="color:#f92672">=</span>tcp tcp-flags<span style="color:#f92672">=</span>syn

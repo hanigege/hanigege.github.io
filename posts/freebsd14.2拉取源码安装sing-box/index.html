@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 
-    <head><title>Freebsd14.2拉取源码安装sing-Box(包含pf防火墙配置) &ndash; 代碼倉庫</title>
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=56883&amp;path=livereload" data-no-instant defer></script><title>Freebsd14.2拉取源码安装sing-Box(包含pf防火墙配置) &ndash; 代碼倉庫</title>
 <meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
-<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
+<link rel="stylesheet" href="http://localhost:56883/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="http://localhost:56883/css/risotto.css">
+<link rel="stylesheet" href="http://localhost:56883/css/custom.css">
 
 
 
@@ -35,14 +35,14 @@
 
             <header class="page__header"><nav class="page__nav main-nav">
     <ul>
-      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
+      <li class="nomarker"><h1 class="page__logo"><a href="http://localhost:56883/" class="page__logo-inner">代碼倉庫</a></h1></li>
     
     
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="http://localhost:56883/about/" title="">About</a></li>
     
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="http://localhost:56883/posts/" title="">Posts</a></li>
     
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
+    <li class="main-nav__item"><a class="nav-main-item" href="http://localhost:56883/downloads/" title="">Downlaods</a></li>
     
     </ul>
 </nav>
@@ -296,7 +296,7 @@
 </span></span></code></pre></div><p>添加以下内容：</p>
 <h2 id="有重定向日志功能">有重定向日志功能</h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># PROVIDE: sing_box</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># REQUIRE: NETWORKING</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># KEYWORD: shutdown</span>
@@ -315,7 +315,7 @@
 </span></span><span style="display:flex;"><span>run_rc_command <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
 </span></span></code></pre></div><h2 id="无日志重定向版本">无日志重定向版本：</h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># PROVIDE: sing_box</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># REQUIRE: NETWORKING</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># KEYWORD: shutdown</span>
@@ -524,7 +524,7 @@ FreeBSD 下的普通用户可以为放在用户目录下的 sing-box 设置用�
       </ol>
     </li>
     <li><a href="#总结">总结：</a></li>
-    <li><a href="#--c-指定配置文件路径">✅ -c <file>：指定配置文件路径</a></li>
+    <li><a href="#--c-指定配置文件路径">✅ -c ：指定配置文件路径</a></li>
   </ol>
 
   <ol>
