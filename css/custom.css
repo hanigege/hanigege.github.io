@@ -1,1 +1,86 @@
-/* Override this file to customise the theme's CSS for your site */
+/* 模拟终端风格的输入框 */
+#search-input {
+    background: transparent;
+    border: 1px solid #555;
+    color: inherit;
+    font-family: monospace;
+    padding: 10px;
+    outline: none;
+    
+    /* 核心修复代码 */
+    width: 100%;             /* 撑满父容器 */
+    box-sizing: border-box;  /* 确保 padding 不会增加额外宽度 */
+    max-width: 100%;         /* 防止在小屏幕溢出 */
+    
+    font-size: 1rem;
+    display: block;          /* 确保作为块级元素处理 */
+    margin-top: 10px;
+}
+
+#search-input:focus {
+    border-color: #888;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+/* 搜索结果列表 */
+#search-results {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 20px;
+}
+
+#search-results li {
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 5px;
+}
+
+#search-results li a {
+    text-decoration: none;
+    display: block;
+}
+
+#search-results li a:hover {
+    background-color: #222; /* 悬停效果 */
+}
+
+/* 搜索摘要文字 */
+.search-snippet {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 4px;
+    display: block;
+}
+/* 容器设置 */
+.search-container {
+    margin-top: 2rem;
+    width: 100%;
+}
+
+/* 包裹层：使用 flex 布局让 $ 符号和输入框在一行 */
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #555; /* 统一的边框 */
+    padding: 0 10px;
+}
+
+/* 提示符样式 */
+.prompt {
+    font-family: monospace;
+    color: #888;
+    margin-right: 10px;
+}
+
+/* 输入框：去掉自带边框，解决出格问题 */
+#search-input {
+    background: transparent;
+    border: none; /* 去掉 input 原有的边框，因为外层 wrapper 已经有了 */
+    color: inherit;
+    font-family: monospace;
+    padding: 10px 0;
+    outline: none;
+    flex-grow: 1;      /* 自动撑满剩余空间 */
+    width: 100%;       /* 配合 flex 使用 */
+    box-sizing: border-box; /* 核心：防止 padding 撑破布局 */
+}
