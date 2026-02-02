@@ -1,247 +1,113 @@
-<!DOCTYPE html>
-<html lang="zh">
-
-    <head><title>RosIPV6配置方案 &ndash; 代碼倉庫</title>
-<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="UTF-8"/>
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
-
-
-
-
-
-
-
-
-
-
-</head>
-
-    <body>
-        <div class="page">
-
-            <header class="page__header"><nav class="page__nav main-nav">
-    <ul>
-      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
-    
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
-    
-    </ul>
-</nav>
-
-</header>
-
-            <section class="page__body">
-    <header class="content__header">
-        <h1>RosIPV6配置方案</h1>
-    </header>
-    <div class="content__body">
-        <h2 id="ipv6最终配置定型">ipv6最终配置定型：</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/ipv6 dhcp-client
-</span></span><span style="display:flex;"><span>add comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;defconf: local DHCPv6 Client&#34;</span> interface<span style="color:#f92672">=</span>pppoe-out1 pool-name<span style="color:#f92672">=</span>dhcpv6-gua-pool1 pool-prefix-length<span style="color:#f92672">=</span><span style="color:#ae81ff">62</span> request<span style="color:#f92672">=</span>prefix use-peer-dns<span style="color:#f92672">=</span>no
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ipv6 address
-</span></span><span style="display:flex;"><span>add address<span style="color:#f92672">=</span>::1 comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;defconf: local LAN GUA IPv6 address&#34;</span> from-pool<span style="color:#f92672">=</span>dhcpv6-gua-pool1 interface<span style="color:#f92672">=</span>pppoe-out1
-</span></span><span style="display:flex;"><span>add address<span style="color:#f92672">=</span>fd88::1111 comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;defconf: local LAN ULA IPv6 address&#34;</span> from-pool<span style="color:#f92672">=</span>DHCPv6 interface<span style="color:#f92672">=</span>bridge1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ipv6 pool
-</span></span><span style="display:flex;"><span>add name<span style="color:#f92672">=</span>DHCPv6 prefix<span style="color:#f92672">=</span>fd88::/64 prefix-length<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/routing table add name<span style="color:#f92672">=</span>Proxy-V6 fib
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ipv6 firewall mangle add chain<span style="color:#f92672">=</span>prerouting dst-address-list<span style="color:#f92672">=</span>proxy_ipv6 action<span style="color:#f92672">=</span>mark-routing new-routing-mark<span style="color:#f92672">=</span>Proxy-V6
-</span></span><span style="display:flex;"><span>/ipv6 route add dst-address<span style="color:#f92672">=</span>::/0 gateway<span style="color:#f92672">=</span>fd88::9999 routing-table<span style="color:#f92672">=</span>Proxy-V6
-</span></span><span style="display:flex;"><span>/routing rule/add action<span style="color:#f92672">=</span>lookup-only-in-table comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;for ipv6 mangle effective in route&#34;</span> disabled<span style="color:#f92672">=</span>no routing-mark<span style="color:#f92672">=</span>Proxy-V6 table<span style="color:#f92672">=</span>Proxy-V6
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ipv6 firewall nat
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>masquerade chain<span style="color:#f92672">=</span>srcnat src-address<span style="color:#f92672">=</span>fd88::/64
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ipv6 firewall address-list
-</span></span><span style="display:flex;"><span>add address<span style="color:#f92672">=</span>f2b0::/18 list<span style="color:#f92672">=</span>proxy_ipv6
-</span></span><span style="display:flex;"><span>add address<span style="color:#f92672">=</span>2001:b28:f23d::/48 list<span style="color:#f92672">=</span>proxy_ipv6
-</span></span><span style="display:flex;"><span>add address<span style="color:#f92672">=</span>2001:b28:f23f::/48 list<span style="color:#f92672">=</span>proxy_ipv6
-</span></span><span style="display:flex;"><span>add address<span style="color:#f92672">=</span>2001:67c:4e8::/48 list<span style="color:#f92672">=</span>proxy_ipv6
-</span></span><span style="display:flex;"><span>add address<span style="color:#f92672">=</span>2001:b28:f23c::/48 list<span style="color:#f92672">=</span>proxy_ipv6
-</span></span><span style="display:flex;"><span>add address<span style="color:#f92672">=</span>2a0a:f280::/32 list<span style="color:#f92672">=</span>proxy_ipv6
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ipv6 firewall filter
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input connection-state<span style="color:#f92672">=</span>established,related,untracked
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input connection-state<span style="color:#f92672">=</span>invalid
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward connection-state<span style="color:#f92672">=</span><span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    established,related,untracked
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward src-address<span style="color:#f92672">=</span>fd88::/64
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;defconf: drop invalid&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    connection-state<span style="color:#f92672">=</span>invalid
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accept ICMPv6&#34;</span> protocol<span style="color:#f92672">=</span>icmpv6
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accept ICMPv6&#34;</span> protocol<span style="color:#f92672">=</span>icmpv6
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input dst-port<span style="color:#f92672">=</span><span style="color:#ae81ff">546</span> protocol<span style="color:#f92672">=</span>udp src-address<span style="color:#f92672">=</span>fe80::/10 
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward dst-port<span style="color:#f92672">=</span><span style="color:#ae81ff">546</span> protocol<span style="color:#f92672">=</span>udp src-address<span style="color:#f92672">=</span>fe80::/10
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop malformed packet&#34;</span> protocol<span style="color:#f92672">=</span>tcp <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    tcp-flags<span style="color:#f92672">=</span>fin,!syn,!rst,!ack
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop TCP scan&#34;</span> protocol<span style="color:#f92672">=</span>tcp tcp-flags<span style="color:#f92672">=</span><span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    fin,syn
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop TCP syn/rst scan&#34;</span> protocol<span style="color:#f92672">=</span>tcp <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    tcp-flags<span style="color:#f92672">=</span>syn,rst
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop TCP fin/rst scan&#34;</span> protocol<span style="color:#f92672">=</span>tcp <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    tcp-flags<span style="color:#f92672">=</span>fin,rst
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input connection-state<span style="color:#f92672">=</span>new in-interface<span style="color:#f92672">=</span>!bridge1
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop all other input traffic&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    in-interface<span style="color:#f92672">=</span>pppoe-out1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ipv6 firewall mangle
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>change-mss chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;defconf: fix IPv6 mss for WAN&#34;</span> new-mss<span style="color:#f92672">=</span>clamp-to-pmtu passthrough<span style="color:#f92672">=</span>yes protocol<span style="color:#f92672">=</span>tcp tcp-flags<span style="color:#f92672">=</span>syn
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">### ipv4的端口转发</span>
-</span></span><span style="display:flex;"><span>/ip firewall nat
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>dst-nat chain<span style="color:#f92672">=</span>dstnat comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;synapse prot&#34;</span> dst-port<span style="color:#f92672">=</span><span style="color:#ae81ff">12335</span> <span style="color:#ae81ff">\ </span>protocol<span style="color:#f92672">=</span>tcp to-addresses<span style="color:#f92672">=</span>10.20.20.8 to-ports<span style="color:#f92672">=</span><span style="color:#ae81ff">12335</span>
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>dst-nat chain<span style="color:#f92672">=</span>dstnat comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gohome prot&#34;</span> dst-port<span style="color:#f92672">=</span><span style="color:#ae81ff">10521</span> <span style="color:#ae81ff">\ </span>protocol<span style="color:#f92672">=</span>udp to-addresses<span style="color:#f92672">=</span>10.20.20.8 to-ports<span style="color:#f92672">=</span><span style="color:#ae81ff">10521</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ip/firewall/nat
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>dst-nat chain<span style="color:#f92672">=</span>dstnat comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SoftEther VPN - L2TP&#34;</span>  dst-port<span style="color:#f92672">=</span><span style="color:#ae81ff">1701</span> protocol<span style="color:#f92672">=</span>udp to-addresses<span style="color:#f92672">=</span>10.20.20.4 to-ports<span style="color:#f92672">=</span><span style="color:#ae81ff">1701</span>
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>dst-nat chain<span style="color:#f92672">=</span>dstnat comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SoftEther VPN - L2TP&#34;</span>  dst-port<span style="color:#f92672">=</span><span style="color:#ae81ff">500</span> protocol<span style="color:#f92672">=</span>udp to-addresses<span style="color:#f92672">=</span>10.20.20.4 to-ports<span style="color:#f92672">=</span><span style="color:#ae81ff">500</span>
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>dst-nat chain<span style="color:#f92672">=</span>dstnat comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SoftEther VPN - L2TP&#34;</span>  dst-port<span style="color:#f92672">=</span><span style="color:#ae81ff">4500</span> protocol<span style="color:#f92672">=</span>udp to-addresses<span style="color:#f92672">=</span>10.20.20.4 to-ports<span style="color:#f92672">=</span><span style="color:#ae81ff">4500</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#ND 原有的禁掉，新建一个默认接口改为桥即可！主要是接口改为桥（原Nd禁用，新建一个）具体如下图：</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ipv6 nd prefix default
-</span></span><span style="display:flex;"><span>set preferred-lifetime<span style="color:#f92672">=</span>4h valid-lifetime<span style="color:#f92672">=</span>24h
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>/ipv6 settings
-</span></span><span style="display:flex;"><span>set max-neighbor-entries<span style="color:#f92672">=</span><span style="color:#ae81ff">16384</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>参数含义
-</span></span><span style="display:flex;"><span>	•	max-neighbor-entries：IPv6 邻居表中允许的最大条目数量。
-</span></span><span style="display:flex;"><span>	•	如果邻居表满了，新的邻居条目将无法添加，可能导致网络中的部分设备无法通信。
-</span></span><span style="display:flex;"><span>	•	条目包括本地链路上的所有设备，如客户端设备、其他路由器等。
-</span></span><span style="display:flex;"><span>家用网络的合理设置
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>1. 网络规模参考
-</span></span><span style="display:flex;"><span>	•	小型家庭网络（1-10 台设备）：
-</span></span><span style="display:flex;"><span>推荐值：128 或更少（默认是 512）。
-</span></span><span style="display:flex;"><span>	•	中型家庭网络（10-50 台设备）：
-</span></span><span style="display:flex;"><span>推荐值：512 至 1024。
-</span></span><span style="display:flex;"><span>	•	有智能设备的家庭网络（50+ 台设备）：
-</span></span><span style="display:flex;"><span>推荐值：2048。
-</span></span><span style="display:flex;"><span>	•	大型网络（100 台设备或更多）：
-</span></span><span style="display:flex;"><span>可根据需要提高到 <span style="color:#ae81ff">4096</span> 或更高。
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#开启nat1</span>
-</span></span><span style="display:flex;"><span>/ip firewall nat add action<span style="color:#f92672">=</span>endpoint-independent-nat chain<span style="color:#f92672">=</span>srcnat protocol<span style="color:#f92672">=</span>udp out-interface<span style="color:#f92672">=</span>pppoe-out1 place-before<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>/ip firewall nat add action<span style="color:#f92672">=</span>endpoint-independent-nat chain<span style="color:#f92672">=</span>dstnat protocol<span style="color:#f92672">=</span>udp in-interface<span style="color:#f92672">=</span>pppoe-out1 place-before<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
-</span></span></code></pre></div><p><img src="ipv6.png" alt="ipv6set"></p>
-<h2 id="附简易有效防火墙r大提供的方案">附：简易有效防火墙（R大提供的方案）</h2>
-<h4 id="ipv4">ipv4</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/ip firewall filter
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward in-interface<span style="color:#f92672">=</span>bridge1
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input in-interface<span style="color:#f92672">=</span>bridge1
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input connection-state<span style="color:#f92672">=</span>established,related
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input connection-state<span style="color:#f92672">=</span>invalid in-interface<span style="color:#f92672">=</span>pppoe-out1
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input in-interface<span style="color:#f92672">=</span>pppoe-out1 protocol<span style="color:#f92672">=</span>icmp
-</span></span></code></pre></div><h4 id="ipv6">ipv6</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/ipv6 firewall filter
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accept established, related, untracked&#34;</span> connection-state<span style="color:#f92672">=</span>established,related,untracked
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accept established, related, untracked&#34;</span> connection-state<span style="color:#f92672">=</span>established,related,untracked
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accept ICMPv6&#34;</span> protocol<span style="color:#f92672">=</span>icmpv6
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>accept chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accept ICMPv6&#34;</span> protocol<span style="color:#f92672">=</span>icmpv6
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>input comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop invalid&#34;</span> connection-state<span style="color:#f92672">=</span>invalid
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop invalid&#34;</span> connection-state<span style="color:#f92672">=</span>invalid
-</span></span><span style="display:flex;"><span>add action<span style="color:#f92672">=</span>drop chain<span style="color:#f92672">=</span>forward comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Drop all not from LAN&#34;</span> disabled<span style="color:#f92672">=</span>yes in-interface<span style="color:#f92672">=</span>!bridge
-</span></span></code></pre></div>
-<div id="utterances-comments">
-  <script src="https://utteranc.es/client.js"
-      repo="hanigege/blog-comments"
-      issue-term="pathname"
-      theme="github-light"
-      crossorigin="anonymous"
-      async>
-  </script>
-</div>
-
-
-
-
-    </div>
-    <footer class="content__footer"></footer>
-
-            </section>
-
-            <section class="page__aside">
-                <div class="aside__about">
-<div class="aside__about">
-    <span class="about__logo" role="img">🍚</span>&nbsp;
-    
-<h1 class="about__title">喂饭</h1>
-<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
-</div>
-
-
-<ul class="aside__social-links">
-    
-    <li>
-        <a href="mailto:purodn@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
-    </li>
-    
-</ul>
-</div>
-                <hr>
-                <div class="aside__content">
-    
-    
-        <p>
-            
-            2025-05-08
-        </p>
-    
-
-    
-	    <hr>
-	    On this page:
-	    <nav id="TableOfContents">
-  <ol>
-    <li><a href="#ipv6最终配置定型">ipv6最终配置定型：</a></li>
-    <li><a href="#附简易有效防火墙r大提供的方案">附：简易有效防火墙（R大提供的方案）</a>
-      <ol>
-        <li></li>
-      </ol>
-    </li>
-  </ol>
-</nav>
-    
-
-                </div>
-            </section>
-
-            <footer class="page__footer">
- <p class="copyright">© <strong>石榴</strong>.</p>
- <p class="advertisement">Powered by <a>大佬們</a>.</p>
-</footer>
-
-        </div>
-    </body>
-
-</html>
+<!doctype html><html lang=zh><head><title>RosIPV6配置方案 &ndash; 代碼倉庫</title><meta name=description content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://hanigege.github.io/css/palettes/base16-dark.css><link rel=stylesheet href=https://hanigege.github.io/css/risotto.css><link rel=stylesheet href=https://hanigege.github.io/css/custom.css></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><ul><li class=nomarker><h1 class=page__logo><a href=https://hanigege.github.io/ class=page__logo-inner>代碼倉庫</a></h1></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/about/ title>About</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/posts/ title>Posts</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/downloads/ title>Downlaods</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>RosIPV6配置方案</h1></header><div class=content__body><h2 id=ipv6最终配置定型>ipv6最终配置定型：</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>/ipv6 dhcp-client
+</span></span><span style=display:flex><span>add comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;defconf: local DHCPv6 Client&#34;</span> interface<span style=color:#f92672>=</span>pppoe-out1 pool-name<span style=color:#f92672>=</span>dhcpv6-gua-pool1 pool-prefix-length<span style=color:#f92672>=</span><span style=color:#ae81ff>62</span> request<span style=color:#f92672>=</span>prefix use-peer-dns<span style=color:#f92672>=</span>no
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ipv6 address
+</span></span><span style=display:flex><span>add address<span style=color:#f92672>=</span>::1 comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;defconf: local LAN GUA IPv6 address&#34;</span> from-pool<span style=color:#f92672>=</span>dhcpv6-gua-pool1 interface<span style=color:#f92672>=</span>pppoe-out1
+</span></span><span style=display:flex><span>add address<span style=color:#f92672>=</span>fd88::1111 comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;defconf: local LAN ULA IPv6 address&#34;</span> from-pool<span style=color:#f92672>=</span>DHCPv6 interface<span style=color:#f92672>=</span>bridge1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ipv6 pool
+</span></span><span style=display:flex><span>add name<span style=color:#f92672>=</span>DHCPv6 prefix<span style=color:#f92672>=</span>fd88::/64 prefix-length<span style=color:#f92672>=</span><span style=color:#ae81ff>64</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/routing table add name<span style=color:#f92672>=</span>Proxy-V6 fib
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ipv6 firewall mangle add chain<span style=color:#f92672>=</span>prerouting dst-address-list<span style=color:#f92672>=</span>proxy_ipv6 action<span style=color:#f92672>=</span>mark-routing new-routing-mark<span style=color:#f92672>=</span>Proxy-V6
+</span></span><span style=display:flex><span>/ipv6 route add dst-address<span style=color:#f92672>=</span>::/0 gateway<span style=color:#f92672>=</span>fd88::9999 routing-table<span style=color:#f92672>=</span>Proxy-V6
+</span></span><span style=display:flex><span>/routing rule/add action<span style=color:#f92672>=</span>lookup-only-in-table comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;for ipv6 mangle effective in route&#34;</span> disabled<span style=color:#f92672>=</span>no routing-mark<span style=color:#f92672>=</span>Proxy-V6 table<span style=color:#f92672>=</span>Proxy-V6
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ipv6 firewall nat
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>masquerade chain<span style=color:#f92672>=</span>srcnat src-address<span style=color:#f92672>=</span>fd88::/64
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ipv6 firewall address-list
+</span></span><span style=display:flex><span>add address<span style=color:#f92672>=</span>f2b0::/18 list<span style=color:#f92672>=</span>proxy_ipv6
+</span></span><span style=display:flex><span>add address<span style=color:#f92672>=</span>2001:b28:f23d::/48 list<span style=color:#f92672>=</span>proxy_ipv6
+</span></span><span style=display:flex><span>add address<span style=color:#f92672>=</span>2001:b28:f23f::/48 list<span style=color:#f92672>=</span>proxy_ipv6
+</span></span><span style=display:flex><span>add address<span style=color:#f92672>=</span>2001:67c:4e8::/48 list<span style=color:#f92672>=</span>proxy_ipv6
+</span></span><span style=display:flex><span>add address<span style=color:#f92672>=</span>2001:b28:f23c::/48 list<span style=color:#f92672>=</span>proxy_ipv6
+</span></span><span style=display:flex><span>add address<span style=color:#f92672>=</span>2a0a:f280::/32 list<span style=color:#f92672>=</span>proxy_ipv6
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ipv6 firewall filter
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>input connection-state<span style=color:#f92672>=</span>established,related,untracked
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input connection-state<span style=color:#f92672>=</span>invalid
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>forward connection-state<span style=color:#f92672>=</span><span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    established,related,untracked
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>forward src-address<span style=color:#f92672>=</span>fd88::/64
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>forward comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;defconf: drop invalid&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    connection-state<span style=color:#f92672>=</span>invalid
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>forward comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Accept ICMPv6&#34;</span> protocol<span style=color:#f92672>=</span>icmpv6
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>input comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Accept ICMPv6&#34;</span> protocol<span style=color:#f92672>=</span>icmpv6
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>input dst-port<span style=color:#f92672>=</span><span style=color:#ae81ff>546</span> protocol<span style=color:#f92672>=</span>udp src-address<span style=color:#f92672>=</span>fe80::/10 
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>forward dst-port<span style=color:#f92672>=</span><span style=color:#ae81ff>546</span> protocol<span style=color:#f92672>=</span>udp src-address<span style=color:#f92672>=</span>fe80::/10
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Drop malformed packet&#34;</span> protocol<span style=color:#f92672>=</span>tcp <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    tcp-flags<span style=color:#f92672>=</span>fin,!syn,!rst,!ack
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Drop TCP scan&#34;</span> protocol<span style=color:#f92672>=</span>tcp tcp-flags<span style=color:#f92672>=</span><span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    fin,syn
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Drop TCP syn/rst scan&#34;</span> protocol<span style=color:#f92672>=</span>tcp <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    tcp-flags<span style=color:#f92672>=</span>syn,rst
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Drop TCP fin/rst scan&#34;</span> protocol<span style=color:#f92672>=</span>tcp <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    tcp-flags<span style=color:#f92672>=</span>fin,rst
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input connection-state<span style=color:#f92672>=</span>new in-interface<span style=color:#f92672>=</span>!bridge1
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Drop all other input traffic&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    in-interface<span style=color:#f92672>=</span>pppoe-out1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ipv6 firewall mangle
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>change-mss chain<span style=color:#f92672>=</span>forward comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;defconf: fix IPv6 mss for WAN&#34;</span> new-mss<span style=color:#f92672>=</span>clamp-to-pmtu passthrough<span style=color:#f92672>=</span>yes protocol<span style=color:#f92672>=</span>tcp tcp-flags<span style=color:#f92672>=</span>syn
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### ipv4的端口转发</span>
+</span></span><span style=display:flex><span>/ip firewall nat
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>dst-nat chain<span style=color:#f92672>=</span>dstnat comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;synapse prot&#34;</span> dst-port<span style=color:#f92672>=</span><span style=color:#ae81ff>12335</span> <span style=color:#ae81ff>\ </span>protocol<span style=color:#f92672>=</span>tcp to-addresses<span style=color:#f92672>=</span>10.20.20.8 to-ports<span style=color:#f92672>=</span><span style=color:#ae81ff>12335</span>
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>dst-nat chain<span style=color:#f92672>=</span>dstnat comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;gohome prot&#34;</span> dst-port<span style=color:#f92672>=</span><span style=color:#ae81ff>10521</span> <span style=color:#ae81ff>\ </span>protocol<span style=color:#f92672>=</span>udp to-addresses<span style=color:#f92672>=</span>10.20.20.8 to-ports<span style=color:#f92672>=</span><span style=color:#ae81ff>10521</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ip/firewall/nat
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>dst-nat chain<span style=color:#f92672>=</span>dstnat comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;SoftEther VPN - L2TP&#34;</span>  dst-port<span style=color:#f92672>=</span><span style=color:#ae81ff>1701</span> protocol<span style=color:#f92672>=</span>udp to-addresses<span style=color:#f92672>=</span>10.20.20.4 to-ports<span style=color:#f92672>=</span><span style=color:#ae81ff>1701</span>
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>dst-nat chain<span style=color:#f92672>=</span>dstnat comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;SoftEther VPN - L2TP&#34;</span>  dst-port<span style=color:#f92672>=</span><span style=color:#ae81ff>500</span> protocol<span style=color:#f92672>=</span>udp to-addresses<span style=color:#f92672>=</span>10.20.20.4 to-ports<span style=color:#f92672>=</span><span style=color:#ae81ff>500</span>
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>dst-nat chain<span style=color:#f92672>=</span>dstnat comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;SoftEther VPN - L2TP&#34;</span>  dst-port<span style=color:#f92672>=</span><span style=color:#ae81ff>4500</span> protocol<span style=color:#f92672>=</span>udp to-addresses<span style=color:#f92672>=</span>10.20.20.4 to-ports<span style=color:#f92672>=</span><span style=color:#ae81ff>4500</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#ND 原有的禁掉，新建一个默认接口改为桥即可！主要是接口改为桥（原Nd禁用，新建一个）具体如下图：</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ipv6 nd prefix default
+</span></span><span style=display:flex><span>set preferred-lifetime<span style=color:#f92672>=</span>4h valid-lifetime<span style=color:#f92672>=</span>24h
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>/ipv6 settings
+</span></span><span style=display:flex><span>set max-neighbor-entries<span style=color:#f92672>=</span><span style=color:#ae81ff>16384</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>参数含义
+</span></span><span style=display:flex><span>	•	max-neighbor-entries：IPv6 邻居表中允许的最大条目数量。
+</span></span><span style=display:flex><span>	•	如果邻居表满了，新的邻居条目将无法添加，可能导致网络中的部分设备无法通信。
+</span></span><span style=display:flex><span>	•	条目包括本地链路上的所有设备，如客户端设备、其他路由器等。
+</span></span><span style=display:flex><span>家用网络的合理设置
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>1. 网络规模参考
+</span></span><span style=display:flex><span>	•	小型家庭网络（1-10 台设备）：
+</span></span><span style=display:flex><span>推荐值：128 或更少（默认是 512）。
+</span></span><span style=display:flex><span>	•	中型家庭网络（10-50 台设备）：
+</span></span><span style=display:flex><span>推荐值：512 至 1024。
+</span></span><span style=display:flex><span>	•	有智能设备的家庭网络（50+ 台设备）：
+</span></span><span style=display:flex><span>推荐值：2048。
+</span></span><span style=display:flex><span>	•	大型网络（100 台设备或更多）：
+</span></span><span style=display:flex><span>可根据需要提高到 <span style=color:#ae81ff>4096</span> 或更高。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#开启nat1</span>
+</span></span><span style=display:flex><span>/ip firewall nat add action<span style=color:#f92672>=</span>endpoint-independent-nat chain<span style=color:#f92672>=</span>srcnat protocol<span style=color:#f92672>=</span>udp out-interface<span style=color:#f92672>=</span>pppoe-out1 place-before<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>/ip firewall nat add action<span style=color:#f92672>=</span>endpoint-independent-nat chain<span style=color:#f92672>=</span>dstnat protocol<span style=color:#f92672>=</span>udp in-interface<span style=color:#f92672>=</span>pppoe-out1 place-before<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>
+</span></span></code></pre></div><p><img src=ipv6.png alt=ipv6set></p><h2 id=附简易有效防火墙r大提供的方案>附：简易有效防火墙（R大提供的方案）</h2><h4 id=ipv4>ipv4</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>/ip firewall filter
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>forward in-interface<span style=color:#f92672>=</span>bridge1
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>input in-interface<span style=color:#f92672>=</span>bridge1
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>input connection-state<span style=color:#f92672>=</span>established,related
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input connection-state<span style=color:#f92672>=</span>invalid in-interface<span style=color:#f92672>=</span>pppoe-out1
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input in-interface<span style=color:#f92672>=</span>pppoe-out1 protocol<span style=color:#f92672>=</span>icmp
+</span></span></code></pre></div><h4 id=ipv6>ipv6</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>/ipv6 firewall filter
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>input comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Accept established, related, untracked&#34;</span> connection-state<span style=color:#f92672>=</span>established,related,untracked
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>forward comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Accept established, related, untracked&#34;</span> connection-state<span style=color:#f92672>=</span>established,related,untracked
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>forward comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Accept ICMPv6&#34;</span> protocol<span style=color:#f92672>=</span>icmpv6
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>accept chain<span style=color:#f92672>=</span>input comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Accept ICMPv6&#34;</span> protocol<span style=color:#f92672>=</span>icmpv6
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>input comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Drop invalid&#34;</span> connection-state<span style=color:#f92672>=</span>invalid
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>forward comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Drop invalid&#34;</span> connection-state<span style=color:#f92672>=</span>invalid
+</span></span><span style=display:flex><span>add action<span style=color:#f92672>=</span>drop chain<span style=color:#f92672>=</span>forward comment<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Drop all not from LAN&#34;</span> disabled<span style=color:#f92672>=</span>yes in-interface<span style=color:#f92672>=</span>!bridge
+</span></span></code></pre></div><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>喂饭</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2025-05-08</p><hr>On this page:<nav id=TableOfContents><ol><li><a href=#ipv6最终配置定型>ipv6最终配置定型：</a></li><li><a href=#附简易有效防火墙r大提供的方案>附：简易有效防火墙（R大提供的方案）</a><ol><li></li></ol></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>石榴</strong>.</p><p class=advertisement>Powered by <a>大佬們</a>.</p></footer></div></body></html>

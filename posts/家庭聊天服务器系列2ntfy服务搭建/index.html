@@ -1,255 +1,88 @@
-<!DOCTYPE html>
-<html lang="zh">
-
-    <head><title>家庭聊天服务器系列（2）ntfy服务搭建 &ndash; 代碼倉庫</title>
-<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="UTF-8"/>
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
-
-
-
-
-
-
-
-
-
-
-</head>
-
-    <body>
-        <div class="page">
-
-            <header class="page__header"><nav class="page__nav main-nav">
-    <ul>
-      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
-    
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
-    
-    </ul>
-</nav>
-
-</header>
-
-            <section class="page__body">
-    <header class="content__header">
-        <h1>家庭聊天服务器系列（2）ntfy服务搭建</h1>
-    </header>
-    <div class="content__body">
-        <br>
-<h3 id="ntfy-无需注册的通知服务">ntfy 无需注册的通知服务</h3>
-<h4 id="最下面是恢复备份的方案">最下面是恢复备份的方案：</h4>
-<p>##​​ 什么是 ntfy ？
-​ntfy​​​（发音：notify​​​）是一个简单的基于 HTTP​​​ 的 pub-sub​​​ 通知服务。它允许您通过任何计算机上的脚本向您的手机或桌面发送通知，完全无需注册或费用。</p>
-<h4 id="官方提供了免费的版本httpsntfyshapp">官方提供了免费的版本：https://ntfy.sh/app</h4>
-<h2 id="安装">安装</h2>
-<p>新建文件：docker-compose.yml
-脚本如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>services:
-</span></span><span style="display:flex;"><span>  ntfy:
-</span></span><span style="display:flex;"><span>    image: binwiederhier/ntfy:latest
-</span></span><span style="display:flex;"><span>    container_name: ntfy
-</span></span><span style="display:flex;"><span>    command:
-</span></span><span style="display:flex;"><span>      - serve
-</span></span><span style="display:flex;"><span>    environment:
-</span></span><span style="display:flex;"><span>      - TZ<span style="color:#f92672">=</span>Asia/Shanghai
-</span></span><span style="display:flex;"><span>    volumes:
-</span></span><span style="display:flex;"><span>      - /root/data/docker_data/ntfy/data/cache:/var/cache/ntfy
-</span></span><span style="display:flex;"><span>      - /root/data/docker_data/ntfy/data/config:/etc/ntfy
-</span></span><span style="display:flex;"><span>    ports:
-</span></span><span style="display:flex;"><span>      - 12332:80
-</span></span><span style="display:flex;"><span>    restart: unless-stopped
-</span></span><span style="display:flex;"><span>    networks:
-</span></span><span style="display:flex;"><span>      - matrix
-</span></span><span style="display:flex;"><span>networks:
-</span></span><span style="display:flex;"><span>    matrix:
-</span></span><span style="display:flex;"><span>      name: matrix
-</span></span></code></pre></div><p>代码中的反向代理npm转发外出端口12332 。</p>
-<p>上面的代码中会自建 网络matrix.</p>
-<h2 id="如果先行自己建立网络如">如果先行自己建立网络，如：</h2>
-<p>建立一个 docker network：</p>
-<pre tabindex="0"><code>docker network create matrix
-</code></pre><p>那么您可以按照之前提到的建议在 Docker Compose 文件中将网络定义标记为外部网络，并且指定正确的网络名称。在您的 Docker Compose 文件中，您可以将网络定义修改为类似以下内容：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>services:
-</span></span><span style="display:flex;"><span>  ntfy:
-</span></span><span style="display:flex;"><span>    image: binwiederhier/ntfy:latest
-</span></span><span style="display:flex;"><span>    container_name: ntfy
-</span></span><span style="display:flex;"><span>    command:
-</span></span><span style="display:flex;"><span>      - serve
-</span></span><span style="display:flex;"><span>    environment:
-</span></span><span style="display:flex;"><span>      - TZ<span style="color:#f92672">=</span>Asia/Shanghai
-</span></span><span style="display:flex;"><span>    volumes:
-</span></span><span style="display:flex;"><span>      - /root/data/docker_data/ntfy/data/cache:/var/cache/ntfy
-</span></span><span style="display:flex;"><span>      - /root/data/docker_data/ntfy/data/config:/etc/ntfy
-</span></span><span style="display:flex;"><span>    ports:
-</span></span><span style="display:flex;"><span>      - 12332:80
-</span></span><span style="display:flex;"><span>    restart: unless-stopped
-</span></span><span style="display:flex;"><span>    networks:
-</span></span><span style="display:flex;"><span>      matrix:
-</span></span><span style="display:flex;"><span>        external: true
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>networks:
-</span></span><span style="display:flex;"><span>  matrix:
-</span></span><span style="display:flex;"><span>    external: true
-</span></span><span style="display:flex;"><span>    name: matrix
-</span></span></code></pre></div><p>这将告诉 Docker Compose 使用外部网络 &ldquo;matrix&rdquo;，并且不会尝试重新创建它。</p>
-<p>另外，如果您确实想要使用 Compose 创建一个新的网络，并且希望使用 &ldquo;matrix&rdquo; 这个名称，您需要先删除现有的 &ldquo;matrix&rdquo; 网络，然后再创建一个新的。您可以使用以下命令来删除现有的网络：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker network rm matrix
-</span></span></code></pre></div><p>然后，当您运行 docker-compose up -d 时，Compose 将创建一个新的 &ldquo;matrix&rdquo; 网络。</p>
-<p>请确保您的网络设置符合您的预期，并且不会影响到其他服务。</p>
-<h2 id="运行">运行</h2>
-<p>在浏览器中输入 http://IP:12332​ 就能看到主界面</p>
-<p>关键注意： 进入</p>
-<pre tabindex="0"><code>cd /root/data/docker_data/ntfy/data/config:/etc/ntfy 
-</code></pre><p>相应的config文件夹下，需要建立一个<code>server.yml</code> 配置文件，内容如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>base-url: <span style="color:#e6db74">&#34;https://sms.888.org&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#listen-http: &#34;&#34;  #如果上面的网址没有做反向解析，就要加入端口号</span>
-</span></span><span style="display:flex;"><span>behind-proxy: true
-</span></span><span style="display:flex;"><span>upstream-base-url: <span style="color:#e6db74">&#34;https://ntfy.sh&#34;</span>
-</span></span><span style="display:flex;"><span>log-level: TRACE
-</span></span></code></pre></div><p>实例：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>base-url: <span style="color:#e6db74">&#34;http://ss.160.xyz:125&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#listen-http: &#34;&#34;  #如果上面的网址没有做反向解析，就要加入端口号</span>
-</span></span><span style="display:flex;"><span>behind-proxy: true
-</span></span><span style="display:flex;"><span>upstream-base-url: <span style="color:#e6db74">&#34;https://ntfy.sh&#34;</span>
-</span></span><span style="display:flex;"><span>log-level: TRACE
-</span></span></code></pre></div><p>然后重启容器</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker restart  “容器名”
-</span></span></code></pre></div><p>这样element里的网关就可以自动改为本网址，更加安全，方便 ，效率！</p>
-<p>​下面是一个示例，展示了如何使用 POST 请求（通过 curl -d）发布消息：</p>
-<p>格式比较简单：curl -d &lt;消息&gt; &lt;服务器IP:端口&gt;/&lt;主题&gt;</p>
-<h1 id="简单消息测试">简单消息测试</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -d <span style="color:#e6db74">&#34;Hi&#34;</span> http://192.168.0.197:3680/laosu_test_ch
-</span></span></code></pre></div><p>您可以设置 通知优先级、标题和标签 消息。这是一起使用其中一些的示例：</p>
-<h1 id="更复杂的消息示例">更复杂的消息示例</h1>
-<pre tabindex="0"><code>curl \
+<!doctype html><html lang=zh><head><title>家庭聊天服务器系列（2）ntfy服务搭建 &ndash; 代碼倉庫</title><meta name=description content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://hanigege.github.io/css/palettes/base16-dark.css><link rel=stylesheet href=https://hanigege.github.io/css/risotto.css><link rel=stylesheet href=https://hanigege.github.io/css/custom.css></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><ul><li class=nomarker><h1 class=page__logo><a href=https://hanigege.github.io/ class=page__logo-inner>代碼倉庫</a></h1></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/about/ title>About</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/posts/ title>Posts</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/downloads/ title>Downlaods</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>家庭聊天服务器系列（2）ntfy服务搭建</h1></header><div class=content__body><br><h3 id=ntfy-无需注册的通知服务>ntfy 无需注册的通知服务</h3><h4 id=最下面是恢复备份的方案>最下面是恢复备份的方案：</h4><p>##​​ 什么是 ntfy ？
+​ntfy​​​（发音：notify​​​）是一个简单的基于 HTTP​​​ 的 pub-sub​​​ 通知服务。它允许您通过任何计算机上的脚本向您的手机或桌面发送通知，完全无需注册或费用。</p><h4 id=官方提供了免费的版本httpsntfyshapp>官方提供了免费的版本：https://ntfy.sh/app</h4><h2 id=安装>安装</h2><p>新建文件：docker-compose.yml
+脚本如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>services:
+</span></span><span style=display:flex><span>  ntfy:
+</span></span><span style=display:flex><span>    image: binwiederhier/ntfy:latest
+</span></span><span style=display:flex><span>    container_name: ntfy
+</span></span><span style=display:flex><span>    command:
+</span></span><span style=display:flex><span>      - serve
+</span></span><span style=display:flex><span>    environment:
+</span></span><span style=display:flex><span>      - TZ<span style=color:#f92672>=</span>Asia/Shanghai
+</span></span><span style=display:flex><span>    volumes:
+</span></span><span style=display:flex><span>      - /root/data/docker_data/ntfy/data/cache:/var/cache/ntfy
+</span></span><span style=display:flex><span>      - /root/data/docker_data/ntfy/data/config:/etc/ntfy
+</span></span><span style=display:flex><span>    ports:
+</span></span><span style=display:flex><span>      - 12332:80
+</span></span><span style=display:flex><span>    restart: unless-stopped
+</span></span><span style=display:flex><span>    networks:
+</span></span><span style=display:flex><span>      - matrix
+</span></span><span style=display:flex><span>networks:
+</span></span><span style=display:flex><span>    matrix:
+</span></span><span style=display:flex><span>      name: matrix
+</span></span></code></pre></div><p>代码中的反向代理npm转发外出端口12332 。</p><p>上面的代码中会自建 网络matrix.</p><h2 id=如果先行自己建立网络如>如果先行自己建立网络，如：</h2><p>建立一个 docker network：</p><pre tabindex=0><code>docker network create matrix
+</code></pre><p>那么您可以按照之前提到的建议在 Docker Compose 文件中将网络定义标记为外部网络，并且指定正确的网络名称。在您的 Docker Compose 文件中，您可以将网络定义修改为类似以下内容：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>services:
+</span></span><span style=display:flex><span>  ntfy:
+</span></span><span style=display:flex><span>    image: binwiederhier/ntfy:latest
+</span></span><span style=display:flex><span>    container_name: ntfy
+</span></span><span style=display:flex><span>    command:
+</span></span><span style=display:flex><span>      - serve
+</span></span><span style=display:flex><span>    environment:
+</span></span><span style=display:flex><span>      - TZ<span style=color:#f92672>=</span>Asia/Shanghai
+</span></span><span style=display:flex><span>    volumes:
+</span></span><span style=display:flex><span>      - /root/data/docker_data/ntfy/data/cache:/var/cache/ntfy
+</span></span><span style=display:flex><span>      - /root/data/docker_data/ntfy/data/config:/etc/ntfy
+</span></span><span style=display:flex><span>    ports:
+</span></span><span style=display:flex><span>      - 12332:80
+</span></span><span style=display:flex><span>    restart: unless-stopped
+</span></span><span style=display:flex><span>    networks:
+</span></span><span style=display:flex><span>      matrix:
+</span></span><span style=display:flex><span>        external: true
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>networks:
+</span></span><span style=display:flex><span>  matrix:
+</span></span><span style=display:flex><span>    external: true
+</span></span><span style=display:flex><span>    name: matrix
+</span></span></code></pre></div><p>这将告诉 Docker Compose 使用外部网络 &ldquo;matrix&rdquo;，并且不会尝试重新创建它。</p><p>另外，如果您确实想要使用 Compose 创建一个新的网络，并且希望使用 &ldquo;matrix&rdquo; 这个名称，您需要先删除现有的 &ldquo;matrix&rdquo; 网络，然后再创建一个新的。您可以使用以下命令来删除现有的网络：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker network rm matrix
+</span></span></code></pre></div><p>然后，当您运行 docker-compose up -d 时，Compose 将创建一个新的 &ldquo;matrix&rdquo; 网络。</p><p>请确保您的网络设置符合您的预期，并且不会影响到其他服务。</p><h2 id=运行>运行</h2><p>在浏览器中输入 http://IP:12332​ 就能看到主界面</p><p>关键注意： 进入</p><pre tabindex=0><code>cd /root/data/docker_data/ntfy/data/config:/etc/ntfy 
+</code></pre><p>相应的config文件夹下，需要建立一个<code>server.yml</code> 配置文件，内容如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>base-url: <span style=color:#e6db74>&#34;https://sms.888.org&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#listen-http: &#34;&#34;  #如果上面的网址没有做反向解析，就要加入端口号</span>
+</span></span><span style=display:flex><span>behind-proxy: true
+</span></span><span style=display:flex><span>upstream-base-url: <span style=color:#e6db74>&#34;https://ntfy.sh&#34;</span>
+</span></span><span style=display:flex><span>log-level: TRACE
+</span></span></code></pre></div><p>实例：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>base-url: <span style=color:#e6db74>&#34;http://ss.160.xyz:125&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#listen-http: &#34;&#34;  #如果上面的网址没有做反向解析，就要加入端口号</span>
+</span></span><span style=display:flex><span>behind-proxy: true
+</span></span><span style=display:flex><span>upstream-base-url: <span style=color:#e6db74>&#34;https://ntfy.sh&#34;</span>
+</span></span><span style=display:flex><span>log-level: TRACE
+</span></span></code></pre></div><p>然后重启容器</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker restart  “容器名”
+</span></span></code></pre></div><p>这样element里的网关就可以自动改为本网址，更加安全，方便 ，效率！</p><p>​下面是一个示例，展示了如何使用 POST 请求（通过 curl -d）发布消息：</p><p>格式比较简单：curl -d &lt;消息> &lt;服务器IP:端口>/&lt;主题></p><h1 id=简单消息测试>简单消息测试</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl -d <span style=color:#e6db74>&#34;Hi&#34;</span> http://192.168.0.197:3680/laosu_test_ch
+</span></span></code></pre></div><p>您可以设置 通知优先级、标题和标签 消息。这是一起使用其中一些的示例：</p><h1 id=更复杂的消息示例>更复杂的消息示例</h1><pre tabindex=0><code>curl \
   -H &#34;Title: Unauthorized access detected&#34; \
   -H &#34;Priority: urgent&#34; \
   -H &#34;Tags: warning,skull&#34; \
   -d &#34;Remote access to $(hostname) detected. Act right away.&#34; \
   http://192.168.0.197:3680/laosu_test_ch
-</code></pre><p>查看push的log.如果出现element测试推送不下去，转圈圈，正常能发消息就不用管，log里可以会出现200，命令如下：</p>
-<pre tabindex="0"><code>docker logs -tf --tail 100 &lt;synapse容器id或名称&gt; 2&gt;&amp;1 | grep /_matrix/push/v1/notify
-</code></pre><p>实例:</p>
-<pre tabindex="0"><code>docker logs -tf --tail 100 cfb 2&gt;&amp;1 | grep /_matrix/push/v1/notify
-</code></pre><h1 id="恢复备份的docker-composeyml的配置文件">恢复备份的docker-compose.yml的配置文件：</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>services:
-</span></span><span style="display:flex;"><span>  ntfy:
-</span></span><span style="display:flex;"><span>    image: binwiederhier/ntfy:latest
-</span></span><span style="display:flex;"><span>    container_name: ntfy
-</span></span><span style="display:flex;"><span>    command:
-</span></span><span style="display:flex;"><span>      - serve
-</span></span><span style="display:flex;"><span>    environment:
-</span></span><span style="display:flex;"><span>      - TZ<span style="color:#f92672">=</span>Asia/Shanghai
-</span></span><span style="display:flex;"><span>    volumes:
-</span></span><span style="display:flex;"><span>      - /root/data/docker_data/ntfy/data/cache:/var/cache/ntfy
-</span></span><span style="display:flex;"><span>      - /root/data/docker_data/ntfy/data/config:/etc/ntfy
-</span></span><span style="display:flex;"><span>    ports:
-</span></span><span style="display:flex;"><span>      - 12332:80
-</span></span><span style="display:flex;"><span>    restart: unless-stopped
-</span></span><span style="display:flex;"><span>    networks:
-</span></span><span style="display:flex;"><span>      - matrix
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>networks:
-</span></span><span style="display:flex;"><span>  matrix:
-</span></span><span style="display:flex;"><span>    external: true
-</span></span><span style="display:flex;"><span>    name: matrix
-</span></span></code></pre></div><h2 id="本系列最后一篇文章会教你如何和element客户端配合使用element客户内置是支持的">本系列最后一篇文章会教你如何和element客户端配合使用，element客户内置是支持的。</h2>
-
-<div id="utterances-comments">
-  <script src="https://utteranc.es/client.js"
-      repo="hanigege/blog-comments"
-      issue-term="pathname"
-      theme="github-light"
-      crossorigin="anonymous"
-      async>
-  </script>
-</div>
-
-
-
-
-    </div>
-    <footer class="content__footer"></footer>
-
-            </section>
-
-            <section class="page__aside">
-                <div class="aside__about">
-<div class="aside__about">
-    <span class="about__logo" role="img">🍚</span>&nbsp;
-    
-<h1 class="about__title">喂饭</h1>
-<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
-</div>
-
-
-<ul class="aside__social-links">
-    
-    <li>
-        <a href="mailto:purodn@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
-    </li>
-    
-</ul>
-</div>
-                <hr>
-                <div class="aside__content">
-    
-    
-        <p>
-            
-            2025-05-11
-        </p>
-    
-
-    
-	    <hr>
-	    On this page:
-	    <nav id="TableOfContents">
-  <ol>
-    <li>
-      <ol>
-        <li><a href="#ntfy-无需注册的通知服务">ntfy 无需注册的通知服务</a></li>
-      </ol>
-    </li>
-    <li><a href="#安装">安装</a></li>
-    <li><a href="#如果先行自己建立网络如">如果先行自己建立网络，如：</a></li>
-    <li><a href="#运行">运行</a></li>
-  </ol>
-
-  <ol>
-    <li><a href="#本系列最后一篇文章会教你如何和element客户端配合使用element客户内置是支持的">本系列最后一篇文章会教你如何和element客户端配合使用，element客户内置是支持的。</a></li>
-  </ol>
-</nav>
-    
-
-                </div>
-            </section>
-
-            <footer class="page__footer">
- <p class="copyright">© <strong>石榴</strong>.</p>
- <p class="advertisement">Powered by <a>大佬們</a>.</p>
-</footer>
-
-        </div>
-    </body>
-
-</html>
+</code></pre><p>查看push的log.如果出现element测试推送不下去，转圈圈，正常能发消息就不用管，log里可以会出现200，命令如下：</p><pre tabindex=0><code>docker logs -tf --tail 100 &lt;synapse容器id或名称&gt; 2&gt;&amp;1 | grep /_matrix/push/v1/notify
+</code></pre><p>实例:</p><pre tabindex=0><code>docker logs -tf --tail 100 cfb 2&gt;&amp;1 | grep /_matrix/push/v1/notify
+</code></pre><h1 id=恢复备份的docker-composeyml的配置文件>恢复备份的docker-compose.yml的配置文件：</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>services:
+</span></span><span style=display:flex><span>  ntfy:
+</span></span><span style=display:flex><span>    image: binwiederhier/ntfy:latest
+</span></span><span style=display:flex><span>    container_name: ntfy
+</span></span><span style=display:flex><span>    command:
+</span></span><span style=display:flex><span>      - serve
+</span></span><span style=display:flex><span>    environment:
+</span></span><span style=display:flex><span>      - TZ<span style=color:#f92672>=</span>Asia/Shanghai
+</span></span><span style=display:flex><span>    volumes:
+</span></span><span style=display:flex><span>      - /root/data/docker_data/ntfy/data/cache:/var/cache/ntfy
+</span></span><span style=display:flex><span>      - /root/data/docker_data/ntfy/data/config:/etc/ntfy
+</span></span><span style=display:flex><span>    ports:
+</span></span><span style=display:flex><span>      - 12332:80
+</span></span><span style=display:flex><span>    restart: unless-stopped
+</span></span><span style=display:flex><span>    networks:
+</span></span><span style=display:flex><span>      - matrix
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>networks:
+</span></span><span style=display:flex><span>  matrix:
+</span></span><span style=display:flex><span>    external: true
+</span></span><span style=display:flex><span>    name: matrix
+</span></span></code></pre></div><h2 id=本系列最后一篇文章会教你如何和element客户端配合使用element客户内置是支持的>本系列最后一篇文章会教你如何和element客户端配合使用，element客户内置是支持的。</h2><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>喂饭</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2025-05-11</p><hr>On this page:<nav id=TableOfContents><ol><li><ol><li><a href=#ntfy-无需注册的通知服务>ntfy 无需注册的通知服务</a></li></ol></li><li><a href=#安装>安装</a></li><li><a href=#如果先行自己建立网络如>如果先行自己建立网络，如：</a></li><li><a href=#运行>运行</a></li></ol><ol><li><a href=#本系列最后一篇文章会教你如何和element客户端配合使用element客户内置是支持的>本系列最后一篇文章会教你如何和element客户端配合使用，element客户内置是支持的。</a></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>石榴</strong>.</p><p class=advertisement>Powered by <a>大佬們</a>.</p></footer></div></body></html>

@@ -1,245 +1,90 @@
-<!DOCTYPE html>
-<html lang="zh">
-
-    <head><title>Freebsd-Packet-Filter（PF）防火墙介绍 &ndash; 代碼倉庫</title>
-<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="UTF-8"/>
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
-
-
-
-
-
-
-
-
-
-
-</head>
-
-    <body>
-        <div class="page">
-
-            <header class="page__header"><nav class="page__nav main-nav">
-    <ul>
-      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
-    
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
-    
-    </ul>
-</nav>
-
-</header>
-
-            <section class="page__body">
-    <header class="content__header">
-        <h1>Freebsd-Packet-Filter（PF）防火墙介绍</h1>
-    </header>
-    <div class="content__body">
-        <h4 id="在-pfconf-中pf-规则的顺序是非常严格的正确的顺序应该是">在 pf.conf 中，PF 规则的顺序是非常严格的。正确的顺序应该是：</h4>
-<p><code>options — 设置 PF 的全局选项。</code></p>
-<p><code>ethernet — 设置网络接口。</code></p>
-<p><code>normalization — 设置数据包的规范化。</code></p>
-<p><code>queueing — 设置队列（可选）。</code></p>
-<p><code>translation — NAT 或 RDR 设置。</code></p>
-<p><code>filtering — 包过滤规则。</code></p>
-<h4 id="pfpacket-filter包过滤器是一款由-openbsd-移植而来的防火墙提供了大量功能包括-altq-alternate-queuing交错队列-等">PF（Packet Filter，包过滤器）是一款由 OpenBSD 移植而来的防火墙，提供了大量功能，包括 ALTQ (Alternate Queuing，交错队列) 等。</h4>
-<p>启用 PF</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># kldload pf # ① 加载内核模块</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 示例文件作为默认配置规则集文件，否则 pf 无法启动 ②</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># cp /usr/share/examples/pf/pf.conf /etc/</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># service pf enable # 设置 pf 开机启动</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># service pf start  # 启动 pf</span>
-</span></span></code></pre></div><p>① 如不做，则提示 pfctl: /dev/pf: No such file or directory。或者你重启再 service pf start。</p>
-<p>② 否则提示：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/etc/rc.d/pf: WARNING: /etc/pf.conf is not readable.
-</span></span></code></pre></div><h2 id="pfctl命令详解">pfctl命令详解</h2>
-<p>pf 的管理命令为 pfctl，常用操作示例如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 启动 pf，相当于 service pf start</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># pfctl -e</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 即禁止规则。几乎相当于 service pf stop（停止防火墙）</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># pfctl -d</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 加载规则集文件中的规则</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># pfctl -f /etc/pf.conf</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 解析规则，但不加载。-f 参数还可以与其他参数配合，如 -N 表示只载入 NAT 规则，-R 表示只载入过滤规则，-A 只载入队列规则，-O 只载入选项规则</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># pfctl -nf /etc/pf.conf</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 查看 pf 所有对象信息。如果想查看特定对象信息，可以用 nat、queue、rules、Anchors、states、Sources、info、Running、labels、timeouts、memory、Tables、osfp、Interfaces 替换 all</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># pfctl -s all</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 清理 pf 所有规则</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># pfctl -F all</span>
-</span></span></code></pre></div><p>如果想查看特定规则，可以用 nat、queue、rules、states、Sources、info、Tables、osfp 替换 all。</p>
-<p>不过以上操作并没有对规则的管理，因此还需要修改规则集文件，常用示例如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 整理所有输入的数据</span>
-</span></span><span style="display:flex;"><span>scrub in all
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 拒绝所有访问</span>
-</span></span><span style="display:flex;"><span>block all  <span style="color:#75715e"># 默认明示禁止所有访问。block 是动作，all 是从任何源到任何目标的简写，表示从源地址到目标地址。 </span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 放开回环接口的访问权限，回环接口不对外部</span>
-</span></span><span style="display:flex;"><span>pass quick on lo0 all  <span style="color:#75715e"># quick 关键字表示若规则匹配，就停止执行，不会再执行后续规则</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 增加 TCP 协议访问 80 端口的规则，允许任何设备以 TCP 协议访问本机 80 端口</span>
-</span></span><span style="display:flex;"><span>pass in quick proto tcp from any to 192.168.1.184 port <span style="color:#ae81ff">80</span>  <span style="color:#75715e"># proto tcp 是访问协议，port 80 是目标端口</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许回显信息给任何访问的设备</span>
-</span></span><span style="display:flex;"><span>pass out quick proto tcp from 192.168.1.184 port <span style="color:#ae81ff">80</span> to any  <span style="color:#75715e"># 允许本机向外发送 80 端口的响应</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 增加 80 端口到 8080 端口流量转发的规则</span>
-</span></span><span style="display:flex;"><span>rdr pass on em0 inet proto tcp from any to 192.168.1.184 port <span style="color:#ae81ff">80</span> -&gt; 192.168.1.166 port <span style="color:#ae81ff">8080</span>  <span style="color:#75715e"># 转发流量到内网地址 192.168.1.166 端口 8080</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许本机与外部设备互 ping</span>
-</span></span><span style="display:flex;"><span>pass quick inet proto icmp all icmp-type <span style="color:#ae81ff">8</span> code <span style="color:#ae81ff">0</span>  <span style="color:#75715e"># icmp-type 8 是查询请求，code 0 表示返回码为 0</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许 traceroute 命令以 ICMP 协议执行</span>
-</span></span><span style="display:flex;"><span>pass out quick inet proto icmp from 192.168.1.184 to any icmp-type <span style="color:#ae81ff">11</span> code <span style="color:#ae81ff">0</span>  <span style="color:#75715e"># icmp-type 11 用于时间超时</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许 traceroute 使用 UDP 协议执行，端口号从 33434 开始</span>
-</span></span><span style="display:flex;"><span>pass out quick proto udp from 192.168.1.184 to any port <span style="color:#ae81ff">33434</span> &gt;&lt; <span style="color:#ae81ff">34500</span>  <span style="color:#75715e"># 默认 UDP 协议，端口号从 33434 开始，每转发一次端口号加 1</span>
-</span></span><span style="display:flex;"><span>可能用到的规则集文件 /etc/pf.conf 如下：
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 流量整形</span>
-</span></span><span style="display:flex;"><span>scrub in all
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 转发规则</span>
-</span></span><span style="display:flex;"><span>rdr pass on em0 inet proto tcp from any to 192.168.1.184 port <span style="color:#ae81ff">8080</span> -&gt; 192.168.1.184 port <span style="color:#ae81ff">80</span>  <span style="color:#75715e"># 注意规则次序，根据 pf.conf 规则，转发规则应位于过滤规则之前，相关内容请参考帮助</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 过滤规则</span>
-</span></span><span style="display:flex;"><span>block all pass quick on lo0 all  <span style="color:#75715e"># 阻止所有流量，但允许回环接口（lo0）上的流量</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置任何设备可以访问服务器的 22、80、443、4200、10000 端口</span>
-</span></span><span style="display:flex;"><span>pass in quick proto tcp from any to 192.168.1.184 port <span style="color:#f92672">{</span> 22, 80, 443, 4200, <span style="color:#ae81ff">10000</span> <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置服务器可以访问外部设备的 22、80、443、4200、10000 端口</span>
-</span></span><span style="display:flex;"><span>pass out quick proto tcp from 192.168.1.184 port <span style="color:#f92672">{</span> 22, 80, 443, 4200, <span style="color:#ae81ff">10000</span> <span style="color:#f92672">}</span> to any
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置服务器访问任何网络设备的 80、443 端口，并保持状态</span>
-</span></span><span style="display:flex;"><span>pass out quick proto tcp from 192.168.1.184 to any port <span style="color:#f92672">{</span> 80, <span style="color:#ae81ff">443</span> <span style="color:#f92672">}</span> keep state
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置服务器访问 DNS 服务器（UDP 端口 53）</span>
-</span></span><span style="display:flex;"><span>pass out quick proto udp from any to any port <span style="color:#ae81ff">53</span> keep state
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置服务器访问 DHCP 服务器（UDP 端口 67）</span>
-</span></span><span style="display:flex;"><span>pass out quick proto udp from any to any port <span style="color:#ae81ff">67</span> keep state
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许服务器发送 ICMP 请求</span>
-</span></span><span style="display:flex;"><span>pass quick inet proto icmp all icmp-type <span style="color:#ae81ff">8</span> code <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许服务器发送 ICMP 超时消息（TTL 超过）</span>
-</span></span><span style="display:flex;"><span>pass out quick inet proto icmp from 192.168.1.184 to any icmp-type <span style="color:#ae81ff">11</span> code <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 允许服务器访问 UDP 范围端口 33434 到 34500</span>
-</span></span><span style="display:flex;"><span>pass out quick proto udp from 192.168.1.184 to any port <span style="color:#ae81ff">33434</span> &gt;&lt; <span style="color:#ae81ff">34500</span>
-</span></span></code></pre></div><p>保存文件，接下来在终端执行命令：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 加载规则集文件中的规则 就可以看到效果了。</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># pfctl -Fa -f /etc/pf.conf </span>
-</span></span></code></pre></div><p><code>----------------------------------------------------------------</code></p>
-<h2 id="要取消卸载已经加载的内核模块-pf可以使用-kldunload-命令具体操作如下">要取消（卸载）已经加载的内核模块 pf，可以使用 kldunload 命令。具体操作如下：</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kldunload pf
+<!doctype html><html lang=zh><head><title>Freebsd-Packet-Filter（PF）防火墙介绍 &ndash; 代碼倉庫</title><meta name=description content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://hanigege.github.io/css/palettes/base16-dark.css><link rel=stylesheet href=https://hanigege.github.io/css/risotto.css><link rel=stylesheet href=https://hanigege.github.io/css/custom.css></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><ul><li class=nomarker><h1 class=page__logo><a href=https://hanigege.github.io/ class=page__logo-inner>代碼倉庫</a></h1></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/about/ title>About</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/posts/ title>Posts</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/downloads/ title>Downlaods</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>Freebsd-Packet-Filter（PF）防火墙介绍</h1></header><div class=content__body><h4 id=在-pfconf-中pf-规则的顺序是非常严格的正确的顺序应该是>在 pf.conf 中，PF 规则的顺序是非常严格的。正确的顺序应该是：</h4><p><code>options — 设置 PF 的全局选项。</code></p><p><code>ethernet — 设置网络接口。</code></p><p><code>normalization — 设置数据包的规范化。</code></p><p><code>queueing — 设置队列（可选）。</code></p><p><code>translation — NAT 或 RDR 设置。</code></p><p><code>filtering — 包过滤规则。</code></p><h4 id=pfpacket-filter包过滤器是一款由-openbsd-移植而来的防火墙提供了大量功能包括-altq-alternate-queuing交错队列-等>PF（Packet Filter，包过滤器）是一款由 OpenBSD 移植而来的防火墙，提供了大量功能，包括 ALTQ (Alternate Queuing，交错队列) 等。</h4><p>启用 PF</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># kldload pf # ① 加载内核模块</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 示例文件作为默认配置规则集文件，否则 pf 无法启动 ②</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># cp /usr/share/examples/pf/pf.conf /etc/</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># service pf enable # 设置 pf 开机启动</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># service pf start  # 启动 pf</span>
+</span></span></code></pre></div><p>① 如不做，则提示 pfctl: /dev/pf: No such file or directory。或者你重启再 service pf start。</p><p>② 否则提示：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>/etc/rc.d/pf: WARNING: /etc/pf.conf is not readable.
+</span></span></code></pre></div><h2 id=pfctl命令详解>pfctl命令详解</h2><p>pf 的管理命令为 pfctl，常用操作示例如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 启动 pf，相当于 service pf start</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># pfctl -e</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 即禁止规则。几乎相当于 service pf stop（停止防火墙）</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># pfctl -d</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 加载规则集文件中的规则</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># pfctl -f /etc/pf.conf</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 解析规则，但不加载。-f 参数还可以与其他参数配合，如 -N 表示只载入 NAT 规则，-R 表示只载入过滤规则，-A 只载入队列规则，-O 只载入选项规则</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># pfctl -nf /etc/pf.conf</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 查看 pf 所有对象信息。如果想查看特定对象信息，可以用 nat、queue、rules、Anchors、states、Sources、info、Running、labels、timeouts、memory、Tables、osfp、Interfaces 替换 all</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># pfctl -s all</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 清理 pf 所有规则</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># pfctl -F all</span>
+</span></span></code></pre></div><p>如果想查看特定规则，可以用 nat、queue、rules、states、Sources、info、Tables、osfp 替换 all。</p><p>不过以上操作并没有对规则的管理，因此还需要修改规则集文件，常用示例如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 整理所有输入的数据</span>
+</span></span><span style=display:flex><span>scrub in all
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 拒绝所有访问</span>
+</span></span><span style=display:flex><span>block all  <span style=color:#75715e># 默认明示禁止所有访问。block 是动作，all 是从任何源到任何目标的简写，表示从源地址到目标地址。 </span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 放开回环接口的访问权限，回环接口不对外部</span>
+</span></span><span style=display:flex><span>pass quick on lo0 all  <span style=color:#75715e># quick 关键字表示若规则匹配，就停止执行，不会再执行后续规则</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 增加 TCP 协议访问 80 端口的规则，允许任何设备以 TCP 协议访问本机 80 端口</span>
+</span></span><span style=display:flex><span>pass in quick proto tcp from any to 192.168.1.184 port <span style=color:#ae81ff>80</span>  <span style=color:#75715e># proto tcp 是访问协议，port 80 是目标端口</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 允许回显信息给任何访问的设备</span>
+</span></span><span style=display:flex><span>pass out quick proto tcp from 192.168.1.184 port <span style=color:#ae81ff>80</span> to any  <span style=color:#75715e># 允许本机向外发送 80 端口的响应</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 增加 80 端口到 8080 端口流量转发的规则</span>
+</span></span><span style=display:flex><span>rdr pass on em0 inet proto tcp from any to 192.168.1.184 port <span style=color:#ae81ff>80</span> -&gt; 192.168.1.166 port <span style=color:#ae81ff>8080</span>  <span style=color:#75715e># 转发流量到内网地址 192.168.1.166 端口 8080</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 允许本机与外部设备互 ping</span>
+</span></span><span style=display:flex><span>pass quick inet proto icmp all icmp-type <span style=color:#ae81ff>8</span> code <span style=color:#ae81ff>0</span>  <span style=color:#75715e># icmp-type 8 是查询请求，code 0 表示返回码为 0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 允许 traceroute 命令以 ICMP 协议执行</span>
+</span></span><span style=display:flex><span>pass out quick inet proto icmp from 192.168.1.184 to any icmp-type <span style=color:#ae81ff>11</span> code <span style=color:#ae81ff>0</span>  <span style=color:#75715e># icmp-type 11 用于时间超时</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 允许 traceroute 使用 UDP 协议执行，端口号从 33434 开始</span>
+</span></span><span style=display:flex><span>pass out quick proto udp from 192.168.1.184 to any port <span style=color:#ae81ff>33434</span> &gt;&lt; <span style=color:#ae81ff>34500</span>  <span style=color:#75715e># 默认 UDP 协议，端口号从 33434 开始，每转发一次端口号加 1</span>
+</span></span><span style=display:flex><span>可能用到的规则集文件 /etc/pf.conf 如下：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 流量整形</span>
+</span></span><span style=display:flex><span>scrub in all
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 转发规则</span>
+</span></span><span style=display:flex><span>rdr pass on em0 inet proto tcp from any to 192.168.1.184 port <span style=color:#ae81ff>8080</span> -&gt; 192.168.1.184 port <span style=color:#ae81ff>80</span>  <span style=color:#75715e># 注意规则次序，根据 pf.conf 规则，转发规则应位于过滤规则之前，相关内容请参考帮助</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 过滤规则</span>
+</span></span><span style=display:flex><span>block all pass quick on lo0 all  <span style=color:#75715e># 阻止所有流量，但允许回环接口（lo0）上的流量</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 设置任何设备可以访问服务器的 22、80、443、4200、10000 端口</span>
+</span></span><span style=display:flex><span>pass in quick proto tcp from any to 192.168.1.184 port <span style=color:#f92672>{</span> 22, 80, 443, 4200, <span style=color:#ae81ff>10000</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 设置服务器可以访问外部设备的 22、80、443、4200、10000 端口</span>
+</span></span><span style=display:flex><span>pass out quick proto tcp from 192.168.1.184 port <span style=color:#f92672>{</span> 22, 80, 443, 4200, <span style=color:#ae81ff>10000</span> <span style=color:#f92672>}</span> to any
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 设置服务器访问任何网络设备的 80、443 端口，并保持状态</span>
+</span></span><span style=display:flex><span>pass out quick proto tcp from 192.168.1.184 to any port <span style=color:#f92672>{</span> 80, <span style=color:#ae81ff>443</span> <span style=color:#f92672>}</span> keep state
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 设置服务器访问 DNS 服务器（UDP 端口 53）</span>
+</span></span><span style=display:flex><span>pass out quick proto udp from any to any port <span style=color:#ae81ff>53</span> keep state
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 设置服务器访问 DHCP 服务器（UDP 端口 67）</span>
+</span></span><span style=display:flex><span>pass out quick proto udp from any to any port <span style=color:#ae81ff>67</span> keep state
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 允许服务器发送 ICMP 请求</span>
+</span></span><span style=display:flex><span>pass quick inet proto icmp all icmp-type <span style=color:#ae81ff>8</span> code <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 允许服务器发送 ICMP 超时消息（TTL 超过）</span>
+</span></span><span style=display:flex><span>pass out quick inet proto icmp from 192.168.1.184 to any icmp-type <span style=color:#ae81ff>11</span> code <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 允许服务器访问 UDP 范围端口 33434 到 34500</span>
+</span></span><span style=display:flex><span>pass out quick proto udp from 192.168.1.184 to any port <span style=color:#ae81ff>33434</span> &gt;&lt; <span style=color:#ae81ff>34500</span>
+</span></span></code></pre></div><p>保存文件，接下来在终端执行命令：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 加载规则集文件中的规则 就可以看到效果了。</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># pfctl -Fa -f /etc/pf.conf </span>
+</span></span></code></pre></div><p><code>----------------------------------------------------------------</code></p><h2 id=要取消卸载已经加载的内核模块-pf可以使用-kldunload-命令具体操作如下>要取消（卸载）已经加载的内核模块 pf，可以使用 kldunload 命令。具体操作如下：</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kldunload pf
 </span></span></code></pre></div><p>解释：
-kldunload pf 会卸载已加载的 pf（Packet Filter）内核模块。如果这个模块正在被使用（例如，配置了防火墙规则），卸载时可能会产生一些影响。</p>
-<p>请确保在卸载模块前没有相关服务或规则在运行。</p>
-<p>查看当前加载的内核模块：
-你可以通过以下命令查看当前加载的内核模块：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kldstat
-</span></span></code></pre></div><p>这会列出当前加载的所有内核模块，包括 pf。</p>
-<h2 id="注意">注意：</h2>
-<p>如果你希望在系统重启后不再加载 pf 模块，可以移除相关的配置文件中的 kldload pf 指令，例如 /etc/rc.conf 文件中的设置。</p>
-
-<div id="utterances-comments">
-  <script src="https://utteranc.es/client.js"
-      repo="hanigege/blog-comments"
-      issue-term="pathname"
-      theme="github-light"
-      crossorigin="anonymous"
-      async>
-  </script>
-</div>
-
-
-
-
-    </div>
-    <footer class="content__footer"></footer>
-
-            </section>
-
-            <section class="page__aside">
-                <div class="aside__about">
-<div class="aside__about">
-    <span class="about__logo" role="img">🍚</span>&nbsp;
-    
-<h1 class="about__title">喂饭</h1>
-<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
-</div>
-
-
-<ul class="aside__social-links">
-    
-    <li>
-        <a href="mailto:purodn@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
-    </li>
-    
-</ul>
-</div>
-                <hr>
-                <div class="aside__content">
-    
-    
-        <p>
-            
-            2025-05-12
-        </p>
-    
-
-    
-	    <hr>
-	    On this page:
-	    <nav id="TableOfContents">
-  <ol>
-    <li>
-      <ol>
-        <li></li>
-      </ol>
-    </li>
-    <li><a href="#pfctl命令详解">pfctl命令详解</a></li>
-    <li><a href="#要取消卸载已经加载的内核模块-pf可以使用-kldunload-命令具体操作如下">要取消（卸载）已经加载的内核模块 pf，可以使用 kldunload 命令。具体操作如下：</a></li>
-    <li><a href="#注意">注意：</a></li>
-  </ol>
-</nav>
-    
-
-                </div>
-            </section>
-
-            <footer class="page__footer">
- <p class="copyright">© <strong>石榴</strong>.</p>
- <p class="advertisement">Powered by <a>大佬們</a>.</p>
-</footer>
-
-        </div>
-    </body>
-
-</html>
+kldunload pf 会卸载已加载的 pf（Packet Filter）内核模块。如果这个模块正在被使用（例如，配置了防火墙规则），卸载时可能会产生一些影响。</p><p>请确保在卸载模块前没有相关服务或规则在运行。</p><p>查看当前加载的内核模块：
+你可以通过以下命令查看当前加载的内核模块：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kldstat
+</span></span></code></pre></div><p>这会列出当前加载的所有内核模块，包括 pf。</p><h2 id=注意>注意：</h2><p>如果你希望在系统重启后不再加载 pf 模块，可以移除相关的配置文件中的 kldload pf 指令，例如 /etc/rc.conf 文件中的设置。</p><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>喂饭</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2025-05-12</p><hr>On this page:<nav id=TableOfContents><ol><li><ol><li></li></ol></li><li><a href=#pfctl命令详解>pfctl命令详解</a></li><li><a href=#要取消卸载已经加载的内核模块-pf可以使用-kldunload-命令具体操作如下>要取消（卸载）已经加载的内核模块 pf，可以使用 kldunload 命令。具体操作如下：</a></li><li><a href=#注意>注意：</a></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>石榴</strong>.</p><p class=advertisement>Powered by <a>大佬們</a>.</p></footer></div></body></html>

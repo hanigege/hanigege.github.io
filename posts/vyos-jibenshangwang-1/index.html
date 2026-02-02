@@ -1,106 +1,25 @@
-<!DOCTYPE html>
-<html lang="zh">
-
-    <head><title>Vyos上网系列之-上网配置（1） &ndash; 代碼倉庫</title>
-<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="UTF-8"/>
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
-
-
-
-
-
-
-
-
-
-
-</head>
-
-    <body>
-        <div class="page">
-
-            <header class="page__header"><nav class="page__nav main-nav">
-    <ul>
-      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
-    
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
-    
-    </ul>
-</nav>
-
-</header>
-
-            <section class="page__body">
-    <header class="content__header">
-        <h1>Vyos上网系列之-上网配置（1）</h1>
-    </header>
-    <div class="content__body">
-        <h4 id="vyos的命令行界面是基于shell的没有图形界面-但是可以用tab自动补全">vyos的命令行界面是基于shell的，没有图形界面, 但是可以用tab自动补全.</h4>
-<p>本文的vyos命令是基于vyos的vyos-rolling-nightly-builds的1.5.x版本.</p>
-<p><code>**特别感谢大卫佬给予的指导与帮助**</code></p>
-<h2 id="pve安装vyos">pve安装vyos:</h2>
-<p>下载nightly-build: <a href="https://github.com/vyos/vyos-nightly-build/releases">https://github.com/vyos/vyos-nightly-build/releases</a>
-pve的虚拟机设置和安装(略), 建议内存2G, 磁盘10G或更大, 因为vyos可以运行容器, vyos用podman管理容器.</p>
-<p>vm运行后, 用vyos:vyos登录. 用命令</p>
-<pre tabindex="0"><code>install image
-</code></pre><p>安装vyos.</p>
-<p>进入配置模式：</p>
-<pre tabindex="0"><code>configure
-</code></pre><p>生效：</p>
-<pre tabindex="0"><code>commit
-</code></pre><p>保存配置：</p>
-<pre tabindex="0"><code>save
-</code></pre><p>取消生效的,未保存的配置：</p>
-<pre tabindex="0"><code>discard
-</code></pre><h2 id="下面开始配置随时都可以输入生效命令如果不保存重启后配置会失效">下面开始配置，随时都可以输入生效命令，如果不保存，重启后配置会失效</h2>
-<p>设置ssh登录:</p>
-<pre tabindex="0"><code>set service ssh port &#39;22&#39;
-</code></pre><p>创建用户gary:</p>
-<pre tabindex="0"><code>set system login user gary full-name gary
+<!doctype html><html lang=zh><head><title>Vyos上网系列之-上网配置（1） &ndash; 代碼倉庫</title><meta name=description content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://hanigege.github.io/css/palettes/base16-dark.css><link rel=stylesheet href=https://hanigege.github.io/css/risotto.css><link rel=stylesheet href=https://hanigege.github.io/css/custom.css></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><ul><li class=nomarker><h1 class=page__logo><a href=https://hanigege.github.io/ class=page__logo-inner>代碼倉庫</a></h1></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/about/ title>About</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/posts/ title>Posts</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/downloads/ title>Downlaods</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>Vyos上网系列之-上网配置（1）</h1></header><div class=content__body><h4 id=vyos的命令行界面是基于shell的没有图形界面-但是可以用tab自动补全>vyos的命令行界面是基于shell的，没有图形界面, 但是可以用tab自动补全.</h4><p>本文的vyos命令是基于vyos的vyos-rolling-nightly-builds的1.5.x版本.</p><p><code>**特别感谢大卫佬给予的指导与帮助**</code></p><h2 id=pve安装vyos>pve安装vyos:</h2><p>下载nightly-build: <a href=https://github.com/vyos/vyos-nightly-build/releases>https://github.com/vyos/vyos-nightly-build/releases</a>
+pve的虚拟机设置和安装(略), 建议内存2G, 磁盘10G或更大, 因为vyos可以运行容器, vyos用podman管理容器.</p><p>vm运行后, 用vyos:vyos登录. 用命令</p><pre tabindex=0><code>install image
+</code></pre><p>安装vyos.</p><p>进入配置模式：</p><pre tabindex=0><code>configure
+</code></pre><p>生效：</p><pre tabindex=0><code>commit
+</code></pre><p>保存配置：</p><pre tabindex=0><code>save
+</code></pre><p>取消生效的,未保存的配置：</p><pre tabindex=0><code>discard
+</code></pre><h2 id=下面开始配置随时都可以输入生效命令如果不保存重启后配置会失效>下面开始配置，随时都可以输入生效命令，如果不保存，重启后配置会失效</h2><p>设置ssh登录:</p><pre tabindex=0><code>set service ssh port &#39;22&#39;
+</code></pre><p>创建用户gary:</p><pre tabindex=0><code>set system login user gary full-name gary
 set system login user gary authentication plaintext-password &#39;密码&#39;
-</code></pre><p>建议ssh密钥登录:</p>
-<pre tabindex="0"><code>set system login user gary authentication public-keys gary@laptop key &#39;your-public-key&#39;
+</code></pre><p>建议ssh密钥登录:</p><pre tabindex=0><code>set system login user gary authentication public-keys gary@laptop key &#39;your-public-key&#39;
 set system login user gary authentication public-keys gary@laptop type &#39;ssh-rsa&#39;
-</code></pre><p>禁用默认的vyos用户:</p>
-<pre tabindex="0"><code>set system login user vyos disable
-</code></pre><p>设置系统的hostname:</p>
-<pre tabindex="0"><code>set system host-name &#39;vyos&#39;
-</code></pre><p>查看系统的hostname</p>
-<pre tabindex="0"><code>show system host-name
-</code></pre><p>设置时区:</p>
-<pre tabindex="0"><code>set system time-zone &#39;Asia/Shanghai&#39;
-</code></pre><p>设置ntp:</p>
-<pre tabindex="0"><code>set service ntp server 129.250.35.251
+</code></pre><p>禁用默认的vyos用户:</p><pre tabindex=0><code>set system login user vyos disable
+</code></pre><p>设置系统的hostname:</p><pre tabindex=0><code>set system host-name &#39;vyos&#39;
+</code></pre><p>查看系统的hostname</p><pre tabindex=0><code>show system host-name
+</code></pre><p>设置时区:</p><pre tabindex=0><code>set system time-zone &#39;Asia/Shanghai&#39;
+</code></pre><p>设置ntp:</p><pre tabindex=0><code>set service ntp server 129.250.35.251
 set service ntp server 203.107.6.88
-</code></pre><p>(注: 可以设置多个ntp服务器, 建议用运营商的ntp服务器, 最好是纯ip, 可删除默认的ntp服务器)</p>
-<p>设置接口组(可选但建议):</p>
-<pre tabindex="0"><code>set firewall group interface-group LAN interface &#39;eth0&#39;
+</code></pre><p>(注: 可以设置多个ntp服务器, 建议用运营商的ntp服务器, 最好是纯ip, 可删除默认的ntp服务器)</p><p>设置接口组(可选但建议):</p><pre tabindex=0><code>set firewall group interface-group LAN interface &#39;eth0&#39;
 set firewall group interface-group WAN interface &#39;eth1&#39;
-</code></pre><p>设置网络组(可选):</p>
-<pre tabindex="0"><code>set firewall group network-group LAN-v4 network &#39;192.168.100.0/24&#39;
-</code></pre><p>设置ip:</p>
-<pre tabindex="0"><code>set interfaces ethernet eth0 address 192.168.100.1/24
-</code></pre><p>配置dhcp server:</p>
-<pre tabindex="0"><code>set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 subnet-id 1   
+</code></pre><p>设置网络组(可选):</p><pre tabindex=0><code>set firewall group network-group LAN-v4 network &#39;192.168.100.0/24&#39;
+</code></pre><p>设置ip:</p><pre tabindex=0><code>set interfaces ethernet eth0 address 192.168.100.1/24
+</code></pre><p>配置dhcp server:</p><pre tabindex=0><code>set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 subnet-id 1   
 set service dhcp-server hostfile-update
 set service dhcp-server shared-network-name VYOS authoritative #开启特定共享网络的授权，防止出现冲突和混乱(第三方加的）
 set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 lease &#39;86400&#39;
@@ -109,18 +28,13 @@ set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 option 
 set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 option ntp-server &#39;192.168.100.1&#39; #dhcp option ntp
 set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 range 0 start &#39;192.168.100.101&#39;
 set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 range 0 stop &#39;192.168.100.200&#39;
-</code></pre><h3 id="补充可选">补充（可选）：</h3>
-<p>添加一个dhcp下的dns</p>
-<pre tabindex="0"><code>set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 option name-server &#39;192.168.100.2&#39;
+</code></pre><h3 id=补充可选>补充（可选）：</h3><p>添加一个dhcp下的dns</p><pre tabindex=0><code>set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 option name-server &#39;192.168.100.2&#39;
 删除一个dpcp下的dns
 delete service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 option name-server &#39;192.168.100.1&#39;
 更改dhcp下的网关地址
 set service dhcp-server shared-network-name VYOS subnet 192.168.100.0/24 option default-router &#39;192.168.100.2&#39; 
-</code></pre><p>设置外网网口为dhcp客户端，从上级路由获取 （可选）：</p>
-<pre tabindex="0"><code>set interfaces ethernet eth1 address dhcp
-</code></pre><h2 id="设置pppoe1参考配置一">设置pppoe1参考配置（一）</h2>
-<p>当eth1是pppoe时，配置 PPPoE 拨号:</p>
-<pre tabindex="0"><code>set interfaces pppoe pppoe0 source-interface &#39;eth1&#39;
+</code></pre><p>设置外网网口为dhcp客户端，从上级路由获取 （可选）：</p><pre tabindex=0><code>set interfaces ethernet eth1 address dhcp
+</code></pre><h2 id=设置pppoe1参考配置一>设置pppoe1参考配置（一）</h2><p>当eth1是pppoe时，配置 PPPoE 拨号:</p><pre tabindex=0><code>set interfaces pppoe pppoe0 source-interface &#39;eth1&#39;
 set interfaces pppoe pppoe0 authentication username &#39;054546帐号6266&#39;
 set interfaces pppoe pppoe0 authentication password &#39;24密码502&#39;
 set interfaces pppoe pppoe0 mtu &#39;1492&#39;
@@ -129,63 +43,51 @@ set interfaces pppoe pppoe0 ip adjust-mss &#39;clamp-mss-to-pmtu&#39;
 set interfaces pppoe pppoe1 no-default-route
 (注: 当设置no-default-route时, 需要在后面指定静态路由, 或者也可不设置no-default-route这条, vyos会自动添加默认路由)
 </code></pre><p>小技巧：在 VyOS 中，要删除一条已有的配置，需要使用 delete 命令。
-对于 <code>set interfaces pppoe pppoe0 source-interface 'eth1'</code>，可以这样删除：</p>
-<pre tabindex="0"><code>configure
+对于 <code>set interfaces pppoe pppoe0 source-interface 'eth1'</code>，可以这样删除：</p><pre tabindex=0><code>configure
 delete interfaces pppoe pppoe1 source-interface
 commit
 save
 exit
-</code></pre><p>设置出Wan口的默认静态路由:</p>
-<pre tabindex="0"><code>set protocols static route 0.0.0.0/0 interface pppoe0
+</code></pre><p>设置出Wan口的默认静态路由:</p><pre tabindex=0><code>set protocols static route 0.0.0.0/0 interface pppoe0
 set protocols static route6 ::/0 interface pppoe0
 (注: 前面设置了no-default-route, 所以这里需要设置默认路由)
-</code></pre><h2 id="设置dns">设置dns:</h2>
-<pre tabindex="0"><code>set system name-server &#39;223.5.5.5&#39;
+</code></pre><h2 id=设置dns>设置dns:</h2><pre tabindex=0><code>set system name-server &#39;223.5.5.5&#39;
 set service dns forwarding cache-size &#39;0&#39; ## 关闭了缓存，默认是150
 set service dns forwarding listen-address &#39;192.168.100.1&#39; ## 监听 LAN 口
 # 3. 限制 DNS 解析范围，仅允许内网使用
 set service dns forwarding allow-from &#39;192.168.100.0/24&#39;
-</code></pre><p>设置端口转发(DNAT):</p>
-<pre tabindex="0"><code>set nat destination rule 10 description &#39;DSTNAT-wg&#39;
+</code></pre><p>设置端口转发(DNAT):</p><pre tabindex=0><code>set nat destination rule 10 description &#39;DSTNAT-wg&#39;
 set nat destination rule 10 destination port &#39;53822&#39;
 set nat destination rule 10 inbound-interface group &#39;WAN&#39; #可用interface eth1代替
 set nat destination rule 10 protocol &#39;udp&#39;
 set nat destination rule 10 translation address &#39;192.168.10.145&#39;
 set nat destination rule 10 translation port &#39;53822&#39; #可省略, 如果端口相同
 </code></pre><p>设置防火墙:
-设置masquerade(SNAT):</p>
-<pre tabindex="0"><code>set nat source rule 100 translation address &#39;masquerade&#39;
-</code></pre><p>指定网段：</p>
-<pre tabindex="0"><code>set nat source rule 100 source address &#39;192.168.100.0/24&#39;
+设置masquerade(SNAT):</p><pre tabindex=0><code>set nat source rule 100 translation address &#39;masquerade&#39;
+</code></pre><p>指定网段：</p><pre tabindex=0><code>set nat source rule 100 source address &#39;192.168.100.0/24&#39;
 </code></pre><p>设置回流:
 由于上面masquerade(SNAT)的规则, 这里不需要设置回流.
 <code>---------------------------------------------</code>
-这里防火墙rule <number> 数字可自定, 同一数字为一组, 建议设置数字时, 留出空隙, 以便以后添加新的规则.
-针对上面这条nat source rule 100 规则, 建议不要限制接口, 就只用上面一条, 这对以后的端口转发和回流设置, 都很方便.</p>
-<h2 id="设置防火墙规则">设置防火墙规则:</h2>
-<p>全局：</p>
-<pre tabindex="0"><code>set firewall global-options state-policy established action &#39;accept&#39;
+这里防火墙rule <number>数字可自定, 同一数字为一组, 建议设置数字时, 留出空隙, 以便以后添加新的规则.
+针对上面这条nat source rule 100 规则, 建议不要限制接口, 就只用上面一条, 这对以后的端口转发和回流设置, 都很方便.</p><h2 id=设置防火墙规则>设置防火墙规则:</h2><p>全局：</p><pre tabindex=0><code>set firewall global-options state-policy established action &#39;accept&#39;
 set firewall global-options state-policy invalid action &#39;drop&#39;
 set firewall global-options state-policy related action &#39;accept&#39;
 #下面一条是容器与内网互通
 set firewall global-options apply-to-bridged-traffic invalid-connections
-</code></pre><p>设置ipv4入站(input链)规则:</p>
-<pre tabindex="0"><code>set firewall ipv4 name WAN_LOCAL default-action &#39;drop&#39; #默认拒绝
+</code></pre><p>设置ipv4入站(input链)规则:</p><pre tabindex=0><code>set firewall ipv4 name WAN_LOCAL default-action &#39;drop&#39; #默认拒绝
 set firewall ipv4 name WAN_LOCAL rule 10 action &#39;accept&#39; #允许已建立和相关连接
 set firewall ipv4 name WAN_LOCAL rule 10 state &#39;established&#39;
 set firewall ipv4 name WAN_LOCAL rule 10 state &#39;related&#39;
 set firewall ipv4 name WAN_LOCAL rule 30 action &#39;accept&#39; #允许icmp
 set firewall ipv4 name WAN_LOCAL rule 30 protocol &#39;icmp&#39;
-</code></pre><p>下面是wireguard放行端口（可选）</p>
-<pre tabindex="0"><code>set firewall ipv4 name WAN_LOCAL rule 20 action &#39;accept&#39; #允许连接wg0
+</code></pre><p>下面是wireguard放行端口（可选）</p><pre tabindex=0><code>set firewall ipv4 name WAN_LOCAL rule 20 action &#39;accept&#39; #允许连接wg0
 set firewall ipv4 name WAN_LOCAL rule 20 destination port &#39;11133&#39; 
 set firewall ipv4 name WAN_LOCAL rule 20 protocol &#39;udp&#39;
 
 set firewall ipv4 name WAN_LOCAL rule 40 action &#39;accept&#39; #连续端口样例
 set firewall ipv4 name WAN_LOCAL rule 40 destination port &#39;10000-10100&#39;
 set firewall ipv4 name WAN_LOCAL rule 40 protocol &#39;udp&#39;
-</code></pre><p>设置ipv6入站(input链)规则:</p>
-<pre tabindex="0"><code>set firewall ipv6 name WAN_LOCAL default-action &#39;drop&#39; #默认拒绝
+</code></pre><p>设置ipv6入站(input链)规则:</p><pre tabindex=0><code>set firewall ipv6 name WAN_LOCAL default-action &#39;drop&#39; #默认拒绝
 set firewall ipv6 name WAN_LOCAL rule 10 action &#39;accept&#39; #允许已建立和相关连接
 set firewall ipv6 name WAN_LOCAL rule 10 state &#39;established&#39;
 set firewall ipv6 name WAN_LOCAL rule 10 state &#39;related&#39;
@@ -195,25 +97,20 @@ set firewall ipv6 name WAN_LOCAL rule 30 action &#39;accept&#39; #允许从ISP�
 set firewall ipv6 name WAN_LOCAL rule 30 destination port &#39;546&#39;
 set firewall ipv6 name WAN_LOCAL rule 30 protocol &#39;udp&#39;
 set firewall ipv6 name WAN_LOCAL rule 30 source port &#39;547&#39;
-</code></pre><p>下面是wireguard放行端口（可选）</p>
-<pre tabindex="0"><code>set firewall ipv6 name WAN_LOCAL rule 40 action &#39;accept&#39; #允许连接wg0
+</code></pre><p>下面是wireguard放行端口（可选）</p><pre tabindex=0><code>set firewall ipv6 name WAN_LOCAL rule 40 action &#39;accept&#39; #允许连接wg0
 set firewall ipv6 name WAN_LOCAL rule 40 destination port &#39;11133&#39;
 set firewall ipv6 name WAN_LOCAL rule 40 protocol &#39;udp&#39;
-</code></pre><p>设置ipv4转发(forward链)规则:</p>
-<pre tabindex="0"><code>set firewall ipv4 name WAN_IN default-action &#39;drop&#39; #默认拒绝
+</code></pre><p>设置ipv4转发(forward链)规则:</p><pre tabindex=0><code>set firewall ipv4 name WAN_IN default-action &#39;drop&#39; #默认拒绝
 set firewall ipv4 name WAN_IN rule 10 action &#39;accept&#39; #允许已建立和相关连接
 set firewall ipv4 name WAN_IN rule 10 state &#39;established&#39;
 set firewall ipv4 name WAN_IN rule 10 state &#39;related&#39;
-</code></pre><p>如有ipv4进来后的端口转发加下面三条</p>
-<pre tabindex="0"><code>set firewall ipv4 name WAN_IN rule 20 action &#39;accept&#39; #允许已DNAT的连接
+</code></pre><p>如有ipv4进来后的端口转发加下面三条</p><pre tabindex=0><code>set firewall ipv4 name WAN_IN rule 20 action &#39;accept&#39; #允许已DNAT的连接
 set firewall ipv4 name WAN_IN rule 20 connection-status nat &#39;destination&#39;
 set firewall ipv4 name WAN_IN rule 20 state &#39;new&#39;
-</code></pre><p>如有ipv6进来后的端口转发 也需要和v4一样 加这条</p>
-<pre tabindex="0"><code>set firewall ipv6 name WAN_IN rule 40 action &#39;accept&#39;
+</code></pre><p>如有ipv6进来后的端口转发 也需要和v4一样 加这条</p><pre tabindex=0><code>set firewall ipv6 name WAN_IN rule 40 action &#39;accept&#39;
 set firewall ipv6 name WAN_IN rule 40 connection-status nat &#39;destination&#39;
 set firewall ipv6 name WAN_IN rule 40 state &#39;new&#39;
-</code></pre><p>设置ipv6转发(forward链)规则:</p>
-<pre tabindex="0"><code>set firewall ipv6 name WAN_IN default-action &#39;drop&#39; #默认拒绝
+</code></pre><p>设置ipv6转发(forward链)规则:</p><pre tabindex=0><code>set firewall ipv6 name WAN_IN default-action &#39;drop&#39; #默认拒绝
 set firewall ipv6 name WAN_IN rule 10 action &#39;accept&#39; #允许已建立和相关连接
 set firewall ipv6 name WAN_IN rule 10 state &#39;established&#39;
 set firewall ipv6 name WAN_IN rule 10 state &#39;related&#39;
@@ -222,8 +119,7 @@ set firewall ipv6 name WAN_IN rule 20 protocol &#39;icmpv6&#39;
 set firewall ipv6 name WAN_IN rule 30 action &#39;accept&#39; #允许ipsec
 set firewall ipv6 name WAN_IN rule 30 destination port &#39;500,4500&#39;
 set firewall ipv6 name WAN_IN rule 30 protocol &#39;udp&#39;
-</code></pre><p>然后分别从input和forward链, 调用WAN_LOCAL和WAN_IN:</p>
-<pre tabindex="0"><code>set firewall ipv4 input filter rule 10 action &#39;jump&#39;
+</code></pre><p>然后分别从input和forward链, 调用WAN_LOCAL和WAN_IN:</p><pre tabindex=0><code>set firewall ipv4 input filter rule 10 action &#39;jump&#39;
 set firewall ipv4 input filter rule 10 inbound-interface group &#39;WAN&#39;
 set firewall ipv4 input filter rule 10 jump-target &#39;WAN_LOCAL&#39;
 
@@ -238,16 +134,13 @@ set firewall ipv6 input filter rule 10 jump-target &#39;WAN_LOCAL&#39;
 set firewall ipv6 forward filter rule 10 action &#39;jump&#39;
 set firewall ipv6 forward filter rule 10 inbound-interface group &#39;WAN&#39;
 set firewall ipv6 forward filter rule 10 jump-target &#39;WAN_IN&#39;
-</code></pre><p>注: DNAT是流量进入后, 最先处理的, 然后进入forward链, 而SNAT是流量出站前, 最后处理的.</p>
-<h2 id="配置wireguard">配置wireguard:</h2>
-<pre tabindex="0"><code>set interfaces wireguard wg0 address &#39;10.20.20.1/24&#39;
+</code></pre><p>注: DNAT是流量进入后, 最先处理的, 然后进入forward链, 而SNAT是流量出站前, 最后处理的.</p><h2 id=配置wireguard>配置wireguard:</h2><pre tabindex=0><code>set interfaces wireguard wg0 address &#39;10.20.20.1/24&#39;
 set interfaces wireguard wg0 peer iphone allowed-ips &#39;10.20.20.2/32&#39;
 set interfaces wireguard wg0 peer iphone preshared-key &#39;preshared-key&#39;
 set interfaces wireguard wg0 peer iphone public-key &#39;public-key&#39;
 set interfaces wireguard wg0 port &#39;11133&#39;
 set interfaces wireguard wg0 private-key &#39;private-key&#39;
-</code></pre><h2 id="配置ddns">配置ddns:</h2>
-<pre tabindex="0"><code>cloudflare ddns:
+</code></pre><h2 id=配置ddns>配置ddns:</h2><pre tabindex=0><code>cloudflare ddns:
 set service dns dynamic name DDNS-CF-v4 address interface &#39;pppoe1&#39;
 set service dns dynamic name DDNS-CF-v4 host-name &#39;ddns.example.com&#39;
 set service dns dynamic name DDNS-CF-v4 ip-version &#39;ipv4&#39;
@@ -260,109 +153,14 @@ set service dns dynamic name DDNS-CF-v6 ip-version &#39;ipv6&#39;
 set service dns dynamic name DDNS-CF-v6 password &#39;token&#39;
 set service dns dynamic name DDNS-CF-v6 protocol &#39;cloudflare&#39;
 set service dns dynamic name DDNS-CF-v6 zone &#39;example.com&#39;
-</code></pre><p>dnspod ddns:</p>
-<pre tabindex="0"><code>set service dns dynamic name DNSPOD-v4 address interface &#39;pppoe1&#39;
+</code></pre><p>dnspod ddns:</p><pre tabindex=0><code>set service dns dynamic name DNSPOD-v4 address interface &#39;pppoe1&#39;
 set service dns dynamic name DNSPOD-v4 host-name &#39;ddns.example.com&#39;
 set service dns dynamic name DNSPOD-v4 password &#39;token&#39;
 set service dns dynamic name DNSPOD-v4 protocol &#39;dyndns2&#39;
 set service dns dynamic name DNSPOD-v4 server &#39;dnsapi.cn&#39;
 set service dns dynamic name DNSPOD-v4 username &#39;id&#39;
-</code></pre><h4 id="个人使用下来-上述配置并不需要设置interval-ip变化也会自动更新">个人使用下来, 上述配置并不需要设置interval, ip变化也会自动更新.</h4>
-<h2 id="设置策略路由">设置策略路由:</h2>
-<p>举例: 让wg0的流量走100号路由表, 100号路由表是sb的路由表</p>
-<pre tabindex="0"><code>set policy route WG0-to-SB interface &#39;wg0&#39;
+</code></pre><h4 id=个人使用下来-上述配置并不需要设置interval-ip变化也会自动更新>个人使用下来, 上述配置并不需要设置interval, ip变化也会自动更新.</h4><h2 id=设置策略路由>设置策略路由:</h2><p>举例: 让wg0的流量走100号路由表, 100号路由表是sb的路由表</p><pre tabindex=0><code>set policy route WG0-to-SB interface &#39;wg0&#39;
 set policy route WG0-to-SB rule 10 destination group network-group &#39;!LAN-v4&#39;
 set policy route WG0-to-SB rule 10 set table &#39;100&#39;
-</code></pre><p>路由表</p>
-<pre tabindex="0"><code>set protocols static table 100 route 0.0.0.0/0 next-hop 192.168.10.90
-</code></pre><hr>
-<p>Happy Routing!</p>
-
-<div id="utterances-comments">
-  <script src="https://utteranc.es/client.js"
-      repo="hanigege/blog-comments"
-      issue-term="pathname"
-      theme="github-light"
-      crossorigin="anonymous"
-      async>
-  </script>
-</div>
-
-
-
-
-    </div>
-    <footer class="content__footer"></footer>
-
-            </section>
-
-            <section class="page__aside">
-                <div class="aside__about">
-<div class="aside__about">
-    <span class="about__logo" role="img">🍚</span>&nbsp;
-    
-<h1 class="about__title">喂饭</h1>
-<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
-</div>
-
-
-<ul class="aside__social-links">
-    
-    <li>
-        <a href="mailto:purodn@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
-    </li>
-    
-</ul>
-</div>
-                <hr>
-                <div class="aside__content">
-    
-    
-        <p>
-            
-            2025-05-10
-        </p>
-    
-
-    
-	    <hr>
-	    On this page:
-	    <nav id="TableOfContents">
-  <ol>
-    <li>
-      <ol>
-        <li></li>
-      </ol>
-    </li>
-    <li><a href="#pve安装vyos">pve安装vyos:</a></li>
-    <li><a href="#下面开始配置随时都可以输入生效命令如果不保存重启后配置会失效">下面开始配置，随时都可以输入生效命令，如果不保存，重启后配置会失效</a>
-      <ol>
-        <li><a href="#补充可选">补充（可选）：</a></li>
-      </ol>
-    </li>
-    <li><a href="#设置pppoe1参考配置一">设置pppoe1参考配置（一）</a></li>
-    <li><a href="#设置dns">设置dns:</a></li>
-    <li><a href="#设置防火墙规则">设置防火墙规则:</a></li>
-    <li><a href="#配置wireguard">配置wireguard:</a></li>
-    <li><a href="#配置ddns">配置ddns:</a>
-      <ol>
-        <li></li>
-      </ol>
-    </li>
-    <li><a href="#设置策略路由">设置策略路由:</a></li>
-  </ol>
-</nav>
-    
-
-                </div>
-            </section>
-
-            <footer class="page__footer">
- <p class="copyright">© <strong>石榴</strong>.</p>
- <p class="advertisement">Powered by <a>大佬們</a>.</p>
-</footer>
-
-        </div>
-    </body>
-
-</html>
+</code></pre><p>路由表</p><pre tabindex=0><code>set protocols static table 100 route 0.0.0.0/0 next-hop 192.168.10.90
+</code></pre><hr><p>Happy Routing!</p><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>喂饭</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2025-05-10</p><hr>On this page:<nav id=TableOfContents><ol><li><ol><li></li></ol></li><li><a href=#pve安装vyos>pve安装vyos:</a></li><li><a href=#下面开始配置随时都可以输入生效命令如果不保存重启后配置会失效>下面开始配置，随时都可以输入生效命令，如果不保存，重启后配置会失效</a><ol><li><a href=#补充可选>补充（可选）：</a></li></ol></li><li><a href=#设置pppoe1参考配置一>设置pppoe1参考配置（一）</a></li><li><a href=#设置dns>设置dns:</a></li><li><a href=#设置防火墙规则>设置防火墙规则:</a></li><li><a href=#配置wireguard>配置wireguard:</a></li><li><a href=#配置ddns>配置ddns:</a><ol><li></li></ol></li><li><a href=#设置策略路由>设置策略路由:</a></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>石榴</strong>.</p><p class=advertisement>Powered by <a>大佬們</a>.</p></footer></div></body></html>

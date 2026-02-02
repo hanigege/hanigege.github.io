@@ -1,391 +1,190 @@
-<!DOCTYPE html>
-<html lang="zh">
-
-    <head><title>家庭聊天服务器系列（3）coturn服务搭建 &ndash; 代碼倉庫</title>
-<meta name="description" content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="UTF-8"/>
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-<link rel="stylesheet" href="https://hanigege.github.io/css/palettes/base16-dark.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/risotto.css">
-<link rel="stylesheet" href="https://hanigege.github.io/css/custom.css">
-
-
-
-
-
-
-
-
-
-
-</head>
-
-    <body>
-        <div class="page">
-
-            <header class="page__header"><nav class="page__nav main-nav">
-    <ul>
-      <li class="nomarker"><h1 class="page__logo"><a href="https://hanigege.github.io/" class="page__logo-inner">代碼倉庫</a></h1></li>
-    
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/about/" title="">About</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/posts/" title="">Posts</a></li>
-    
-    <li class="main-nav__item"><a class="nav-main-item" href="https://hanigege.github.io/downloads/" title="">Downlaods</a></li>
-    
-    </ul>
-</nav>
-
-</header>
-
-            <section class="page__body">
-    <header class="content__header">
-        <h1>家庭聊天服务器系列（3）coturn服务搭建</h1>
-    </header>
-    <div class="content__body">
-        <h2 id="docker搭建coturn-turn服务器">docker搭建Coturn TURN服务器</h2>
-<h2 id="共两种方案">共两种方案：</h2>
-<h2 id="第一种方案要了解">第一种方案（要了解）</h2>
-<h4 id="先建立一个文件夹">先建立一个文件夹</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p ~/data/docker_data/coturn/etc/coturn
-</span></span><span style="display:flex;"><span>mkdir -p ~/data/docker_data/coturn/var/run
-</span></span><span style="display:flex;"><span>mkdir -p ~/data/docker_data/coturn/var/log  <span style="color:#75715e">#如果用下面第一种方案这个才需要建立，第二种不需要</span>
-</span></span><span style="display:flex;"><span>cd ~/data/docker_data/coturn/etc/coturn
-</span></span><span style="display:flex;"><span>touch turnserver.conf
-</span></span><span style="display:flex;"><span>cd ~/data/docker_data/coturn/var/run
-</span></span><span style="display:flex;"><span>touch turnserver.pid
-</span></span><span style="display:flex;"><span>cd ../../
-</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">777</span> -R var
-</span></span></code></pre></div><p>拉取镜像</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span> docker pull coturn/coturn
-</span></span></code></pre></div><p>直接host方式运行</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>     docker run -d --network<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/var:/var <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>       coturn/coturn
+<!doctype html><html lang=zh><head><title>家庭聊天服务器系列（3）coturn服务搭建 &ndash; 代碼倉庫</title><meta name=description content="個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://hanigege.github.io/css/palettes/base16-dark.css><link rel=stylesheet href=https://hanigege.github.io/css/risotto.css><link rel=stylesheet href=https://hanigege.github.io/css/custom.css></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><ul><li class=nomarker><h1 class=page__logo><a href=https://hanigege.github.io/ class=page__logo-inner>代碼倉庫</a></h1></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/about/ title>About</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/posts/ title>Posts</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/downloads/ title>Downlaods</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>家庭聊天服务器系列（3）coturn服务搭建</h1></header><div class=content__body><h2 id=docker搭建coturn-turn服务器>docker搭建Coturn TURN服务器</h2><h2 id=共两种方案>共两种方案：</h2><h2 id=第一种方案要了解>第一种方案（要了解）</h2><h4 id=先建立一个文件夹>先建立一个文件夹</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir -p ~/data/docker_data/coturn/etc/coturn
+</span></span><span style=display:flex><span>mkdir -p ~/data/docker_data/coturn/var/run
+</span></span><span style=display:flex><span>mkdir -p ~/data/docker_data/coturn/var/log  <span style=color:#75715e>#如果用下面第一种方案这个才需要建立，第二种不需要</span>
+</span></span><span style=display:flex><span>cd ~/data/docker_data/coturn/etc/coturn
+</span></span><span style=display:flex><span>touch turnserver.conf
+</span></span><span style=display:flex><span>cd ~/data/docker_data/coturn/var/run
+</span></span><span style=display:flex><span>touch turnserver.pid
+</span></span><span style=display:flex><span>cd ../../
+</span></span><span style=display:flex><span>chmod <span style=color:#ae81ff>777</span> -R var
+</span></span></code></pre></div><p>拉取镜像</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span> docker pull coturn/coturn
+</span></span></code></pre></div><p>直接host方式运行</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>     docker run -d --network<span style=color:#f92672>=</span>host <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/var:/var <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>       coturn/coturn
 </span></span></code></pre></div><p>运行时不加 -d 先看输入有错误吗！
 同时查看var下的log看相关的问题
-调试启动命令：停止容器后会自动图删除容器，命令如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --network<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/var:/var <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           --rm <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>       coturn/coturn
-</span></span></code></pre></div><p>哪果去掉了配置文件里的指定log，停用cli功能，下面有说明，可以用下面的启动命令：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span> docker run -d --network<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -e DETECT_EXTERNAL_IP<span style="color:#f92672">=</span>yes <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -e DETECT_RELAY_IP<span style="color:#f92672">=</span>yes <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/var:/var <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>       coturn/coturn <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -n --log-file<span style="color:#f92672">=</span>stdout  
-</span></span></code></pre></div><p>你之后不要1~65535全都开放 实行白名单放行模式</p>
-<p>比如coturn只开放以下</p>
-<p>3478</p>
-<p>5349</p>
-<p>上面两个tcp udp全打开</p>
-<p>49152~65535</p>
-<p>生成证书：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo openssl req -x509 -newkey rsa:2048 -keyout /etc/turn_server_pkey.pem -out /etc/turn_server_cert.pem -days <span style="color:#ae81ff">99999</span> -nodes 
+调试启动命令：停止容器后会自动图删除容器，命令如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker run --network<span style=color:#f92672>=</span>host <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/var:/var <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           --rm <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>       coturn/coturn
+</span></span></code></pre></div><p>哪果去掉了配置文件里的指定log，停用cli功能，下面有说明，可以用下面的启动命令：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span> docker run -d --network<span style=color:#f92672>=</span>host <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -e DETECT_EXTERNAL_IP<span style=color:#f92672>=</span>yes <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -e DETECT_RELAY_IP<span style=color:#f92672>=</span>yes <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/var:/var <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>       coturn/coturn <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -n --log-file<span style=color:#f92672>=</span>stdout  
+</span></span></code></pre></div><p>你之后不要1~65535全都开放 实行白名单放行模式</p><p>比如coturn只开放以下</p><p>3478</p><p>5349</p><p>上面两个tcp udp全打开</p><p>49152~65535</p><p>生成证书：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>sudo openssl req -x509 -newkey rsa:2048 -keyout /etc/turn_server_pkey.pem -out /etc/turn_server_cert.pem -days <span style=color:#ae81ff>99999</span> -nodes 
 </span></span></code></pre></div><p>生成的两个证书传输到 <code>/root/data/docker_data/coturn/etc/ </code>文件夹下。可以先下载下来，再传到相应的文件夹里。
-<strong>或者一步到位直接生成到目标文件夹</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo openssl req -x509 -newkey rsa:2048 -keyout /root/data/docker_data/coturn/etc/turn_server_pkey.pem -out  /root/data/docker_data/coturn/etc/turn_server_cert.pem -days <span style="color:#ae81ff">99999</span> -nodes
-</span></span></code></pre></div><p><code>netstat -anpl | grep turnserver </code> #检测 Dibian没有这个命令，可以安装：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt-get install net-tools
+<strong>或者一步到位直接生成到目标文件夹</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>sudo openssl req -x509 -newkey rsa:2048 -keyout /root/data/docker_data/coturn/etc/turn_server_pkey.pem -out  /root/data/docker_data/coturn/etc/turn_server_cert.pem -days <span style=color:#ae81ff>99999</span> -nodes
+</span></span></code></pre></div><p><code>netstat -anpl | grep turnserver </code>#检测 Dibian没有这个命令，可以安装：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>apt-get install net-tools
 </span></span></code></pre></div><p>搞定！
-生成验证密钥到test.conf文件，生成后打开文件复制密钥替换下面配置文件里的密钥：（特别说明，密钥的长度可以修改下面命令行里的256参数，建议设为68即可，也就是68个字符</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;static-auth-secret=</span><span style="color:#66d9ef">$(</span>cat /dev/urandom | tr -cd <span style="color:#e6db74">&#39;[:alnum:]&#39;</span> | fold -w <span style="color:#ae81ff">256</span> | head -n 1<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> | sudo tee /root/test.conf
-</span></span></code></pre></div><p>如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;static-auth-secret=</span><span style="color:#66d9ef">$(</span>cat /dev/urandom | tr -cd <span style="color:#e6db74">&#39;[:alnum:]&#39;</span> | fold -w <span style="color:#ae81ff">68</span> | head -n 1<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> | sudo tee /root/test.conf
-</span></span></code></pre></div><p>具体配置文件是：<code>turnserver.conf</code> 路径为：<code>/root/data/docker_data/coturn/etc/coturn</code></p>
-<p>COTURN Server 配置样例：turnserver.conf</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>use-auth-secret
-</span></span><span style="display:flex;"><span>static-auth-secret<span style="color:#f92672">=</span>ynojlSEBrJ6VjFHNyjJiyZRnnMUQ0WKAsSzGdMhL8he
-</span></span><span style="display:flex;"><span>realm<span style="color:#f92672">=</span>coturn.1.xyz
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#指定 Coturn 的日志文件路径</span>
-</span></span><span style="display:flex;"><span>log-file<span style="color:#f92672">=</span>/var/log/turnserver.log
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># VoIP traffic is all UDP. There is no reason to let users connect to arbitrary TCP endpoints via the relay.</span>
-</span></span><span style="display:flex;"><span>no-tcp-relay
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 调试日志级别</span>
-</span></span><span style="display:flex;"><span>verbose<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cli-password<span style="color:#f92672">=</span>8al8la.com <span style="color:#75715e"># Set a non-empty CLI password</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># don&#39;t let the relay ever try to connect to private IP address ranges within your network (if any)</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># given the turn server is likely behind your firewall, remember to include any privileged public IPs too.</span>
-</span></span><span style="display:flex;"><span>denied-peer-ip<span style="color:#f92672">=</span>10.0.0.0-10.255.255.255
-</span></span><span style="display:flex;"><span>denied-peer-ip<span style="color:#f92672">=</span>192.168.0.0-192.168.255.255
-</span></span><span style="display:flex;"><span>denied-peer-ip<span style="color:#f92672">=</span>172.16.0.0-172.31.255.255
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># special case the turn server itself so that client-&gt;TURN-&gt;TURN-&gt;client flows work</span>
-</span></span><span style="display:flex;"><span>allowed-peer-ip<span style="color:#f92672">=</span>10.0.0.1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>listener-ip<span style="color:#f92672">=</span>coturn.1.xyz
-</span></span><span style="display:flex;"><span>relay-ip<span style="color:#f92672">=</span>coturn.1.xyz
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># consider whether you want to limit the quota of relayed streams per user (or total) to avoid risk of DoS.</span>
-</span></span><span style="display:flex;"><span>user-quota<span style="color:#f92672">=</span><span style="color:#ae81ff">12</span> <span style="color:#75715e"># 4 streams per video call, so 12 streams = 3 simultaneous relayed calls per user.</span>
-</span></span><span style="display:flex;"><span>total-quota<span style="color:#f92672">=</span><span style="color:#ae81ff">1200</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># TLS certificates, including intermediate certs.</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 指定了 TLS 证书文件的路径</span>
-</span></span><span style="display:flex;"><span>cert<span style="color:#f92672">=</span>/etc/turn_server_cert.pem
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 指定了 TLS 私钥文件的路径</span>
-</span></span><span style="display:flex;"><span>pkey<span style="color:#f92672">=</span>/etc/turn_server_pkey.pem
-</span></span><span style="display:flex;"><span>pidfile<span style="color:#f92672">=</span>/var/run/turnserver.pid
-</span></span></code></pre></div><p>修改上面的域名，和那一串密码，保存后重启coturn的容器！</p>
-<h2 id="调试日志说明">调试日志说明</h2>
-<p>在您提供的配置中，日志调试级别由verbose参数指定。在您的配置中，verbose设置为1，表示启用了最低级别的调试日志。</p>
-<p>调试级别通常有不同的值，用于控制日志的详细程度。常见的级别包括：</p>
-<p>0：关闭调试日志，只记录错误和关键信息。</p>
-<p>1：最低级别的调试，通常用于记录基本的操作信息和警告。</p>
-<p>2：中等级别的调试，记录更多的详细信息，包括一些内部操作的细节。</p>
-<p>3：最高级别的调试，记录非常详细的信息，包括每个步骤的操作和状态。</p>
-<p>在您的配置中，设置为1的调试级别将记录基本的操作信息和警告，但不会记录过多的细节。这对于一般情况下的日志记录已经足够。如果需要更详细的调试信息，您可以将调试级别设置为更高的值，例如2或3，但这可能会生成更多的日志数据。</p>
-<p>注意上面/etc/turn_*路役是指容器里的路径。</p>
-<p>如果想关闭CLI监听器功能。要禁用CLI功能，您可以删除或注释掉相关配置行。在您的配置文件中，只需要删除或注释掉以下两行即可：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cli-password<span style="color:#f92672">=</span>8al8la.com <span style="color:#75715e"># Set a non-empty CLI password</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 指定 Coturn 的日志文件路径</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># log-file=/var/log/turnserver.log</span>
-</span></span></code></pre></div><p>请注意，这些配置更改将禁用CLI密码和CLI日志记录功能。保存更改后，重新启动coturn服务器以使更改生效。</p>
-<p>所谓cli功能：</p>
-<p>CLI监听器（Command Line Interface listener）允许您通过命令行界面与coturn服务器进行交互和管理。通过CLI，您可以执行各种管理任务，例如查看当前服务器状态、添加或删除用户、配置转发规则等。</p>
-<p>CLI监听器允许管理员通过命令行输入特定的命令来与coturn服务器进行通信，而无需通过图形界面或其他方式进行操作。这使得管理者可以更加灵活和高效地管理服务器，特别是在自动化和脚本化管理方面。</p>
-<p>查看日志：运行时不加 -d 看输入！</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>journalctl -u coturnsystemd 
-</span></span></code></pre></div><p>这是加<code>/root/data/docker_data/synapse/data/homeserver.yaml</code>配置文件里的</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#turnserver#</span>
-</span></span><span style="display:flex;"><span>turn_uris: <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;turn:coturn.666.eu.org?transport=udp&#34;</span>, <span style="color:#e6db74">&#34;turn:coturn.666.eu.org?transport=tcp&#34;</span> <span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>turn_shared_secret: <span style="color:#e6db74">&#34;SdQmVOBTRxViwUhsRsRgpBctFNMYatKUBHIO69wFKxEVuqog1HPPoMKya7YA&#34;</span>
-</span></span><span style="display:flex;"><span>turn_user_lifetime: <span style="color:#ae81ff">86400000</span>
-</span></span><span style="display:flex;"><span>turn_allow_guests: True
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
-</span></span><span style="display:flex;"><span>记的修改域名和密码和主文件同步。
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>bash
-</span></span><span style="display:flex;"><span>确保您的防火墙允许流量进入您配置为侦听的端口上的 TURN 服务器（默认情况下：TURN 流量使用 <span style="color:#ae81ff">3478</span> 和 5349（请记住同时允许 TCP 和 UDP 流量），UDP 中继使用端口 49152-65535 .<span style="color:#f92672">)</span>
-</span></span></code></pre></div><p>特别说明：coturn服务器也可以不做反向代理</p>
-<p>Coturn服务通常需要打开以下端口以支持TURN协议和实现NAT遍历：</p>
-<p><code>TURN Listening Port (Default: 3478): </code>Coturn服务通过此端口侦听TURN请求。此端口是TURN协议的标准端口。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Default TURN Port: <span style="color:#ae81ff">3478</span>
-</span></span><span style="display:flex;"><span>TURN TLS Listening Port <span style="color:#f92672">(</span>Default: 5349<span style="color:#f92672">)</span>: 如果启用了TURN over TLS（加密的TURN流量），则需要打开此端口。
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Default TURN TLS Port: <span style="color:#ae81ff">5349</span>
-</span></span></code></pre></div><p>Listening Ports Range for Relayed UDP Traffic (Default: 49152-65535): 当TURN服务器用于中继UDP流量时，它需要使用一系列UDP端口。</p>
-<p>上面的配置里我指定了20000-30000</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Default UDP Port Range: 49152-65535
-</span></span></code></pre></div><p>这些端口需要在Coturn服务器配置中指定，并且相应的防火墙规则也需要配置，以允许流量通过这些端口。确保在配置Coturn服务器时参考文档，因为实际端口配置可能因特定用例和安全需求而有所不同。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Matrix Synapse Default Communication Port <span style="color:#f92672">(</span>TCP<span style="color:#f92672">)</span>: <span style="color:#ae81ff">8448</span>
-</span></span></code></pre></div><p>确保在配置防火墙规则时，这些端口是开放的，以确保Synapse和Coturn能够相互通信。</p>
-<h2 id="第二种方案优选推荐使用这一种方案">第二种方案：（优选，推荐使用这一种方案）</h2>
-<p>关于日志输入等级，常见的选项包括：</p>
-<p>verbose：冗余的输出，通常包含了非常详细的信息，用于调试和排查问题。</p>
-<p>debug：调试级别的输出，提供比较详细但不如 verbose 那么冗余的信息。</p>
-<p>info：信息级别的输出，提供基本的运行信息，适合一般情况下的使用。</p>
-<p>warning：警告级别的输出，用于指示潜在的问题或错误。</p>
-<p>error：错误级别的输出，指示出现的错误情况。</p>
-<p>您可以根据实际需求调整日志输入等级，一般来说，在生产环境中，通常会将日志输入等级设置为 info 或更高级别，以避免冗余信息过多，而在开发或调试阶段，则可能会选择 debug 或 verbose 等级以便更详细地了解系统运行情况。</p>
-<h2 id="自行安装好docker及docker-compose">自行安装好docker及docker-compose</h2>
-<h2 id="开始操作">开始操作</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p ~/data/docker_data/coturn/etc/coturn
-</span></span><span style="display:flex;"><span>mkdir -p ~/data/docker_data/coturn/var/run
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>mkdir -p ~/data/docker_data/coturn/var/log  <span style="color:#75715e">#如果用下面第一种方案这个才需要建立，第二种不需要</span>
-</span></span><span style="display:flex;"><span>cd ~/data/docker_data/coturn/etc/coturn
-</span></span><span style="display:flex;"><span>touch turnserver.conf
-</span></span><span style="display:flex;"><span>cd ~/data/docker_data/coturn/var/run
-</span></span><span style="display:flex;"><span>touch turnserver.pid
-</span></span><span style="display:flex;"><span>cd ../../
-</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">777</span> -R var
-</span></span></code></pre></div><p><code>turnserver.conf:</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#这是系统日志 </span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#syslog</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#冗余的日志输出</span>
-</span></span><span style="display:flex;"><span>verbose
-</span></span><span style="display:flex;"><span>use-auth-secret
-</span></span><span style="display:flex;"><span>static-auth-secret<span style="color:#f92672">=</span>ThisIsASharedSecret-ChangeMe
-</span></span><span style="display:flex;"><span>realm<span style="color:#f92672">=</span>example.org
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cert<span style="color:#f92672">=</span>/etc/letsencrypt/live/turn.example.org/fullchain.pem
-</span></span><span style="display:flex;"><span>pkey<span style="color:#f92672">=</span>/etc/letsencrypt/live/turn.example.org/privkey.pem
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>no-udp
-</span></span><span style="display:flex;"><span>external-ip<span style="color:#f92672">=</span>1.2.3.4
-</span></span><span style="display:flex;"><span>min-port<span style="color:#f92672">=</span><span style="color:#ae81ff">64000</span>
-</span></span><span style="display:flex;"><span>max-port<span style="color:#f92672">=</span><span style="color:#ae81ff">65535</span>
-</span></span></code></pre></div><p>详解：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 走系统日志</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#syslog</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 冗余的日志输出</span>
-</span></span><span style="display:flex;"><span>verbose
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 指定了长期凭证机制，用于客户端的身份验证和下面的二选一</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#lt-cred-mech</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启用了使用静态身份验证密钥进行身份验证的功能</span>
-</span></span><span style="display:flex;"><span>use-auth-secret
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置了身份验证密钥和域名</span>
-</span></span><span style="display:flex;"><span>static-auth-secret<span style="color:#f92672">=</span>ynojlSEBrJnMUQ0WKAsSzGdMhL8he
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置了域名</span>
-</span></span><span style="display:flex;"><span>realm<span style="color:#f92672">=</span>coturn.1.xyz
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 指定了 TLS 证书文件的路径</span>
-</span></span><span style="display:flex;"><span>cert<span style="color:#f92672">=</span>/etc/web.crt
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 指定了 TLS 私钥文件的路径</span>
-</span></span><span style="display:flex;"><span>pkey<span style="color:#f92672">=</span>/etc/web.key
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Set a non-empty CLI password</span>
-</span></span><span style="display:flex;"><span>cli-password<span style="color:#f92672">=</span>8al8la.com 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 禁用了 UDP 通信，意味着只使用 TCP</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#no-udp</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>min-port<span style="color:#f92672">=</span><span style="color:#ae81ff">64000</span>
-</span></span><span style="display:flex;"><span>max-port<span style="color:#f92672">=</span><span style="color:#ae81ff">65535</span>
-</span></span></code></pre></div><p>最终实例：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 日志输出参数</span>
-</span></span><span style="display:flex;"><span>info
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启用认证</span>
-</span></span><span style="display:flex;"><span>use-auth-secret
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 值为认证时使用的密钥</span>
-</span></span><span style="display:flex;"><span>static-auth-secret<span style="color:#f92672">=</span>ynojlSEBnMUQ0WKAsSzGdMhL8he
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 值为你给 coturn 实例分配的域名 (它可以不和你的域名完全一致, 但至少必须有)</span>
-</span></span><span style="display:flex;"><span>realm<span style="color:#f92672">=</span>coturn.10.xyz
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 指定了 TLS 证书文件的路径</span>
-</span></span><span style="display:flex;"><span>cert<span style="color:#f92672">=</span>/etc/web.crt
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 指定了 TLS 私钥文件的路径</span>
-</span></span><span style="display:flex;"><span>pkey<span style="color:#f92672">=</span>/etc/web.key
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Set a non-empty CLI password</span>
-</span></span><span style="display:flex;"><span>cli-password<span style="color:#f92672">=</span>8a.com
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#限定最小最大端口</span>
-</span></span><span style="display:flex;"><span>min-port<span style="color:#f92672">=</span><span style="color:#ae81ff">64000</span>
-</span></span><span style="display:flex;"><span>max-port<span style="color:#f92672">=</span><span style="color:#ae81ff">65535</span>
-</span></span></code></pre></div><h2 id="上面配置里的证书-和域名生成标准证书一样本站有提供教程此证书为coturn服务器域名的证书">上面配置里的证书： 和域名生成标准证书一样，本站有提供教程。此证书为coturn服务器域名的证书</h2>
-<h2 id="测试启动命令没有加-d-后台运行-测试没问题了再加还有最后的rm去除掉退出自动删除容器的意思">测试启动命令：(没有加-d （后台运行） 测试没问题了，再加,还有最后的&ndash;rm去除掉，退出自动删除容器的意思）</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --network<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>		   -v /root/data/docker_data/coturn/var/run/turnserver.pid:/var/run/turnserver.pid <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>           --rm <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>       coturn/coturn
+生成验证密钥到test.conf文件，生成后打开文件复制密钥替换下面配置文件里的密钥：（特别说明，密钥的长度可以修改下面命令行里的256参数，建议设为68即可，也就是68个字符</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>echo <span style=color:#e6db74>&#34;static-auth-secret=</span><span style=color:#66d9ef>$(</span>cat /dev/urandom | tr -cd <span style=color:#e6db74>&#39;[:alnum:]&#39;</span> | fold -w <span style=color:#ae81ff>256</span> | head -n 1<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span> | sudo tee /root/test.conf
+</span></span></code></pre></div><p>如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>echo <span style=color:#e6db74>&#34;static-auth-secret=</span><span style=color:#66d9ef>$(</span>cat /dev/urandom | tr -cd <span style=color:#e6db74>&#39;[:alnum:]&#39;</span> | fold -w <span style=color:#ae81ff>68</span> | head -n 1<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span> | sudo tee /root/test.conf
+</span></span></code></pre></div><p>具体配置文件是：<code>turnserver.conf</code> 路径为：<code>/root/data/docker_data/coturn/etc/coturn</code></p><p>COTURN Server 配置样例：turnserver.conf</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>use-auth-secret
+</span></span><span style=display:flex><span>static-auth-secret<span style=color:#f92672>=</span>ynojlSEBrJ6VjFHNyjJiyZRnnMUQ0WKAsSzGdMhL8he
+</span></span><span style=display:flex><span>realm<span style=color:#f92672>=</span>coturn.1.xyz
+</span></span><span style=display:flex><span><span style=color:#75715e>#指定 Coturn 的日志文件路径</span>
+</span></span><span style=display:flex><span>log-file<span style=color:#f92672>=</span>/var/log/turnserver.log
+</span></span><span style=display:flex><span><span style=color:#75715e># VoIP traffic is all UDP. There is no reason to let users connect to arbitrary TCP endpoints via the relay.</span>
+</span></span><span style=display:flex><span>no-tcp-relay
+</span></span><span style=display:flex><span><span style=color:#75715e># 调试日志级别</span>
+</span></span><span style=display:flex><span>verbose<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cli-password<span style=color:#f92672>=</span>8al8la.com <span style=color:#75715e># Set a non-empty CLI password</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># don&#39;t let the relay ever try to connect to private IP address ranges within your network (if any)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># given the turn server is likely behind your firewall, remember to include any privileged public IPs too.</span>
+</span></span><span style=display:flex><span>denied-peer-ip<span style=color:#f92672>=</span>10.0.0.0-10.255.255.255
+</span></span><span style=display:flex><span>denied-peer-ip<span style=color:#f92672>=</span>192.168.0.0-192.168.255.255
+</span></span><span style=display:flex><span>denied-peer-ip<span style=color:#f92672>=</span>172.16.0.0-172.31.255.255
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># special case the turn server itself so that client-&gt;TURN-&gt;TURN-&gt;client flows work</span>
+</span></span><span style=display:flex><span>allowed-peer-ip<span style=color:#f92672>=</span>10.0.0.1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>listener-ip<span style=color:#f92672>=</span>coturn.1.xyz
+</span></span><span style=display:flex><span>relay-ip<span style=color:#f92672>=</span>coturn.1.xyz
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># consider whether you want to limit the quota of relayed streams per user (or total) to avoid risk of DoS.</span>
+</span></span><span style=display:flex><span>user-quota<span style=color:#f92672>=</span><span style=color:#ae81ff>12</span> <span style=color:#75715e># 4 streams per video call, so 12 streams = 3 simultaneous relayed calls per user.</span>
+</span></span><span style=display:flex><span>total-quota<span style=color:#f92672>=</span><span style=color:#ae81ff>1200</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># TLS certificates, including intermediate certs.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 指定了 TLS 证书文件的路径</span>
+</span></span><span style=display:flex><span>cert<span style=color:#f92672>=</span>/etc/turn_server_cert.pem
+</span></span><span style=display:flex><span><span style=color:#75715e># 指定了 TLS 私钥文件的路径</span>
+</span></span><span style=display:flex><span>pkey<span style=color:#f92672>=</span>/etc/turn_server_pkey.pem
+</span></span><span style=display:flex><span>pidfile<span style=color:#f92672>=</span>/var/run/turnserver.pid
+</span></span></code></pre></div><p>修改上面的域名，和那一串密码，保存后重启coturn的容器！</p><h2 id=调试日志说明>调试日志说明</h2><p>在您提供的配置中，日志调试级别由verbose参数指定。在您的配置中，verbose设置为1，表示启用了最低级别的调试日志。</p><p>调试级别通常有不同的值，用于控制日志的详细程度。常见的级别包括：</p><p>0：关闭调试日志，只记录错误和关键信息。</p><p>1：最低级别的调试，通常用于记录基本的操作信息和警告。</p><p>2：中等级别的调试，记录更多的详细信息，包括一些内部操作的细节。</p><p>3：最高级别的调试，记录非常详细的信息，包括每个步骤的操作和状态。</p><p>在您的配置中，设置为1的调试级别将记录基本的操作信息和警告，但不会记录过多的细节。这对于一般情况下的日志记录已经足够。如果需要更详细的调试信息，您可以将调试级别设置为更高的值，例如2或3，但这可能会生成更多的日志数据。</p><p>注意上面/etc/turn_*路役是指容器里的路径。</p><p>如果想关闭CLI监听器功能。要禁用CLI功能，您可以删除或注释掉相关配置行。在您的配置文件中，只需要删除或注释掉以下两行即可：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cli-password<span style=color:#f92672>=</span>8al8la.com <span style=color:#75715e># Set a non-empty CLI password</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 指定 Coturn 的日志文件路径</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># log-file=/var/log/turnserver.log</span>
+</span></span></code></pre></div><p>请注意，这些配置更改将禁用CLI密码和CLI日志记录功能。保存更改后，重新启动coturn服务器以使更改生效。</p><p>所谓cli功能：</p><p>CLI监听器（Command Line Interface listener）允许您通过命令行界面与coturn服务器进行交互和管理。通过CLI，您可以执行各种管理任务，例如查看当前服务器状态、添加或删除用户、配置转发规则等。</p><p>CLI监听器允许管理员通过命令行输入特定的命令来与coturn服务器进行通信，而无需通过图形界面或其他方式进行操作。这使得管理者可以更加灵活和高效地管理服务器，特别是在自动化和脚本化管理方面。</p><p>查看日志：运行时不加 -d 看输入！</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>journalctl -u coturnsystemd 
+</span></span></code></pre></div><p>这是加<code>/root/data/docker_data/synapse/data/homeserver.yaml</code>配置文件里的</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#turnserver#</span>
+</span></span><span style=display:flex><span>turn_uris: <span style=color:#f92672>[</span> <span style=color:#e6db74>&#34;turn:coturn.666.eu.org?transport=udp&#34;</span>, <span style=color:#e6db74>&#34;turn:coturn.666.eu.org?transport=tcp&#34;</span> <span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>turn_shared_secret: <span style=color:#e6db74>&#34;SdQmVOBTRxViwUhsRsRgpBctFNMYatKUBHIO69wFKxEVuqog1HPPoMKya7YA&#34;</span>
+</span></span><span style=display:flex><span>turn_user_lifetime: <span style=color:#ae81ff>86400000</span>
+</span></span><span style=display:flex><span>turn_allow_guests: True
+</span></span><span style=display:flex><span><span style=color:#e6db74>```</span>bash
+</span></span><span style=display:flex><span>记的修改域名和密码和主文件同步。
+</span></span><span style=display:flex><span><span style=color:#e6db74>```</span>bash
+</span></span><span style=display:flex><span>确保您的防火墙允许流量进入您配置为侦听的端口上的 TURN 服务器（默认情况下：TURN 流量使用 <span style=color:#ae81ff>3478</span> 和 5349（请记住同时允许 TCP 和 UDP 流量），UDP 中继使用端口 49152-65535 .<span style=color:#f92672>)</span>
+</span></span></code></pre></div><p>特别说明：coturn服务器也可以不做反向代理</p><p>Coturn服务通常需要打开以下端口以支持TURN协议和实现NAT遍历：</p><p><code>TURN Listening Port (Default: 3478): </code>Coturn服务通过此端口侦听TURN请求。此端口是TURN协议的标准端口。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Default TURN Port: <span style=color:#ae81ff>3478</span>
+</span></span><span style=display:flex><span>TURN TLS Listening Port <span style=color:#f92672>(</span>Default: 5349<span style=color:#f92672>)</span>: 如果启用了TURN over TLS（加密的TURN流量），则需要打开此端口。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Default TURN TLS Port: <span style=color:#ae81ff>5349</span>
+</span></span></code></pre></div><p>Listening Ports Range for Relayed UDP Traffic (Default: 49152-65535): 当TURN服务器用于中继UDP流量时，它需要使用一系列UDP端口。</p><p>上面的配置里我指定了20000-30000</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Default UDP Port Range: 49152-65535
+</span></span></code></pre></div><p>这些端口需要在Coturn服务器配置中指定，并且相应的防火墙规则也需要配置，以允许流量通过这些端口。确保在配置Coturn服务器时参考文档，因为实际端口配置可能因特定用例和安全需求而有所不同。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Matrix Synapse Default Communication Port <span style=color:#f92672>(</span>TCP<span style=color:#f92672>)</span>: <span style=color:#ae81ff>8448</span>
+</span></span></code></pre></div><p>确保在配置防火墙规则时，这些端口是开放的，以确保Synapse和Coturn能够相互通信。</p><h2 id=第二种方案优选推荐使用这一种方案>第二种方案：（优选，推荐使用这一种方案）</h2><p>关于日志输入等级，常见的选项包括：</p><p>verbose：冗余的输出，通常包含了非常详细的信息，用于调试和排查问题。</p><p>debug：调试级别的输出，提供比较详细但不如 verbose 那么冗余的信息。</p><p>info：信息级别的输出，提供基本的运行信息，适合一般情况下的使用。</p><p>warning：警告级别的输出，用于指示潜在的问题或错误。</p><p>error：错误级别的输出，指示出现的错误情况。</p><p>您可以根据实际需求调整日志输入等级，一般来说，在生产环境中，通常会将日志输入等级设置为 info 或更高级别，以避免冗余信息过多，而在开发或调试阶段，则可能会选择 debug 或 verbose 等级以便更详细地了解系统运行情况。</p><h2 id=自行安装好docker及docker-compose>自行安装好docker及docker-compose</h2><h2 id=开始操作>开始操作</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir -p ~/data/docker_data/coturn/etc/coturn
+</span></span><span style=display:flex><span>mkdir -p ~/data/docker_data/coturn/var/run
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mkdir -p ~/data/docker_data/coturn/var/log  <span style=color:#75715e>#如果用下面第一种方案这个才需要建立，第二种不需要</span>
+</span></span><span style=display:flex><span>cd ~/data/docker_data/coturn/etc/coturn
+</span></span><span style=display:flex><span>touch turnserver.conf
+</span></span><span style=display:flex><span>cd ~/data/docker_data/coturn/var/run
+</span></span><span style=display:flex><span>touch turnserver.pid
+</span></span><span style=display:flex><span>cd ../../
+</span></span><span style=display:flex><span>chmod <span style=color:#ae81ff>777</span> -R var
+</span></span></code></pre></div><p><code>turnserver.conf:</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#这是系统日志 </span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#syslog</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#冗余的日志输出</span>
+</span></span><span style=display:flex><span>verbose
+</span></span><span style=display:flex><span>use-auth-secret
+</span></span><span style=display:flex><span>static-auth-secret<span style=color:#f92672>=</span>ThisIsASharedSecret-ChangeMe
+</span></span><span style=display:flex><span>realm<span style=color:#f92672>=</span>example.org
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cert<span style=color:#f92672>=</span>/etc/letsencrypt/live/turn.example.org/fullchain.pem
+</span></span><span style=display:flex><span>pkey<span style=color:#f92672>=</span>/etc/letsencrypt/live/turn.example.org/privkey.pem
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>no-udp
+</span></span><span style=display:flex><span>external-ip<span style=color:#f92672>=</span>1.2.3.4
+</span></span><span style=display:flex><span>min-port<span style=color:#f92672>=</span><span style=color:#ae81ff>64000</span>
+</span></span><span style=display:flex><span>max-port<span style=color:#f92672>=</span><span style=color:#ae81ff>65535</span>
+</span></span></code></pre></div><p>详解：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 走系统日志</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#syslog</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 冗余的日志输出</span>
+</span></span><span style=display:flex><span>verbose
+</span></span><span style=display:flex><span><span style=color:#75715e># 指定了长期凭证机制，用于客户端的身份验证和下面的二选一</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#lt-cred-mech</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 启用了使用静态身份验证密钥进行身份验证的功能</span>
+</span></span><span style=display:flex><span>use-auth-secret
+</span></span><span style=display:flex><span><span style=color:#75715e># 设置了身份验证密钥和域名</span>
+</span></span><span style=display:flex><span>static-auth-secret<span style=color:#f92672>=</span>ynojlSEBrJnMUQ0WKAsSzGdMhL8he
+</span></span><span style=display:flex><span><span style=color:#75715e># 设置了域名</span>
+</span></span><span style=display:flex><span>realm<span style=color:#f92672>=</span>coturn.1.xyz
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 指定了 TLS 证书文件的路径</span>
+</span></span><span style=display:flex><span>cert<span style=color:#f92672>=</span>/etc/web.crt
+</span></span><span style=display:flex><span><span style=color:#75715e># 指定了 TLS 私钥文件的路径</span>
+</span></span><span style=display:flex><span>pkey<span style=color:#f92672>=</span>/etc/web.key
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Set a non-empty CLI password</span>
+</span></span><span style=display:flex><span>cli-password<span style=color:#f92672>=</span>8al8la.com 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 禁用了 UDP 通信，意味着只使用 TCP</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#no-udp</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>min-port<span style=color:#f92672>=</span><span style=color:#ae81ff>64000</span>
+</span></span><span style=display:flex><span>max-port<span style=color:#f92672>=</span><span style=color:#ae81ff>65535</span>
+</span></span></code></pre></div><p>最终实例：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 日志输出参数</span>
+</span></span><span style=display:flex><span>info
+</span></span><span style=display:flex><span><span style=color:#75715e># 启用认证</span>
+</span></span><span style=display:flex><span>use-auth-secret
+</span></span><span style=display:flex><span><span style=color:#75715e># 值为认证时使用的密钥</span>
+</span></span><span style=display:flex><span>static-auth-secret<span style=color:#f92672>=</span>ynojlSEBnMUQ0WKAsSzGdMhL8he
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 值为你给 coturn 实例分配的域名 (它可以不和你的域名完全一致, 但至少必须有)</span>
+</span></span><span style=display:flex><span>realm<span style=color:#f92672>=</span>coturn.10.xyz
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 指定了 TLS 证书文件的路径</span>
+</span></span><span style=display:flex><span>cert<span style=color:#f92672>=</span>/etc/web.crt
+</span></span><span style=display:flex><span><span style=color:#75715e># 指定了 TLS 私钥文件的路径</span>
+</span></span><span style=display:flex><span>pkey<span style=color:#f92672>=</span>/etc/web.key
+</span></span><span style=display:flex><span><span style=color:#75715e># Set a non-empty CLI password</span>
+</span></span><span style=display:flex><span>cli-password<span style=color:#f92672>=</span>8a.com
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#限定最小最大端口</span>
+</span></span><span style=display:flex><span>min-port<span style=color:#f92672>=</span><span style=color:#ae81ff>64000</span>
+</span></span><span style=display:flex><span>max-port<span style=color:#f92672>=</span><span style=color:#ae81ff>65535</span>
+</span></span></code></pre></div><h2 id=上面配置里的证书-和域名生成标准证书一样本站有提供教程此证书为coturn服务器域名的证书>上面配置里的证书： 和域名生成标准证书一样，本站有提供教程。此证书为coturn服务器域名的证书</h2><h2 id=测试启动命令没有加-d-后台运行-测试没问题了再加还有最后的rm去除掉退出自动删除容器的意思>测试启动命令：(没有加-d （后台运行） 测试没问题了，再加,还有最后的&ndash;rm去除掉，退出自动删除容器的意思）</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker run --network<span style=color:#f92672>=</span>host <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           -v /root/data/docker_data/coturn/etc/:/etc/ <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>		   -v /root/data/docker_data/coturn/var/run/turnserver.pid:/var/run/turnserver.pid <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>           --rm <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>       coturn/coturn
 </span></span></code></pre></div><p>(小提醒:域名证书生成后按照配置文件路役放入运行后，可能会提示key文件权限不够，给他个other读权限，重启即可）
-正式启动命令：</p>
-<pre tabindex="0"><code>docker run -d --network=host \
+正式启动命令：</p><pre tabindex=0><code>docker run -d --network=host \
            -v /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf \
            -v /root/data/docker_data/coturn/etc/:/etc/ \
 		   -v /root/data/docker_data/coturn/var/run/turnserver.pid:/var/run/turnserver.pid \
        coturn/coturn
-</code></pre><p>docker-compose.yaml</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>services:
-</span></span><span style="display:flex;"><span>    coturn:
-</span></span><span style="display:flex;"><span>        image: coturn/coturn
-</span></span><span style="display:flex;"><span>        container_name: coturn
-</span></span><span style="display:flex;"><span>        network_mode: host
-</span></span><span style="display:flex;"><span>        restart: unless-stopped     <span style="color:#75715e"># 始终启动，除非手动停止</span>
-</span></span><span style="display:flex;"><span>        volumes:
-</span></span><span style="display:flex;"><span>            - /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf
-</span></span><span style="display:flex;"><span>            - /root/data/docker_data/coturn/etc/:/etc/
-</span></span><span style="display:flex;"><span>            - /root/data/docker_data/coturn/var/run/turnserver.pid:/var/run/turnserver.pid
-</span></span></code></pre></div><p>使用以下命令来后台运行容器：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker-compose up -d
-</span></span></code></pre></div><h2 id="在synapse配置文件datahomeserveryaml里加入">在synapse配置文件<code>data/homeserver.yaml</code>里加入</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#turnserver#</span>
-</span></span><span style="display:flex;"><span>turn_uris: <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;turn:cotu10.xyz?transport=udp&#34;</span>, <span style="color:#e6db74">&#34;turn:coturnc10.xyz?transport=tcp&#34;</span> <span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>turn_shared_secret: <span style="color:#e6db74">&#34;ynojlAOWksiyk1SEBrJ6VjFHNyjJiyZRnnMUQ0WKAsSzGdMhL8he&#34;</span>
-</span></span><span style="display:flex;"><span>turn_user_lifetime: <span style="color:#ae81ff">86400000</span>
-</span></span><span style="display:flex;"><span>turn_allow_guests: True
-</span></span></code></pre></div>
-<div id="utterances-comments">
-  <script src="https://utteranc.es/client.js"
-      repo="hanigege/blog-comments"
-      issue-term="pathname"
-      theme="github-light"
-      crossorigin="anonymous"
-      async>
-  </script>
-</div>
-
-
-
-
-    </div>
-    <footer class="content__footer"></footer>
-
-            </section>
-
-            <section class="page__aside">
-                <div class="aside__about">
-<div class="aside__about">
-    <span class="about__logo" role="img">🍚</span>&nbsp;
-    
-<h1 class="about__title">喂饭</h1>
-<p class="about__description">個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p>
-</div>
-
-
-<ul class="aside__social-links">
-    
-    <li>
-        <a href="mailto:purodn@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
-    </li>
-    
-</ul>
-</div>
-                <hr>
-                <div class="aside__content">
-    
-    
-        <p>
-            
-            2025-05-11
-        </p>
-    
-
-    
-	    <hr>
-	    On this page:
-	    <nav id="TableOfContents">
-  <ol>
-    <li><a href="#docker搭建coturn-turn服务器">docker搭建Coturn TURN服务器</a></li>
-    <li><a href="#共两种方案">共两种方案：</a></li>
-    <li><a href="#第一种方案要了解">第一种方案（要了解）</a>
-      <ol>
-        <li></li>
-      </ol>
-    </li>
-    <li><a href="#调试日志说明">调试日志说明</a></li>
-    <li><a href="#第二种方案优选推荐使用这一种方案">第二种方案：（优选，推荐使用这一种方案）</a></li>
-    <li><a href="#自行安装好docker及docker-compose">自行安装好docker及docker-compose</a></li>
-    <li><a href="#开始操作">开始操作</a></li>
-    <li><a href="#上面配置里的证书-和域名生成标准证书一样本站有提供教程此证书为coturn服务器域名的证书">上面配置里的证书： 和域名生成标准证书一样，本站有提供教程。此证书为coturn服务器域名的证书</a></li>
-    <li><a href="#测试启动命令没有加-d-后台运行-测试没问题了再加还有最后的rm去除掉退出自动删除容器的意思">测试启动命令：(没有加-d （后台运行） 测试没问题了，再加,还有最后的&ndash;rm去除掉，退出自动删除容器的意思）</a></li>
-    <li><a href="#在synapse配置文件datahomeserveryaml里加入">在synapse配置文件<code>data/homeserver.yaml</code>里加入</a></li>
-  </ol>
-</nav>
-    
-
-                </div>
-            </section>
-
-            <footer class="page__footer">
- <p class="copyright">© <strong>石榴</strong>.</p>
- <p class="advertisement">Powered by <a>大佬們</a>.</p>
-</footer>
-
-        </div>
-    </body>
-
-</html>
+</code></pre><p>docker-compose.yaml</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>services:
+</span></span><span style=display:flex><span>    coturn:
+</span></span><span style=display:flex><span>        image: coturn/coturn
+</span></span><span style=display:flex><span>        container_name: coturn
+</span></span><span style=display:flex><span>        network_mode: host
+</span></span><span style=display:flex><span>        restart: unless-stopped     <span style=color:#75715e># 始终启动，除非手动停止</span>
+</span></span><span style=display:flex><span>        volumes:
+</span></span><span style=display:flex><span>            - /root/data/docker_data/coturn/etc/coturn/turnserver.conf:/etc/coturn/turnserver.conf
+</span></span><span style=display:flex><span>            - /root/data/docker_data/coturn/etc/:/etc/
+</span></span><span style=display:flex><span>            - /root/data/docker_data/coturn/var/run/turnserver.pid:/var/run/turnserver.pid
+</span></span></code></pre></div><p>使用以下命令来后台运行容器：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker-compose up -d
+</span></span></code></pre></div><h2 id=在synapse配置文件datahomeserveryaml里加入>在synapse配置文件<code>data/homeserver.yaml</code>里加入</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#turnserver#</span>
+</span></span><span style=display:flex><span>turn_uris: <span style=color:#f92672>[</span> <span style=color:#e6db74>&#34;turn:cotu10.xyz?transport=udp&#34;</span>, <span style=color:#e6db74>&#34;turn:coturnc10.xyz?transport=tcp&#34;</span> <span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>turn_shared_secret: <span style=color:#e6db74>&#34;ynojlAOWksiyk1SEBrJ6VjFHNyjJiyZRnnMUQ0WKAsSzGdMhL8he&#34;</span>
+</span></span><span style=display:flex><span>turn_user_lifetime: <span style=color:#ae81ff>86400000</span>
+</span></span><span style=display:flex><span>turn_allow_guests: True
+</span></span></code></pre></div><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>喂饭</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興，工作繁忙，不接受諮詢,敬請諒解。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2025-05-11</p><hr>On this page:<nav id=TableOfContents><ol><li><a href=#docker搭建coturn-turn服务器>docker搭建Coturn TURN服务器</a></li><li><a href=#共两种方案>共两种方案：</a></li><li><a href=#第一种方案要了解>第一种方案（要了解）</a><ol><li></li></ol></li><li><a href=#调试日志说明>调试日志说明</a></li><li><a href=#第二种方案优选推荐使用这一种方案>第二种方案：（优选，推荐使用这一种方案）</a></li><li><a href=#自行安装好docker及docker-compose>自行安装好docker及docker-compose</a></li><li><a href=#开始操作>开始操作</a></li><li><a href=#上面配置里的证书-和域名生成标准证书一样本站有提供教程此证书为coturn服务器域名的证书>上面配置里的证书： 和域名生成标准证书一样，本站有提供教程。此证书为coturn服务器域名的证书</a></li><li><a href=#测试启动命令没有加-d-后台运行-测试没问题了再加还有最后的rm去除掉退出自动删除容器的意思>测试启动命令：(没有加-d （后台运行） 测试没问题了，再加,还有最后的&ndash;rm去除掉，退出自动删除容器的意思）</a></li><li><a href=#在synapse配置文件datahomeserveryaml里加入>在synapse配置文件<code>data/homeserver.yaml</code>里加入</a></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>石榴</strong>.</p><p class=advertisement>Powered by <a>大佬們</a>.</p></footer></div></body></html>
