@@ -144,7 +144,7 @@ done
 &lt;/code&gt;&lt;/pre&gt;&lt;h4 id="添加权限并执行"&gt;添加权限并执行&lt;/h4&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;chmod +x iptables_manager.sh
 ./iptables_manager.sh
-&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>FreeBSD</title><link>https://hanigege.github.io/posts/freebsd/</link><pubDate>Thu, 26 Feb 2026 20:00:00 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/</guid><description/></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd14下配置服务器端hysteria2"&gt;FreeBSD14下配置服务器端Hysteria2&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd14下配置服务器端hysteria2"&gt;FreeBSD14下配置服务器端Hysteria2&lt;/h2&gt;
 &lt;p&gt;我的系统是FreeBSD14的，官方提供的无法正常运行，不知道，是什么原因。&lt;/p&gt;
 &lt;p&gt;只好在自己的build一个，不过还好很简单。建议用好一点的VPS来build，用国内的，各种time out。&lt;/p&gt;
 &lt;p&gt;准备&lt;/p&gt;
