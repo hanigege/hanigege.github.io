@@ -261,141 +261,25 @@
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update &amp;amp;&amp;amp; apt install neovim
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="验证版本信息"&gt;验证版本信息&lt;/h4&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim --version | grep ^NVIM
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="如果是低版本系统也可自行编译安装最新版"&gt;如果是低版本系统，也可自行编译安装（最新版）&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 1. 安装编译所必须的基础工具和系统依赖
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install ninja-build gettext cmake unzip curl build-essential git -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 2. 拉取 Neovim 源码并切换到稳定版分支 (规避开发版的潜在 bug)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/neovim/neovim.git ~/neovim-src
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd ~/neovim-src
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout stable
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 3. 编译并全局安装 (利用多核加速)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make CMAKE_BUILD_TYPE=Release -j$(nproc)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo make install
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 4. 清理路径缓存并验证版本
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hash -r
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim -v
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="安装格式化与剪贴板依赖环境"&gt;安装格式化与剪贴板依赖环境&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;要让 conform.nvim 成功调用 prettier，以及保证系统与 Neovim 之间的剪贴板交互顺畅，必须在操作系统层面安装以下工具：&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&amp;ndash;Debian13&amp;ndash;:&lt;/p&gt;
-&lt;h2 id="2-安装-nodejs-和-npm-提供运行环境-xclip-提供剪贴板支持"&gt;2. 安装 Node.js 和 npm (提供运行环境), xclip (提供剪贴板支持)&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update &amp;amp;&amp;amp; sudo apt install -y nodejs npm xclip
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-全局安装-prettier"&gt;3. 全局安装 Prettier&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo npm install -g prettier
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-清理旧环境"&gt;4. 清理旧环境&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rm -rf ~/.config/nvim ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p ~/.config/nvim
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-写入配置"&gt;5. 写入配置&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;EOF&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#f92672"&gt;~/.&lt;/span&gt;config&lt;span style="color:#f92672"&gt;/&lt;/span&gt;nvim&lt;span style="color:#f92672"&gt;/&lt;/span&gt;init&lt;span style="color:#f92672"&gt;.&lt;/span&gt;lua
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; [&lt;span style="color:#960050;background-color:#1e0010"&gt;基础设置&lt;/span&gt;]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;g&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mapleader &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;;&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;local opt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;opt
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;number &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;relativenumber &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cursorline &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;termguicolors &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;encoding &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;utf-8&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mouse &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;a&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;timeoutlen &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;splitright &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;splitbelow &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; [&lt;span style="color:#960050;background-color:#1e0010"&gt;安装&lt;/span&gt; lazy&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nvim]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;local lazypath &lt;span style="color:#f92672"&gt;=&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fn&lt;span style="color:#f92672"&gt;.&lt;/span&gt;stdpath(&lt;span style="color:#e6db74"&gt;&amp;#34;data&amp;#34;&lt;/span&gt;) &lt;span style="color:#f92672"&gt;..&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;/lazy/lazy.nvim&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;loop&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fs_stat(lazypath) then
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fn&lt;span style="color:#f92672"&gt;.&lt;/span&gt;system({
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;git&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;clone&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;--filter=blob:none&amp;#34;&lt;/span&gt;,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;https://github.com/folke/lazy.nvim.git&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;--branch=stable&amp;#34;&lt;/span&gt;, lazypath,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;end
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;rtp:prepend(lazypath)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; [&lt;span style="color:#960050;background-color:#1e0010"&gt;插件配置&lt;/span&gt;]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;require(&lt;span style="color:#e6db74"&gt;&amp;#34;lazy&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup({
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1.&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;主题&lt;/span&gt; (Onedark)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;navarasu/onedark.nvim&amp;#34;&lt;/span&gt;,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; lazy &lt;span style="color:#f92672"&gt;=&lt;/span&gt; false,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; priority &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;onedark&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup({ style &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;dark&amp;#39;&lt;/span&gt; })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;onedark&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;load()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;护眼模式修复&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local hl &lt;span style="color:#f92672"&gt;=&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;api&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nvim_set_hl
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; hl(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;Normal&amp;#34;&lt;/span&gt;, { bg &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;#1e2127&amp;#34;&lt;/span&gt;, fg &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;#abb2bf&amp;#34;&lt;/span&gt; })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; hl(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;CursorLine&amp;#34;&lt;/span&gt;, { bg &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;#2c313a&amp;#34;&lt;/span&gt; })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2.&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;文件树&lt;/span&gt; (NvimTree)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;nvim-tree/nvim-tree.lua&amp;#34;&lt;/span&gt;,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dependencies &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;nvim-tree/nvim-web-devicons&amp;#34;&lt;/span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;nvim-tree&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup({
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; view &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { width &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; renderer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { indent_markers &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { enable &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true } }
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3.&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;远程复制&lt;/span&gt; (OSC &lt;span style="color:#ae81ff"&gt;52&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ojroques/nvim-osc52&amp;#34;&lt;/span&gt;,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#39;osc52&amp;#39;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;api&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nvim_create_autocmd(&lt;span style="color:#e6db74"&gt;&amp;#34;TextYankPost&amp;#34;&lt;/span&gt;, {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; callback &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;v&lt;span style="color:#f92672"&gt;.&lt;/span&gt;event&lt;span style="color:#f92672"&gt;.&lt;/span&gt;operator &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;and&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;v&lt;span style="color:#f92672"&gt;.&lt;/span&gt;event&lt;span style="color:#f92672"&gt;.&lt;/span&gt;regname &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt; then
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#39;osc52&amp;#39;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;copy_register(&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;4.&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;代码格式化&lt;/span&gt; (Conform)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;stevearc/conform.nvim&amp;#34;&lt;/span&gt;,
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;conform&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup({
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; formatters_by_ft &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; json &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; yaml &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; html &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; css &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; javascript &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; typescript &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; format_on_save &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { timeout_ms &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;, lsp_fallback &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;})
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; [&lt;span style="color:#960050;background-color:#1e0010"&gt;快捷键映射&lt;/span&gt;]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;local map &lt;span style="color:#f92672"&gt;=&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keymap&lt;span style="color:#f92672"&gt;.&lt;/span&gt;set
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;基础功能&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;leader&amp;gt;w&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;:w&amp;lt;CR&amp;gt;&amp;#34;&lt;/span&gt;, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;leader&amp;gt;q&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;:q&amp;lt;CR&amp;gt;&amp;#34;&lt;/span&gt;, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;CR&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;:noh&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;&amp;#34;&lt;/span&gt;, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;智能文件树来回切换&lt;/span&gt; (;t)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;leader&amp;gt;t&amp;#34;&lt;/span&gt;, function()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local view &lt;span style="color:#f92672"&gt;=&lt;/span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;nvim-tree.view&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; view&lt;span style="color:#f92672"&gt;.&lt;/span&gt;is_visible() then
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;api&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nvim_get_current_win() &lt;span style="color:#f92672"&gt;==&lt;/span&gt; view&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get_winnr() then
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cmd(&lt;span style="color:#e6db74"&gt;&amp;#34;wincmd p&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cmd(&lt;span style="color:#e6db74"&gt;&amp;#34;NvimTreeFocus&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cmd(&lt;span style="color:#e6db74"&gt;&amp;#34;NvimTreeToggle&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;end, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;格式化&lt;/span&gt; (;f)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map({ &lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;v&amp;#34;&lt;/span&gt; }, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;leader&amp;gt;f&amp;#34;&lt;/span&gt;, function()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;conform&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;format({ lsp_fallback &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true, timeout_ms &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt; })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;✨ Format executed&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;end, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;窗口导航&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-h&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-w&amp;gt;h&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-l&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-w&amp;gt;l&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-j&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-w&amp;gt;j&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-k&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-w&amp;gt;k&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EOF
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="配置完成后输入-nvim-启动按回车让它自动下载并部署所有插件即可"&gt;配置完成后，输入 nvim 启动，按回车让它自动下载并部署所有插件即可。&lt;/h2&gt;
-&lt;h2 id="核心特性"&gt;核心特性：&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;智能切换：使用 ;t 在文件树与代码之间来回跳转。&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>CK佬的wg-Easy一键脚本程序</title><link>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link><pubDate>Mon, 12 May 2025 16:09:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p&gt;&lt;img src="assets/1.png" alt="图示"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;要让 conform.nvim 成功调用 prettier，以及保证系统与 Neovim 之间的剪贴板交互顺畅，必须在操作系统层面安装以下工具：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>CK佬的wg-Easy一键脚本程序</title><link>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link><pubDate>Mon, 12 May 2025 16:09:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p&gt;&lt;img src="assets/1.png" alt="图示"&gt;&lt;/p&gt;
 &lt;p&gt;pve下安装ubuntu或者debian.然后看下面ck佬的教程操作：&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://drive.google.com/file/d/1ETrZhXvuLgmXs_-6rdMwsPHz0QJ2JmqY/view?usp=sharing"&gt;wg-easy.zip&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="安装教程"&gt;安装教程&lt;/h2&gt;
