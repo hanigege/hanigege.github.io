@@ -1,150 +1,150 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Freebsd on 代碼倉庫</title><link>https://hanigege.github.io/categories/freebsd/</link><description>Recent content in Freebsd on 代碼倉庫</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **felix**.</copyright><lastBuildDate>Fri, 27 Feb 2026 08:44:18 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/categories/freebsd/index.xml" rel="self" type="application/rss+xml"/><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</guid><description>&lt;br&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202026-02-27%20at%2009.05.03@2x.png" alt="列表"&gt;&lt;/p&gt;
 &lt;h4 id="新建脚本文件"&gt;新建脚本文件&lt;/h4&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;nvim pf_manager.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;h4 id="复制下面的配置"&gt;复制下面的配置&lt;/h4&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;#!/bin/sh
-# FreeBSD 15 PF 交互式防火墙管理脚本 - 终极版
-
-STATE_FILE=&amp;#34;/etc/pf_ports.list&amp;#34;
-PF_CONF=&amp;#34;/etc/pf.conf&amp;#34;
-
-if [ &amp;#34;$(id -u)&amp;#34; != &amp;#34;0&amp;#34; ]; then
- echo &amp;#34;错误：必须使用 root 权限运行。&amp;#34;
- exit 1
-fi
-
-get_active_ssh_ports() {
- ports=$(sockstat -46 -l -P tcp | grep -E &amp;#39;\bsshd\b&amp;#39; | awk &amp;#39;{print $6}&amp;#39; | awk -F&amp;#39;:&amp;#39; &amp;#39;{print $NF}&amp;#39; | sort -u)
- if [ -z &amp;#34;$ports&amp;#34; ]; then echo &amp;#34;22&amp;#34;; else echo &amp;#34;$ports&amp;#34;; fi
-}
-
-init_env() {
- if ! grep -q &amp;#34;^pf_enable=\&amp;#34;YES\&amp;#34;&amp;#34; /etc/rc.conf; then
- sysrc pf_enable=&amp;#34;YES&amp;#34; &amp;gt;/dev/null
- service pf start &amp;gt;/dev/null 2&amp;gt;&amp;amp;1
- fi
- [ ! -f &amp;#34;$STATE_FILE&amp;#34; ] &amp;amp;&amp;amp; init_zero
-}
-
-init_zero() {
- &amp;gt; &amp;#34;$STATE_FILE&amp;#34;
- active_ports=$(get_active_ssh_ports)
- for port in $active_ports; do
- echo &amp;#34;tcp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34;
- done
- apply_rules &amp;gt;/dev/null 2&amp;gt;&amp;amp;1
- echo &amp;#34;✅ 已清空所有自定义规则。&amp;#34;
- echo &amp;#34;🔒 自动检测并放行当前活动 SSH 端口: [ $active_ports ]&amp;#34;
-}
-
-apply_rules() {
- cat &amp;lt;&amp;lt;EOF &amp;gt; &amp;#34;$PF_CONF&amp;#34;
-# 宏定义与全局选项
-set skip on lo0
-set block-policy drop
-
-# 流量清理
-scrub in all fragment reassemble
-
-# 基础过滤规则 (状态机制处理新老连接)
-block in all
-pass out all keep state
-pass in quick inet proto icmp all icmp-type echoreq keep state
-EOF
-
- if grep -q &amp;#34;^ALL PORTS OPEN$&amp;#34; &amp;#34;$STATE_FILE&amp;#34;; then
- echo &amp;#34;pass in quick all keep state&amp;#34; &amp;gt;&amp;gt; &amp;#34;$PF_CONF&amp;#34;
- else
- while read -r proto port; do
- [ -z &amp;#34;$proto&amp;#34; ] || [ -z &amp;#34;$port&amp;#34; ] &amp;amp;&amp;amp; continue
- echo &amp;#34;pass in quick inet proto $proto from any to any port $port keep state&amp;#34; &amp;gt;&amp;gt; &amp;#34;$PF_CONF&amp;#34;
- done &amp;lt; &amp;#34;$STATE_FILE&amp;#34;
- fi
-
- pfctl -nf &amp;#34;$PF_CONF&amp;#34; &amp;gt;/dev/null 2&amp;gt;&amp;amp;1
- if [ $? -eq 0 ]; then
- pfctl -f &amp;#34;$PF_CONF&amp;#34; &amp;gt;/dev/null 2&amp;gt;&amp;amp;1
- echo &amp;#34;✅ 规则已成功更新并生效！&amp;#34;
- else
- echo &amp;#34;❌ 规则语法错误，未应用更改！&amp;#34;
- fi
-}
-
-view_rules() {
- echo &amp;#34;--- 当前系统生效的 PF 规则 (pfctl -sr) ---&amp;#34;
- pfctl -sr
- echo &amp;#34;------------------------------------------&amp;#34;
-}
-
-open_port() {
- read -p &amp;#34;请输入要开放的端口号 (1-65535): &amp;#34; port
- if ! [ &amp;#34;$port&amp;#34; -eq &amp;#34;$port&amp;#34; ] 2&amp;gt;/dev/null || [ &amp;#34;$port&amp;#34; -lt 1 ] || [ &amp;#34;$port&amp;#34; -gt 65535 ]; then
- echo &amp;#34;错误：端口号无效。&amp;#34;
- return
- fi
- echo &amp;#34;请选择协议: 1) TCP 2) UDP 3) TCP 和 UDP&amp;#34;
- read -p &amp;#34;输入选项 (1/2/3): &amp;#34; proto_opt
- sed -i &amp;#39;&amp;#39; &amp;#39;/^ALL PORTS OPEN$/d&amp;#39; &amp;#34;$STATE_FILE&amp;#34;
- case $proto_opt in
- 1) grep -q &amp;#34;^tcp $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34; || echo &amp;#34;tcp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34; ;;
- 2) grep -q &amp;#34;^udp $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34; || echo &amp;#34;udp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34; ;;
- 3) 
- grep -q &amp;#34;^tcp $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34; || echo &amp;#34;tcp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34;
- grep -q &amp;#34;^udp $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34; || echo &amp;#34;udp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34; ;;
- *) echo &amp;#34;错误：无效选项。&amp;#34; ; return ;;
- esac
- apply_rules
-}
-
-delete_port() {
- read -p &amp;#34;请输入要关闭的端口号: &amp;#34; port
- if grep -q &amp;#34; $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34;; then
- sed -i &amp;#39;&amp;#39; &amp;#34;/ $port$/d&amp;#34; &amp;#34;$STATE_FILE&amp;#34;
- apply_rules
- else
- echo &amp;#34;该端口未在管理列表中。&amp;#34;
- fi
-}
-
-open_all_ports() {
- echo &amp;#34;⚠️ 警告：这将放行所有入站流量！&amp;#34;
- read -p &amp;#34;确认执行？(y/n): &amp;#34; confirm
- [ &amp;#34;$confirm&amp;#34; = &amp;#34;y&amp;#34; ] || [ &amp;#34;$confirm&amp;#34; = &amp;#34;Y&amp;#34; ] &amp;amp;&amp;amp; { echo &amp;#34;ALL PORTS OPEN&amp;#34; &amp;gt; &amp;#34;$STATE_FILE&amp;#34;; apply_rules; }
-}
-
-init_env
-
-while true; do
- echo &amp;#34;&amp;#34;
- echo &amp;#34;=== PF 防火墙管理菜单 ===&amp;#34;
- echo &amp;#34;1. 查看当前底层生效规则&amp;#34;
- echo &amp;#34;2. 查看已开放端口列表&amp;#34;
- echo &amp;#34;3. 开放新端口 (支持 TCP/UDP)&amp;#34;
- echo &amp;#34;4. 删除/关闭端口&amp;#34;
- echo &amp;#34;5. 关闭所有端口并从零开始 (保留当前活动 SSH 端口)&amp;#34;
- echo &amp;#34;6. 开放所有端口 (高危)&amp;#34;
- echo &amp;#34;0. 退出&amp;#34;
- read -p &amp;#34;请选择操作 [0-6]: &amp;#34; choice
-
- case $choice in
- 1) view_rules ;;
- 2) echo &amp;#34;--- 当前管理的端口 ---&amp;#34;; cat &amp;#34;$STATE_FILE&amp;#34; ;;
- 3) open_port ;;
- 4) delete_port ;;
- 5) 
- echo &amp;#34;⚠️ 警告：这将清除所有记录，并重新抓取当前 SSH 端口作为唯一放行规则！&amp;#34;
- read -p &amp;#34;确认执行？(y/n): &amp;#34; confirm
- [ &amp;#34;$confirm&amp;#34; = &amp;#34;y&amp;#34; ] || [ &amp;#34;$confirm&amp;#34; = &amp;#34;Y&amp;#34; ] &amp;amp;&amp;amp; init_zero ;;
- 6) open_all_ports ;;
- 0) exit 0 ;;
- *) echo &amp;#34;无效选项。&amp;#34; ;;
- esac
-done
-&lt;/code&gt;&lt;/pre&gt;&lt;h4 id="添加权限并执行"&gt;添加权限并执行&lt;/h4&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;chmod +x iptables_manager.sh
-./iptables_manager.sh
-&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd14下配置服务器端hysteria2"&gt;FreeBSD14下配置服务器端Hysteria2&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim pf_manager.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="复制下面的配置"&gt;复制下面的配置&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/sh
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FreeBSD 15 PF 交互式防火墙管理脚本 - 终极版&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;STATE_FILE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/etc/pf_ports.list&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PF_CONF&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/etc/pf.conf&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;id -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; !&lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;0&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;错误：必须使用 root 权限运行。&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exit &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;get_active_ssh_ports&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ports&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;sockstat -46 -l -P tcp | grep -E &lt;span style="color:#e6db74"&gt;&amp;#39;\bsshd\b&amp;#39;&lt;/span&gt; | awk &lt;span style="color:#e6db74"&gt;&amp;#39;{print $6}&amp;#39;&lt;/span&gt; | awk -F&lt;span style="color:#e6db74"&gt;&amp;#39;:&amp;#39;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;{print $NF}&amp;#39;&lt;/span&gt; | sort -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$ports&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;22&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$ports&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;init_env&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; ! grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^pf_enable=\&amp;#34;YES\&amp;#34;&amp;#34;&lt;/span&gt; /etc/rc.conf; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sysrc pf_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt; &amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; service pf start &amp;gt;/dev/null 2&amp;gt;&amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; ! -f &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; init_zero
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;init_zero&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; active_ports&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;get_active_ssh_ports&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; port in $active_ports; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;tcp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; apply_rules &amp;gt;/dev/null 2&amp;gt;&amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;✅ 已清空所有自定义规则。&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;🔒 自动检测并放行当前活动 SSH 端口: [ &lt;/span&gt;$active_ports&lt;span style="color:#e6db74"&gt; ]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apply_rules&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cat &lt;span style="color:#e6db74"&gt;&amp;lt;&amp;lt;EOF &amp;gt; &amp;#34;$PF_CONF&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;# 宏定义与全局选项
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;set skip on lo0
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;set block-policy drop
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;# 流量清理
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;scrub in all fragment reassemble
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;# 基础过滤规则 (状态机制处理新老连接)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;block in all
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;pass out all keep state
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;pass in quick inet proto icmp all icmp-type echoreq keep state
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^ALL PORTS OPEN&lt;/span&gt;$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;pass in quick all keep state&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PF_CONF&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; read -r proto port; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$proto&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;continue&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;pass in quick inet proto &lt;/span&gt;$proto&lt;span style="color:#e6db74"&gt; from any to any port &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt; keep state&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PF_CONF&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;done&lt;/span&gt; &amp;lt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pfctl -nf &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PF_CONF&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;/dev/null 2&amp;gt;&amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; $? -eq &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pfctl -f &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PF_CONF&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;/dev/null 2&amp;gt;&amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;✅ 规则已成功更新并生效！&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;❌ 规则语法错误，未应用更改！&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;view_rules&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;--- 当前系统生效的 PF 规则 (pfctl -sr) ---&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pfctl -sr
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;open_port&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;请输入要开放的端口号 (1-65535): &amp;#34;&lt;/span&gt; port
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; ! &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; -eq &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; 2&amp;gt;/dev/null &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; -lt &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; -gt &lt;span style="color:#ae81ff"&gt;65535&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;错误：端口号无效。&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;请选择协议: 1) TCP 2) UDP 3) TCP 和 UDP&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;输入选项 (1/2/3): &amp;#34;&lt;/span&gt; proto_opt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sed -i &lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;/^ALL PORTS OPEN$/d&amp;#39;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;case&lt;/span&gt; $proto_opt in
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 1&lt;span style="color:#f92672"&gt;)&lt;/span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^tcp &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;tcp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2&lt;span style="color:#f92672"&gt;)&lt;/span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^udp &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;udp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 3&lt;span style="color:#f92672"&gt;)&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^tcp &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;tcp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^udp &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;udp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; *&lt;span style="color:#f92672"&gt;)&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;错误：无效选项。&amp;#34;&lt;/span&gt; ; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;esac&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; apply_rules
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;delete_port&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;请输入要关闭的端口号: &amp;#34;&lt;/span&gt; port
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34; &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sed -i &lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;/ &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;/d&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; apply_rules
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;该端口未在管理列表中。&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;open_all_ports&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;⚠️ 警告：这将放行所有入站流量！&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;确认执行？(y/n): &amp;#34;&lt;/span&gt; confirm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$confirm&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$confirm&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;ALL PORTS OPEN&amp;#34;&lt;/span&gt; &amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; apply_rules; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;init_env
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; true; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;=== PF 防火墙管理菜单 ===&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;1. 查看当前底层生效规则&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;2. 查看已开放端口列表&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;3. 开放新端口 (支持 TCP/UDP)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;4. 删除/关闭端口&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;5. 关闭所有端口并从零开始 (保留当前活动 SSH 端口)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;6. 开放所有端口 (高危)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;0. 退出&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;请选择操作 [0-6]: &amp;#34;&lt;/span&gt; choice
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;case&lt;/span&gt; $choice in
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 1&lt;span style="color:#f92672"&gt;)&lt;/span&gt; view_rules ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2&lt;span style="color:#f92672"&gt;)&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;--- 当前管理的端口 ---&amp;#34;&lt;/span&gt;; cat &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 3&lt;span style="color:#f92672"&gt;)&lt;/span&gt; open_port ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 4&lt;span style="color:#f92672"&gt;)&lt;/span&gt; delete_port ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 5&lt;span style="color:#f92672"&gt;)&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;⚠️ 警告：这将清除所有记录，并重新抓取当前 SSH 端口作为唯一放行规则！&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;确认执行？(y/n): &amp;#34;&lt;/span&gt; confirm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$confirm&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$confirm&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; init_zero ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 6&lt;span style="color:#f92672"&gt;)&lt;/span&gt; open_all_ports ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 0&lt;span style="color:#f92672"&gt;)&lt;/span&gt; exit &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; *&lt;span style="color:#f92672"&gt;)&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;无效选项。&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;esac&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="添加权限并执行"&gt;添加权限并执行&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x iptables_manager.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./iptables_manager.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd14下配置服务器端hysteria2"&gt;FreeBSD14下配置服务器端Hysteria2&lt;/h2&gt;
 &lt;p&gt;我的系统是FreeBSD14的，官方提供的无法正常运行，不知道，是什么原因。&lt;/p&gt;
 &lt;p&gt;只好在自己的build一个，不过还好很简单。建议用好一点的VPS来build，用国内的，各种time out。&lt;/p&gt;
 &lt;p&gt;准备&lt;/p&gt;
@@ -326,33 +326,31 @@ done
 &lt;h2 id="pkg-换源"&gt;pkg 换源&lt;/h2&gt;
 &lt;p&gt;若要获取滚动更新的包，请将 quarterly 修改为 latest。二者区别见 FreeBSD 手册。请注意，CURRENT 版本只有 latest。&lt;/p&gt;
 &lt;p&gt;使用命令修改系统级 pkg 源使用 latest：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;sed -i &amp;#39;&amp;#39; &amp;#39;s/quarterly/latest/g&amp;#39; /etc/pkg/FreeBSD.conf
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;创建用户级源目录和文件：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;# mkdir -p /usr/local/etc/pkg/repos
-# nano /usr/local/etc/pkg/repos/mirrors.conf
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;中国科学技术大学开源软件镜像站（USTC）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sed -i &amp;#39;&amp;#39; &amp;#39;s/quarterly/latest/g&amp;#39; /etc/pkg/FreeBSD.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;创建用户级源目录和文件：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# mkdir -p /usr/local/etc/pkg/repos
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# nano /usr/local/etc/pkg/repos/mirrors.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;中国科学技术大学开源软件镜像站（USTC）&lt;/p&gt;
 &lt;p&gt;写入以下内容：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;ustc: {
-url: &amp;#34;http://mirrors.ustc.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
-}
-FreeBSD: { enabled: no }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;南京大学开源镜像站&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ustc: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url: &amp;#34;http://mirrors.ustc.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FreeBSD: { enabled: no }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;南京大学开源镜像站&lt;/p&gt;
 &lt;p&gt;写入以下内容：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;nju: {
-url: &amp;#34;http://mirrors.nju.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
-}
-FreeBSD: { enabled: no }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;网易开源镜像站&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nju: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url: &amp;#34;http://mirrors.nju.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FreeBSD: { enabled: no }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;网易开源镜像站&lt;/p&gt;
 &lt;p&gt;写入以下内容：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;163: {
-url: &amp;#34;http://mirrors.163.com/freebsd-pkg/${ABI}/latest&amp;#34;,
-}
-FreeBSD: { enabled: no }
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="ports-源以源代码方式编译安装软件的包管理器"&gt;ports 源：以源代码方式编译安装软件的包管理器&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;163: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url: &amp;#34;http://mirrors.163.com/freebsd-pkg/${ABI}/latest&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FreeBSD: { enabled: no }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="ports-源以源代码方式编译安装软件的包管理器"&gt;ports 源：以源代码方式编译安装软件的包管理器&lt;/h2&gt;
 &lt;p&gt;下载 ports
-这个源是下载 ports 本身的源。等同于以前的 portsnap。&lt;/p&gt;
-&lt;p&gt;Git 方法
-须提前安装 git：&lt;/p&gt;</description></item><item><title>让freebsd在终端下支持中文</title><link>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</link><pubDate>Sun, 11 May 2025 13:48:46 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</guid><description>&lt;br&gt;
+这个源是下载 ports 本身的源。等同于以前的 portsnap。&lt;/p&gt;</description></item><item><title>让freebsd在终端下支持中文</title><link>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</link><pubDate>Sun, 11 May 2025 13:48:46 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</guid><description>&lt;br&gt;
 &lt;h2 id="编辑etcloginconf结尾处我一般在russian段落后面添加"&gt;编辑/etc/login.conf，结尾处（我一般在russian段落后面）添加&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chinese|Chinese Users Accounts:&lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :charset&lt;span style="color:#f92672"&gt;=&lt;/span&gt;UTF-8:&lt;span style="color:#ae81ff"&gt;\
@@ -420,17 +418,17 @@ FreeBSD: { enabled: no }
 &lt;p&gt;安装好后，系统其实是dhcp动态获得ip的，进入看了看，是Centos，我们不需要dhcp，把IP给固定死&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vi &lt;span style="color:#f92672"&gt;/&lt;/span&gt;etc&lt;span style="color:#f92672"&gt;/&lt;/span&gt;sysconfig&lt;span style="color:#f92672"&gt;/&lt;/span&gt;network&lt;span style="color:#f92672"&gt;-&lt;/span&gt;scripts&lt;span style="color:#f92672"&gt;/&lt;/span&gt;ifcfg&lt;span style="color:#f92672"&gt;-&lt;/span&gt;eth0
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;下面的内容跟实际配置文件里的内容相对替换，一一对应替换，原文件里的内容可能更多一些，只修改下面有的，没涉及的保持原来的，dns不可以用科学的，只允许用本地，不然会影响后面系统里nat-ip获取的准确性&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;TYPE=&amp;#34;Ethernet&amp;#34;
-BOOTPROTO=&amp;#34;static&amp;#34;
-IPADDR=10.8.2.60
-NETMASK=255.255.255.0
-GATEWAY=10.8.2.1
-DNS1=114.114.114.114
-DEFROUTE=&amp;#34;yes&amp;#34;
-NAME=&amp;#34;eth0&amp;#34;
-DEVICE=&amp;#34;eth0&amp;#34;
-ONBOOT=&amp;#34;yes&amp;#34;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;重启～&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;TYPE=&amp;#34;Ethernet&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;BOOTPROTO=&amp;#34;static&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;IPADDR=10.8.2.60
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NETMASK=255.255.255.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;GATEWAY=10.8.2.1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DNS1=114.114.114.114
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DEFROUTE=&amp;#34;yes&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME=&amp;#34;eth0&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DEVICE=&amp;#34;eth0&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ONBOOT=&amp;#34;yes&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;重启～&lt;/p&gt;
 &lt;h1 id="freepbx16配置图例"&gt;freepbx16配置图例&lt;/h1&gt;
 &lt;p&gt;freepbx16默认安装在pve系统上就好，登录系统后
 ：&lt;/p&gt;
@@ -441,8 +439,8 @@ ONBOOT=&amp;#34;yes&amp;#34;
 &lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.03.35@2x.png" alt="CleanShot 2025-05-11 at 07.03.35@2x"&gt;&lt;/p&gt;
 &lt;h2 id="现在开始设置系统中文地区时间"&gt;现在开始设置系统中文地区时间&lt;/h2&gt;
 &lt;p&gt;选择高级设置：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;高级设置里一开始还有一个选项是启`chan_sip`,这个记的要打开，不然后面设置中继或者是sip有些选项不显示
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.07.49@2x.png" alt="CleanShot 2025-05-11 at 07.07.49@2x"&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-mysql" data-lang="mysql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;高级设置里一开始还有一个选项是启&lt;/span&gt;&lt;span style="color:#f92672"&gt;`&lt;/span&gt;chan_sip&lt;span style="color:#f92672"&gt;`&lt;/span&gt;,&lt;span style="color:#960050;background-color:#1e0010"&gt;这个记的要打开，不然后面设置中继或者是&lt;/span&gt;sip有些选项不显示
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.07.49@2x.png" alt="CleanShot 2025-05-11 at 07.07.49@2x"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.09.16@2x.png" alt="CleanShot 2025-05-11 at 07.09.16@2x"&gt;&lt;/p&gt;
 &lt;h2 id="开启中继配置-这块设置是连接三汇语音网关的"&gt;开启中继配置 （这块设置是连接三汇语音网关的）&lt;/h2&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.12.25@2x.png" alt="CleanShot 2025-05-11 at 07.12.25@2x"&gt;

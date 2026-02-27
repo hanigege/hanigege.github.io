@@ -1,165 +1,303 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>代码仓库 on 代碼倉庫</title><link>https://hanigege.github.io/</link><description>Recent content in 代码仓库 on 代碼倉庫</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **felix**.</copyright><lastBuildDate>Fri, 27 Feb 2026 08:44:18 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</guid><description>&lt;br&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>代码仓库 on 代碼倉庫</title><link>https://hanigege.github.io/</link><description>Recent content in 代码仓库 on 代碼倉庫</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **felix**.</copyright><lastBuildDate>Fri, 27 Feb 2026 13:04:22 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Debian下nvim格式化全家桶安装</title><link>https://hanigege.github.io/posts/linux/debianmac%E4%B8%8Bnvim%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%85%A8%E5%AE%B6%E6%A1%B6%E5%AE%89%E8%A3%85/</link><pubDate>Fri, 27 Feb 2026 13:04:22 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/debianmac%E4%B8%8Bnvim%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%85%A8%E5%AE%B6%E6%A1%B6%E5%AE%89%E8%A3%85/</guid><description>&lt;br&gt;
+安装 Neovim (&gt;= 0.10.0)
+&lt;h2 id="1-安装neovim-debian13ubuntu2510自动获取最新版必须是默认--010x"&gt;1. 安装neovim (Debian13&amp;amp;Ubuntu25.10+)(自动获取最新版，必须是默认 &amp;gt;= 0.10.x)&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update &amp;amp;&amp;amp; apt install neovim
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="验证版本信息"&gt;验证版本信息&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim --version | grep ^NVIM
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="安装格式化与剪贴板依赖环境"&gt;安装格式化与剪贴板依赖环境&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;要让 conform.nvim 成功调用 prettier，以及保证系统与 Neovim 之间的剪贴板交互顺畅，必须在操作系统层面安装以下工具：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&amp;ndash;Debian13&amp;ndash;:&lt;/p&gt;
+&lt;h2 id="2-安装-nodejs-和-npm-提供运行环境-xclip-提供剪贴板支持"&gt;2. 安装 Node.js 和 npm (提供运行环境), xclip (提供剪贴板支持)&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update &amp;amp;&amp;amp; sudo apt install -y nodejs npm xclip
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-全局安装-prettier"&gt;3. 全局安装 Prettier&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo npm install -g prettier
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-清理旧环境"&gt;4. 清理旧环境&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rm -rf ~/.config/nvim ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p ~/.config/nvim
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-写入配置"&gt;5. 写入配置&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;EOF&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#f92672"&gt;~/.&lt;/span&gt;config&lt;span style="color:#f92672"&gt;/&lt;/span&gt;nvim&lt;span style="color:#f92672"&gt;/&lt;/span&gt;init&lt;span style="color:#f92672"&gt;.&lt;/span&gt;lua
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; [&lt;span style="color:#960050;background-color:#1e0010"&gt;基础设置&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;g&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mapleader &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;local opt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;opt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;number &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;relativenumber &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cursorline &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;termguicolors &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;encoding &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;utf-8&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mouse &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;a&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;timeoutlen &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;splitright &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;splitbelow &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; [&lt;span style="color:#960050;background-color:#1e0010"&gt;安装&lt;/span&gt; lazy&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nvim]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;local lazypath &lt;span style="color:#f92672"&gt;=&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fn&lt;span style="color:#f92672"&gt;.&lt;/span&gt;stdpath(&lt;span style="color:#e6db74"&gt;&amp;#34;data&amp;#34;&lt;/span&gt;) &lt;span style="color:#f92672"&gt;..&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;/lazy/lazy.nvim&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;loop&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fs_stat(lazypath) then
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fn&lt;span style="color:#f92672"&gt;.&lt;/span&gt;system({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;git&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;clone&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;--filter=blob:none&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;https://github.com/folke/lazy.nvim.git&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;--branch=stable&amp;#34;&lt;/span&gt;, lazypath,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;end
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;rtp:prepend(lazypath)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; [&lt;span style="color:#960050;background-color:#1e0010"&gt;插件配置&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;require(&lt;span style="color:#e6db74"&gt;&amp;#34;lazy&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1.&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;主题&lt;/span&gt; (Onedark)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;navarasu/onedark.nvim&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; lazy &lt;span style="color:#f92672"&gt;=&lt;/span&gt; false,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; priority &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;onedark&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup({ style &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;dark&amp;#39;&lt;/span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;onedark&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;load()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;护眼模式修复&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local hl &lt;span style="color:#f92672"&gt;=&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;api&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nvim_set_hl
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; hl(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;Normal&amp;#34;&lt;/span&gt;, { bg &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;#1e2127&amp;#34;&lt;/span&gt;, fg &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;#abb2bf&amp;#34;&lt;/span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; hl(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;CursorLine&amp;#34;&lt;/span&gt;, { bg &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;#2c313a&amp;#34;&lt;/span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2.&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;文件树&lt;/span&gt; (NvimTree)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;nvim-tree/nvim-tree.lua&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dependencies &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;nvim-tree/nvim-web-devicons&amp;#34;&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;nvim-tree&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; view &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { width &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; renderer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { indent_markers &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { enable &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true } }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3.&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;远程复制&lt;/span&gt; (OSC &lt;span style="color:#ae81ff"&gt;52&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ojroques/nvim-osc52&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#39;osc52&amp;#39;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;api&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nvim_create_autocmd(&lt;span style="color:#e6db74"&gt;&amp;#34;TextYankPost&amp;#34;&lt;/span&gt;, {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; callback &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;v&lt;span style="color:#f92672"&gt;.&lt;/span&gt;event&lt;span style="color:#f92672"&gt;.&lt;/span&gt;operator &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;and&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;v&lt;span style="color:#f92672"&gt;.&lt;/span&gt;event&lt;span style="color:#f92672"&gt;.&lt;/span&gt;regname &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt; then
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#39;osc52&amp;#39;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;copy_register(&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;4.&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;代码格式化&lt;/span&gt; (Conform)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;stevearc/conform.nvim&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; function()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;conform&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; formatters_by_ft &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; json &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; yaml &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; html &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; css &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; javascript &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; typescript &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { &lt;span style="color:#e6db74"&gt;&amp;#34;prettier&amp;#34;&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; format_on_save &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { timeout_ms &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;, lsp_fallback &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; [&lt;span style="color:#960050;background-color:#1e0010"&gt;快捷键映射&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;local map &lt;span style="color:#f92672"&gt;=&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keymap&lt;span style="color:#f92672"&gt;.&lt;/span&gt;set
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;基础功能&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;leader&amp;gt;w&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;:w&amp;lt;CR&amp;gt;&amp;#34;&lt;/span&gt;, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;leader&amp;gt;q&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;:q&amp;lt;CR&amp;gt;&amp;#34;&lt;/span&gt;, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;CR&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;:noh&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;&amp;#34;&lt;/span&gt;, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;智能文件树来回切换&lt;/span&gt; (;t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;leader&amp;gt;t&amp;#34;&lt;/span&gt;, function()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local view &lt;span style="color:#f92672"&gt;=&lt;/span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;nvim-tree.view&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; view&lt;span style="color:#f92672"&gt;.&lt;/span&gt;is_visible() then
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;api&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nvim_get_current_win() &lt;span style="color:#f92672"&gt;==&lt;/span&gt; view&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get_winnr() then
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cmd(&lt;span style="color:#e6db74"&gt;&amp;#34;wincmd p&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cmd(&lt;span style="color:#e6db74"&gt;&amp;#34;NvimTreeFocus&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cmd(&lt;span style="color:#e6db74"&gt;&amp;#34;NvimTreeToggle&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; end
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;end, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;格式化&lt;/span&gt; (;f)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map({ &lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;v&amp;#34;&lt;/span&gt; }, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;leader&amp;gt;f&amp;#34;&lt;/span&gt;, function()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; require(&lt;span style="color:#e6db74"&gt;&amp;#34;conform&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;format({ lsp_fallback &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true, timeout_ms &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;✨ Format executed&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;end, { silent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; true })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;--&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;窗口导航&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-h&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-w&amp;gt;h&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-l&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-w&amp;gt;l&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-j&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-w&amp;gt;j&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map(&lt;span style="color:#e6db74"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-k&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;lt;C-w&amp;gt;k&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EOF
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="配置完成后输入-nvim-启动按回车让它自动下载并部署所有插件即可"&gt;配置完成后，输入 nvim 启动，按回车让它自动下载并部署所有插件即可。&lt;/h2&gt;</description></item><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</guid><description>&lt;br&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202026-02-27%20at%2009.05.03@2x.png" alt="列表"&gt;&lt;/p&gt;
 &lt;h4 id="新建脚本文件"&gt;新建脚本文件&lt;/h4&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;nvim pf_manager.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;h4 id="复制下面的配置"&gt;复制下面的配置&lt;/h4&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;#!/bin/sh
-# FreeBSD 15 PF 交互式防火墙管理脚本 - 终极版
-
-STATE_FILE=&amp;#34;/etc/pf_ports.list&amp;#34;
-PF_CONF=&amp;#34;/etc/pf.conf&amp;#34;
-
-if [ &amp;#34;$(id -u)&amp;#34; != &amp;#34;0&amp;#34; ]; then
- echo &amp;#34;错误：必须使用 root 权限运行。&amp;#34;
- exit 1
-fi
-
-get_active_ssh_ports() {
- ports=$(sockstat -46 -l -P tcp | grep -E &amp;#39;\bsshd\b&amp;#39; | awk &amp;#39;{print $6}&amp;#39; | awk -F&amp;#39;:&amp;#39; &amp;#39;{print $NF}&amp;#39; | sort -u)
- if [ -z &amp;#34;$ports&amp;#34; ]; then echo &amp;#34;22&amp;#34;; else echo &amp;#34;$ports&amp;#34;; fi
-}
-
-init_env() {
- if ! grep -q &amp;#34;^pf_enable=\&amp;#34;YES\&amp;#34;&amp;#34; /etc/rc.conf; then
- sysrc pf_enable=&amp;#34;YES&amp;#34; &amp;gt;/dev/null
- service pf start &amp;gt;/dev/null 2&amp;gt;&amp;amp;1
- fi
- [ ! -f &amp;#34;$STATE_FILE&amp;#34; ] &amp;amp;&amp;amp; init_zero
-}
-
-init_zero() {
- &amp;gt; &amp;#34;$STATE_FILE&amp;#34;
- active_ports=$(get_active_ssh_ports)
- for port in $active_ports; do
- echo &amp;#34;tcp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34;
- done
- apply_rules &amp;gt;/dev/null 2&amp;gt;&amp;amp;1
- echo &amp;#34;✅ 已清空所有自定义规则。&amp;#34;
- echo &amp;#34;🔒 自动检测并放行当前活动 SSH 端口: [ $active_ports ]&amp;#34;
-}
-
-apply_rules() {
- cat &amp;lt;&amp;lt;EOF &amp;gt; &amp;#34;$PF_CONF&amp;#34;
-# 宏定义与全局选项
-set skip on lo0
-set block-policy drop
-
-# 流量清理
-scrub in all fragment reassemble
-
-# 基础过滤规则 (状态机制处理新老连接)
-block in all
-pass out all keep state
-pass in quick inet proto icmp all icmp-type echoreq keep state
-EOF
-
- if grep -q &amp;#34;^ALL PORTS OPEN$&amp;#34; &amp;#34;$STATE_FILE&amp;#34;; then
- echo &amp;#34;pass in quick all keep state&amp;#34; &amp;gt;&amp;gt; &amp;#34;$PF_CONF&amp;#34;
- else
- while read -r proto port; do
- [ -z &amp;#34;$proto&amp;#34; ] || [ -z &amp;#34;$port&amp;#34; ] &amp;amp;&amp;amp; continue
- echo &amp;#34;pass in quick inet proto $proto from any to any port $port keep state&amp;#34; &amp;gt;&amp;gt; &amp;#34;$PF_CONF&amp;#34;
- done &amp;lt; &amp;#34;$STATE_FILE&amp;#34;
- fi
-
- pfctl -nf &amp;#34;$PF_CONF&amp;#34; &amp;gt;/dev/null 2&amp;gt;&amp;amp;1
- if [ $? -eq 0 ]; then
- pfctl -f &amp;#34;$PF_CONF&amp;#34; &amp;gt;/dev/null 2&amp;gt;&amp;amp;1
- echo &amp;#34;✅ 规则已成功更新并生效！&amp;#34;
- else
- echo &amp;#34;❌ 规则语法错误，未应用更改！&amp;#34;
- fi
-}
-
-view_rules() {
- echo &amp;#34;--- 当前系统生效的 PF 规则 (pfctl -sr) ---&amp;#34;
- pfctl -sr
- echo &amp;#34;------------------------------------------&amp;#34;
-}
-
-open_port() {
- read -p &amp;#34;请输入要开放的端口号 (1-65535): &amp;#34; port
- if ! [ &amp;#34;$port&amp;#34; -eq &amp;#34;$port&amp;#34; ] 2&amp;gt;/dev/null || [ &amp;#34;$port&amp;#34; -lt 1 ] || [ &amp;#34;$port&amp;#34; -gt 65535 ]; then
- echo &amp;#34;错误：端口号无效。&amp;#34;
- return
- fi
- echo &amp;#34;请选择协议: 1) TCP 2) UDP 3) TCP 和 UDP&amp;#34;
- read -p &amp;#34;输入选项 (1/2/3): &amp;#34; proto_opt
- sed -i &amp;#39;&amp;#39; &amp;#39;/^ALL PORTS OPEN$/d&amp;#39; &amp;#34;$STATE_FILE&amp;#34;
- case $proto_opt in
- 1) grep -q &amp;#34;^tcp $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34; || echo &amp;#34;tcp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34; ;;
- 2) grep -q &amp;#34;^udp $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34; || echo &amp;#34;udp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34; ;;
- 3) 
- grep -q &amp;#34;^tcp $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34; || echo &amp;#34;tcp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34;
- grep -q &amp;#34;^udp $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34; || echo &amp;#34;udp $port&amp;#34; &amp;gt;&amp;gt; &amp;#34;$STATE_FILE&amp;#34; ;;
- *) echo &amp;#34;错误：无效选项。&amp;#34; ; return ;;
- esac
- apply_rules
-}
-
-delete_port() {
- read -p &amp;#34;请输入要关闭的端口号: &amp;#34; port
- if grep -q &amp;#34; $port$&amp;#34; &amp;#34;$STATE_FILE&amp;#34;; then
- sed -i &amp;#39;&amp;#39; &amp;#34;/ $port$/d&amp;#34; &amp;#34;$STATE_FILE&amp;#34;
- apply_rules
- else
- echo &amp;#34;该端口未在管理列表中。&amp;#34;
- fi
-}
-
-open_all_ports() {
- echo &amp;#34;⚠️ 警告：这将放行所有入站流量！&amp;#34;
- read -p &amp;#34;确认执行？(y/n): &amp;#34; confirm
- [ &amp;#34;$confirm&amp;#34; = &amp;#34;y&amp;#34; ] || [ &amp;#34;$confirm&amp;#34; = &amp;#34;Y&amp;#34; ] &amp;amp;&amp;amp; { echo &amp;#34;ALL PORTS OPEN&amp;#34; &amp;gt; &amp;#34;$STATE_FILE&amp;#34;; apply_rules; }
-}
-
-init_env
-
-while true; do
- echo &amp;#34;&amp;#34;
- echo &amp;#34;=== PF 防火墙管理菜单 ===&amp;#34;
- echo &amp;#34;1. 查看当前底层生效规则&amp;#34;
- echo &amp;#34;2. 查看已开放端口列表&amp;#34;
- echo &amp;#34;3. 开放新端口 (支持 TCP/UDP)&amp;#34;
- echo &amp;#34;4. 删除/关闭端口&amp;#34;
- echo &amp;#34;5. 关闭所有端口并从零开始 (保留当前活动 SSH 端口)&amp;#34;
- echo &amp;#34;6. 开放所有端口 (高危)&amp;#34;
- echo &amp;#34;0. 退出&amp;#34;
- read -p &amp;#34;请选择操作 [0-6]: &amp;#34; choice
-
- case $choice in
- 1) view_rules ;;
- 2) echo &amp;#34;--- 当前管理的端口 ---&amp;#34;; cat &amp;#34;$STATE_FILE&amp;#34; ;;
- 3) open_port ;;
- 4) delete_port ;;
- 5) 
- echo &amp;#34;⚠️ 警告：这将清除所有记录，并重新抓取当前 SSH 端口作为唯一放行规则！&amp;#34;
- read -p &amp;#34;确认执行？(y/n): &amp;#34; confirm
- [ &amp;#34;$confirm&amp;#34; = &amp;#34;y&amp;#34; ] || [ &amp;#34;$confirm&amp;#34; = &amp;#34;Y&amp;#34; ] &amp;amp;&amp;amp; init_zero ;;
- 6) open_all_ports ;;
- 0) exit 0 ;;
- *) echo &amp;#34;无效选项。&amp;#34; ;;
- esac
-done
-&lt;/code&gt;&lt;/pre&gt;&lt;h4 id="添加权限并执行"&gt;添加权限并执行&lt;/h4&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;chmod +x iptables_manager.sh
-./iptables_manager.sh
-&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Vyos Wireguard Ipv4</title><link>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</link><pubDate>Sun, 01 Jun 2025 20:42:39 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</guid><description>&lt;h1 id="vyos上配置wireguard-ipv4"&gt;vyos上配置wireguard （IPV4）&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim pf_manager.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="复制下面的配置"&gt;复制下面的配置&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/sh
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FreeBSD 15 PF 交互式防火墙管理脚本 - 终极版&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;STATE_FILE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/etc/pf_ports.list&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PF_CONF&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/etc/pf.conf&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;id -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; !&lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;0&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;错误：必须使用 root 权限运行。&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exit &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;get_active_ssh_ports&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ports&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;sockstat -46 -l -P tcp | grep -E &lt;span style="color:#e6db74"&gt;&amp;#39;\bsshd\b&amp;#39;&lt;/span&gt; | awk &lt;span style="color:#e6db74"&gt;&amp;#39;{print $6}&amp;#39;&lt;/span&gt; | awk -F&lt;span style="color:#e6db74"&gt;&amp;#39;:&amp;#39;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;{print $NF}&amp;#39;&lt;/span&gt; | sort -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$ports&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;22&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$ports&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;init_env&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; ! grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^pf_enable=\&amp;#34;YES\&amp;#34;&amp;#34;&lt;/span&gt; /etc/rc.conf; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sysrc pf_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt; &amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; service pf start &amp;gt;/dev/null 2&amp;gt;&amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; ! -f &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; init_zero
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;init_zero&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; active_ports&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;get_active_ssh_ports&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; port in $active_ports; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;tcp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; apply_rules &amp;gt;/dev/null 2&amp;gt;&amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;✅ 已清空所有自定义规则。&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;🔒 自动检测并放行当前活动 SSH 端口: [ &lt;/span&gt;$active_ports&lt;span style="color:#e6db74"&gt; ]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apply_rules&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cat &lt;span style="color:#e6db74"&gt;&amp;lt;&amp;lt;EOF &amp;gt; &amp;#34;$PF_CONF&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;# 宏定义与全局选项
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;set skip on lo0
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;set block-policy drop
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;# 流量清理
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;scrub in all fragment reassemble
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;# 基础过滤规则 (状态机制处理新老连接)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;block in all
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;pass out all keep state
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;pass in quick inet proto icmp all icmp-type echoreq keep state
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^ALL PORTS OPEN&lt;/span&gt;$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;pass in quick all keep state&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PF_CONF&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; read -r proto port; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$proto&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;continue&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;pass in quick inet proto &lt;/span&gt;$proto&lt;span style="color:#e6db74"&gt; from any to any port &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt; keep state&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PF_CONF&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;done&lt;/span&gt; &amp;lt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pfctl -nf &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PF_CONF&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;/dev/null 2&amp;gt;&amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; $? -eq &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pfctl -f &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PF_CONF&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;/dev/null 2&amp;gt;&amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;✅ 规则已成功更新并生效！&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;❌ 规则语法错误，未应用更改！&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;view_rules&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;--- 当前系统生效的 PF 规则 (pfctl -sr) ---&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pfctl -sr
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;open_port&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;请输入要开放的端口号 (1-65535): &amp;#34;&lt;/span&gt; port
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; ! &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; -eq &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; 2&amp;gt;/dev/null &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; -lt &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; -gt &lt;span style="color:#ae81ff"&gt;65535&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;错误：端口号无效。&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;请选择协议: 1) TCP 2) UDP 3) TCP 和 UDP&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;输入选项 (1/2/3): &amp;#34;&lt;/span&gt; proto_opt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sed -i &lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;/^ALL PORTS OPEN$/d&amp;#39;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;case&lt;/span&gt; $proto_opt in
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 1&lt;span style="color:#f92672"&gt;)&lt;/span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^tcp &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;tcp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2&lt;span style="color:#f92672"&gt;)&lt;/span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^udp &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;udp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 3&lt;span style="color:#f92672"&gt;)&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^tcp &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;tcp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34;^udp &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;udp &lt;/span&gt;$port&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; *&lt;span style="color:#f92672"&gt;)&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;错误：无效选项。&amp;#34;&lt;/span&gt; ; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;esac&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; apply_rules
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;delete_port&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;请输入要关闭的端口号: &amp;#34;&lt;/span&gt; port
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; grep -q &lt;span style="color:#e6db74"&gt;&amp;#34; &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sed -i &lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;/ &lt;/span&gt;$port$&lt;span style="color:#e6db74"&gt;/d&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; apply_rules
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;该端口未在管理列表中。&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;open_all_ports&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;⚠️ 警告：这将放行所有入站流量！&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;确认执行？(y/n): &amp;#34;&lt;/span&gt; confirm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$confirm&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$confirm&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;ALL PORTS OPEN&amp;#34;&lt;/span&gt; &amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; apply_rules; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;init_env
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; true; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;=== PF 防火墙管理菜单 ===&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;1. 查看当前底层生效规则&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;2. 查看已开放端口列表&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;3. 开放新端口 (支持 TCP/UDP)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;4. 删除/关闭端口&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;5. 关闭所有端口并从零开始 (保留当前活动 SSH 端口)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;6. 开放所有端口 (高危)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;0. 退出&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;请选择操作 [0-6]: &amp;#34;&lt;/span&gt; choice
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;case&lt;/span&gt; $choice in
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 1&lt;span style="color:#f92672"&gt;)&lt;/span&gt; view_rules ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2&lt;span style="color:#f92672"&gt;)&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;--- 当前管理的端口 ---&amp;#34;&lt;/span&gt;; cat &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$STATE_FILE&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 3&lt;span style="color:#f92672"&gt;)&lt;/span&gt; open_port ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 4&lt;span style="color:#f92672"&gt;)&lt;/span&gt; delete_port ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 5&lt;span style="color:#f92672"&gt;)&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;⚠️ 警告：这将清除所有记录，并重新抓取当前 SSH 端口作为唯一放行规则！&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; read -p &lt;span style="color:#e6db74"&gt;&amp;#34;确认执行？(y/n): &amp;#34;&lt;/span&gt; confirm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$confirm&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$confirm&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Y&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; init_zero ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 6&lt;span style="color:#f92672"&gt;)&lt;/span&gt; open_all_ports ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 0&lt;span style="color:#f92672"&gt;)&lt;/span&gt; exit &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; *&lt;span style="color:#f92672"&gt;)&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;无效选项。&amp;#34;&lt;/span&gt; ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;esac&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="添加权限并执行"&gt;添加权限并执行&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x iptables_manager.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./iptables_manager.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Vyos Wireguard Ipv4</title><link>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</link><pubDate>Sun, 01 Jun 2025 20:42:39 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</guid><description>&lt;h1 id="vyos上配置wireguard-ipv4"&gt;vyos上配置wireguard （IPV4）&lt;/h1&gt;
 &lt;h2 id="1-生成-wireguard-密钥"&gt;1. 生成 WireGuard 密钥&lt;/h2&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;wg genkey | tee privatekey | wg pubkey &amp;gt; publickey
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;• privatekey 文件中存储 私钥&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wg genkey | tee privatekey | wg pubkey &amp;gt; publickey
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;• privatekey 文件中存储 私钥&lt;/p&gt;
 &lt;p&gt;• publickey 文件中存储 公钥&lt;/p&gt;
 &lt;p&gt;然后使用：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;cat privatekey
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;把私钥填入 第一步 的 &amp;lt;服务器私钥&amp;gt; 位置。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat privatekey
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;把私钥填入 第一步 的 &amp;lt;服务器私钥&amp;gt; 位置。&lt;/p&gt;
 &lt;p&gt;配置wireguard:&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set interfaces wireguard wg0 address &amp;#39;10.20.30.1/24&amp;#39;
-set interfaces wireguard wg0 port &amp;#39;11133&amp;#39;
-set interfaces wireguard wg0 private-key &amp;#39;private-key&amp;#39;
-set interfaces wireguard wg0 peer iphone allowed-ips &amp;#39;10.20.30.2/32&amp;#39;
-set interfaces wireguard wg0 peer iphone public-key &amp;#39;public-key&amp;#39;
-set interfaces wireguard wg0 peer iphone preshared-key &amp;#39;preshared-key&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面这是添加过peer的。&lt;/p&gt;</description></item><item><title>CK佬的wg-Easy一键脚本程序</title><link>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link><pubDate>Mon, 12 May 2025 16:09:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p&gt;&lt;img src="assets/1.png" alt="图示"&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set interfaces wireguard wg0 address &amp;#39;10.20.30.1/24&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set interfaces wireguard wg0 port &amp;#39;11133&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set interfaces wireguard wg0 private-key &amp;#39;private-key&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set interfaces wireguard wg0 peer iphone allowed-ips &amp;#39;10.20.30.2/32&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set interfaces wireguard wg0 peer iphone public-key &amp;#39;public-key&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set interfaces wireguard wg0 peer iphone preshared-key &amp;#39;preshared-key&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上面这是添加过peer的。&lt;/p&gt;</description></item><item><title>CK佬的wg-Easy一键脚本程序</title><link>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link><pubDate>Mon, 12 May 2025 16:09:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p&gt;&lt;img src="assets/1.png" alt="图示"&gt;&lt;/p&gt;
 &lt;p&gt;pve下安装ubuntu或者debian.然后看下面ck佬的教程操作：&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://drive.google.com/file/d/1ETrZhXvuLgmXs_-6rdMwsPHz0QJ2JmqY/view?usp=sharing"&gt;wg-easy.zip&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="安装教程"&gt;安装教程&lt;/h2&gt;
@@ -516,8 +654,8 @@ SIP设置页面填写中继名、和中继配置（可参考下方我的配置�
 &lt;p&gt;上面的代码中会自建 网络matrix.&lt;/p&gt;
 &lt;h2 id="如果先行自己建立网络如"&gt;如果先行自己建立网络，如：&lt;/h2&gt;
 &lt;p&gt;建立一个 docker network：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;docker network create matrix
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那么您可以按照之前提到的建议在 Docker Compose 文件中将网络定义标记为外部网络，并且指定正确的网络名称。在您的 Docker Compose 文件中，您可以将网络定义修改为类似以下内容：&lt;/p&gt;</description></item><item><title>家庭聊天服务器系列（1）synapse搭建</title><link>https://hanigege.github.io/posts/other/%E5%AE%B6%E5%BA%AD%E8%81%8A%E5%A4%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E5%88%971synapse%E6%90%AD%E5%BB%BA/</link><pubDate>Sun, 11 May 2025 16:24:14 +0800</pubDate><guid>https://hanigege.github.io/posts/other/%E5%AE%B6%E5%BA%AD%E8%81%8A%E5%A4%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E5%88%971synapse%E6%90%AD%E5%BB%BA/</guid><description>&lt;br&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker network create matrix
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;那么您可以按照之前提到的建议在 Docker Compose 文件中将网络定义标记为外部网络，并且指定正确的网络名称。在您的 Docker Compose 文件中，您可以将网络定义修改为类似以下内容：&lt;/p&gt;</description></item><item><title>家庭聊天服务器系列（1）synapse搭建</title><link>https://hanigege.github.io/posts/other/%E5%AE%B6%E5%BA%AD%E8%81%8A%E5%A4%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E5%88%971synapse%E6%90%AD%E5%BB%BA/</link><pubDate>Sun, 11 May 2025 16:24:14 +0800</pubDate><guid>https://hanigege.github.io/posts/other/%E5%AE%B6%E5%BA%AD%E8%81%8A%E5%A4%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E5%88%971synapse%E6%90%AD%E5%BB%BA/</guid><description>&lt;br&gt;
 &lt;h2 id="设计思路"&gt;设计思路&lt;/h2&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2016.27.38@2x.png" alt="CleanShot 2025-05-11 at 16.27.38@2x"&gt;&lt;/p&gt;
 &lt;h3 id="服务器需要2台外网一台vps即可搭建coturn服务本地一台搭建synapse及ntfy服务所有服务均以docker的方式来搭建"&gt;服务器需要2台，外网一台vps即可，搭建coturn服务。本地一台，搭建synapse及ntfy服务，所有服务均以docker的方式来搭建&lt;/h3&gt;
@@ -559,41 +697,39 @@ SIP设置页面填写中继名、和中继配置（可参考下方我的配置�
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set container name ddns-go volume config destination &lt;span style="color:#e6db74"&gt;&amp;#39;/root/&amp;#39;&lt;/span&gt; &lt;span style="color:#75715e"&gt;#映射容器内的路径&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set container name ddns-go volume config source &lt;span style="color:#e6db74"&gt;&amp;#39;/config/containers/ddns&amp;#39;&lt;/span&gt; &lt;span style="color:#75715e"&gt;#映射本地的路役&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="查看运行是否成功有up即成功"&gt;查看运行是否成功有UP即成功&lt;/h2&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;sudo podman ps -s
-sudo podman ps -a
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="登录管理平台"&gt;登录管理平台&lt;/h2&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;http://IP:9876
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;登录用户名：admin&lt;/p&gt;</description></item><item><title>让freebsd在终端下换源</title><link>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%8D%A2%E6%BA%90/</link><pubDate>Sun, 11 May 2025 13:52:12 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%8D%A2%E6%BA%90/</guid><description>&lt;br&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo podman ps -s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo podman ps -a
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="登录管理平台"&gt;登录管理平台&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;http://IP:9876
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;登录用户名：admin&lt;/p&gt;</description></item><item><title>让freebsd在终端下换源</title><link>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%8D%A2%E6%BA%90/</link><pubDate>Sun, 11 May 2025 13:52:12 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%8D%A2%E6%BA%90/</guid><description>&lt;br&gt;
 &lt;h2 id="pkg-换源"&gt;pkg 换源&lt;/h2&gt;
 &lt;p&gt;若要获取滚动更新的包，请将 quarterly 修改为 latest。二者区别见 FreeBSD 手册。请注意，CURRENT 版本只有 latest。&lt;/p&gt;
 &lt;p&gt;使用命令修改系统级 pkg 源使用 latest：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;sed -i &amp;#39;&amp;#39; &amp;#39;s/quarterly/latest/g&amp;#39; /etc/pkg/FreeBSD.conf
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;创建用户级源目录和文件：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;# mkdir -p /usr/local/etc/pkg/repos
-# nano /usr/local/etc/pkg/repos/mirrors.conf
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;中国科学技术大学开源软件镜像站（USTC）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sed -i &amp;#39;&amp;#39; &amp;#39;s/quarterly/latest/g&amp;#39; /etc/pkg/FreeBSD.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;创建用户级源目录和文件：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# mkdir -p /usr/local/etc/pkg/repos
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# nano /usr/local/etc/pkg/repos/mirrors.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;中国科学技术大学开源软件镜像站（USTC）&lt;/p&gt;
 &lt;p&gt;写入以下内容：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;ustc: {
-url: &amp;#34;http://mirrors.ustc.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
-}
-FreeBSD: { enabled: no }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;南京大学开源镜像站&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ustc: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url: &amp;#34;http://mirrors.ustc.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FreeBSD: { enabled: no }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;南京大学开源镜像站&lt;/p&gt;
 &lt;p&gt;写入以下内容：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;nju: {
-url: &amp;#34;http://mirrors.nju.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
-}
-FreeBSD: { enabled: no }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;网易开源镜像站&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nju: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url: &amp;#34;http://mirrors.nju.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FreeBSD: { enabled: no }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;网易开源镜像站&lt;/p&gt;
 &lt;p&gt;写入以下内容：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;163: {
-url: &amp;#34;http://mirrors.163.com/freebsd-pkg/${ABI}/latest&amp;#34;,
-}
-FreeBSD: { enabled: no }
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="ports-源以源代码方式编译安装软件的包管理器"&gt;ports 源：以源代码方式编译安装软件的包管理器&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;163: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url: &amp;#34;http://mirrors.163.com/freebsd-pkg/${ABI}/latest&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FreeBSD: { enabled: no }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="ports-源以源代码方式编译安装软件的包管理器"&gt;ports 源：以源代码方式编译安装软件的包管理器&lt;/h2&gt;
 &lt;p&gt;下载 ports
-这个源是下载 ports 本身的源。等同于以前的 portsnap。&lt;/p&gt;
-&lt;p&gt;Git 方法
-须提前安装 git：&lt;/p&gt;</description></item><item><title>让freebsd在终端下支持中文</title><link>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</link><pubDate>Sun, 11 May 2025 13:48:46 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</guid><description>&lt;br&gt;
+这个源是下载 ports 本身的源。等同于以前的 portsnap。&lt;/p&gt;</description></item><item><title>让freebsd在终端下支持中文</title><link>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</link><pubDate>Sun, 11 May 2025 13:48:46 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</guid><description>&lt;br&gt;
 &lt;h2 id="编辑etcloginconf结尾处我一般在russian段落后面添加"&gt;编辑/etc/login.conf，结尾处（我一般在russian段落后面）添加&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chinese|Chinese Users Accounts:&lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :charset&lt;span style="color:#f92672"&gt;=&lt;/span&gt;UTF-8:&lt;span style="color:#ae81ff"&gt;\
@@ -742,17 +878,17 @@ FreeBSD: { enabled: no }
 &lt;p&gt;安装好后，系统其实是dhcp动态获得ip的，进入看了看，是Centos，我们不需要dhcp，把IP给固定死&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vi &lt;span style="color:#f92672"&gt;/&lt;/span&gt;etc&lt;span style="color:#f92672"&gt;/&lt;/span&gt;sysconfig&lt;span style="color:#f92672"&gt;/&lt;/span&gt;network&lt;span style="color:#f92672"&gt;-&lt;/span&gt;scripts&lt;span style="color:#f92672"&gt;/&lt;/span&gt;ifcfg&lt;span style="color:#f92672"&gt;-&lt;/span&gt;eth0
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;下面的内容跟实际配置文件里的内容相对替换，一一对应替换，原文件里的内容可能更多一些，只修改下面有的，没涉及的保持原来的，dns不可以用科学的，只允许用本地，不然会影响后面系统里nat-ip获取的准确性&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;TYPE=&amp;#34;Ethernet&amp;#34;
-BOOTPROTO=&amp;#34;static&amp;#34;
-IPADDR=10.8.2.60
-NETMASK=255.255.255.0
-GATEWAY=10.8.2.1
-DNS1=114.114.114.114
-DEFROUTE=&amp;#34;yes&amp;#34;
-NAME=&amp;#34;eth0&amp;#34;
-DEVICE=&amp;#34;eth0&amp;#34;
-ONBOOT=&amp;#34;yes&amp;#34;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;重启～&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;TYPE=&amp;#34;Ethernet&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;BOOTPROTO=&amp;#34;static&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;IPADDR=10.8.2.60
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NETMASK=255.255.255.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;GATEWAY=10.8.2.1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DNS1=114.114.114.114
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DEFROUTE=&amp;#34;yes&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME=&amp;#34;eth0&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DEVICE=&amp;#34;eth0&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ONBOOT=&amp;#34;yes&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;重启～&lt;/p&gt;
 &lt;h1 id="freepbx16配置图例"&gt;freepbx16配置图例&lt;/h1&gt;
 &lt;p&gt;freepbx16默认安装在pve系统上就好，登录系统后
 ：&lt;/p&gt;
@@ -763,8 +899,8 @@ ONBOOT=&amp;#34;yes&amp;#34;
 &lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.03.35@2x.png" alt="CleanShot 2025-05-11 at 07.03.35@2x"&gt;&lt;/p&gt;
 &lt;h2 id="现在开始设置系统中文地区时间"&gt;现在开始设置系统中文地区时间&lt;/h2&gt;
 &lt;p&gt;选择高级设置：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;高级设置里一开始还有一个选项是启`chan_sip`,这个记的要打开，不然后面设置中继或者是sip有些选项不显示
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.07.49@2x.png" alt="CleanShot 2025-05-11 at 07.07.49@2x"&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-mysql" data-lang="mysql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;高级设置里一开始还有一个选项是启&lt;/span&gt;&lt;span style="color:#f92672"&gt;`&lt;/span&gt;chan_sip&lt;span style="color:#f92672"&gt;`&lt;/span&gt;,&lt;span style="color:#960050;background-color:#1e0010"&gt;这个记的要打开，不然后面设置中继或者是&lt;/span&gt;sip有些选项不显示
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.07.49@2x.png" alt="CleanShot 2025-05-11 at 07.07.49@2x"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.09.16@2x.png" alt="CleanShot 2025-05-11 at 07.09.16@2x"&gt;&lt;/p&gt;
 &lt;h2 id="开启中继配置-这块设置是连接三汇语音网关的"&gt;开启中继配置 （这块设置是连接三汇语音网关的）&lt;/h2&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2007.12.25@2x.png" alt="CleanShot 2025-05-11 at 07.12.25@2x"&gt;
@@ -781,36 +917,36 @@ ONBOOT=&amp;#34;yes&amp;#34;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qualify&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;3000&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;照图填写就好，这里是内网传输使用的，端口不影响啥&lt;/p&gt;</description></item><item><title>出国自建voip(三.2）Telegram机器人连接程序自启动(补充篇)</title><link>https://hanigege.github.io/posts/other/telegram-sms-bot2/</link><pubDate>Sun, 11 May 2025 00:58:10 +0800</pubDate><guid>https://hanigege.github.io/posts/other/telegram-sms-bot2/</guid><description>&lt;h2 id="rootsms-source-myenvbinactivate"&gt;root@sms:~# source myenv/bin/activate&lt;/h2&gt;
 &lt;h2 id="激活虚拟环境"&gt;激活虚拟环境&lt;/h2&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;source myenv/bin/activate 
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;(myenv) root@sms:~# nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;后台启动sms.py&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
-or
-nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
-(myenv) root@sms:~#
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面的两条命令能不能做成脚本，设置为开机自启动&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source myenv/bin/activate 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(myenv) root@sms:~# nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;后台启动sms.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;or
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(myenv) root@sms:~#
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上面的两条命令能不能做成脚本，设置为开机自启动&lt;/p&gt;
 &lt;p&gt;可以的，你可以创建一个 systemd 服务 或者 编写一个 shell 脚本 来实现 Python 虚拟环境的激活 并 运行 sms.py 脚本，同时设置为 开机自启动。&lt;/p&gt;
 &lt;p&gt;方法 1：使用 systemd (推荐)
 适用于 Debian/Ubuntu 及大多数 Linux 发行版。&lt;/p&gt;
 &lt;p&gt;步骤 1：创建 systemd 服务文件
 运行以下命令，创建 sms.service：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;nano /etc/systemd/system/sms.service
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;填入以下内容：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;[Unit]
-Description=SMS Python Service
-After=network.target
-
-[Service]
-User=root
-WorkingDirectory=/root
-ExecStart=/root/myenv/bin/python /root/sms.py
-Restart=always
-StandardOutput=append:/root/sms.log
-StandardError=append:/root/sms.log
-
-[Install]
-WantedBy=multi-user.target
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;⚠ 注意：&lt;/p&gt;</description></item><item><title>出国自建voip(三）连接Telegram机器人本地安装</title><link>https://hanigege.github.io/posts/other/telegram-sms-bot/</link><pubDate>Sun, 11 May 2025 00:39:56 +0800</pubDate><guid>https://hanigege.github.io/posts/other/telegram-sms-bot/</guid><description>&lt;h3 id="前提是telegram自己的机器人提前生成好并获取相应的密钥"&gt;前提是telegram自己的机器人提前生成好，并获取相应的密钥&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nano /etc/systemd/system/sms.service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;填入以下内容：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Unit]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Description=SMS Python Service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;After=network.target
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Service]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;User=root
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;WorkingDirectory=/root
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ExecStart=/root/myenv/bin/python /root/sms.py
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Restart=always
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StandardOutput=append:/root/sms.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StandardError=append:/root/sms.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Install]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;WantedBy=multi-user.target
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠ 注意：&lt;/p&gt;</description></item><item><title>出国自建voip(三）连接Telegram机器人本地安装</title><link>https://hanigege.github.io/posts/other/telegram-sms-bot/</link><pubDate>Sun, 11 May 2025 00:39:56 +0800</pubDate><guid>https://hanigege.github.io/posts/other/telegram-sms-bot/</guid><description>&lt;h3 id="前提是telegram自己的机器人提前生成好并获取相应的密钥"&gt;前提是telegram自己的机器人提前生成好，并获取相应的密钥&lt;/h3&gt;
 &lt;h1 id="打开一台虚拟机建议debian12"&gt;打开一台虚拟机（建议debian12)&lt;/h1&gt;
 &lt;h2 id="方法-1使用虚拟环境"&gt;方法 1：使用虚拟环境&lt;/h2&gt;
 &lt;p&gt;创建一个 Python 虚拟环境，并在其中安装所需的库。这样可以避免系统级 Python 环境的冲突。&lt;/p&gt;
@@ -832,103 +968,96 @@ WantedBy=multi-user.target
 &lt;p&gt;以上要运行在虚拟窗口下，建议使用tmux&lt;/p&gt;
 &lt;h4 id="1使用-tmux"&gt;1.使用 tmux&lt;/h4&gt;
 &lt;p&gt;安装（如果未安装）：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;apt-get install tmux # Debian/Ubuntu 
-yum install tmux # CentOS/RHEL
-启动 Tmux 会话：
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;tmux&lt;/strong&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt-get install tmux # Debian/Ubuntu 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install tmux # CentOS/RHEL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;启动 Tmux 会话：
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;tmux&lt;/strong&gt;
 按 Ctrl+B，然后按 D，会返回终端。&lt;/p&gt;
 &lt;p&gt;关闭 SSH，程序继续运行。&lt;/p&gt;
 &lt;p&gt;重新连接：&lt;/p&gt;
 &lt;p&gt;列出会话：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;tmux ls
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;输出示例：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;0: 1 windows (created ...)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;恢复会话：&lt;/p&gt;</description></item><item><title>Vyos上网系统之-vyos命令技巧集(3)</title><link>https://hanigege.github.io/posts/routers/vyos-jiqiao-3/</link><pubDate>Sat, 10 May 2025 21:35:04 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-jiqiao-3/</guid><description>&lt;h2 id="你可以使用-delete-和-set-命令来修改-network-group-的子网"&gt;你可以使用 delete 和 set 命令来修改 network-group 的子网。&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tmux ls
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出示例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;0: 1 windows (created ...)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;恢复会话：&lt;/p&gt;</description></item><item><title>Vyos上网系统之-vyos命令技巧集(3)</title><link>https://hanigege.github.io/posts/routers/vyos-jiqiao-3/</link><pubDate>Sat, 10 May 2025 21:35:04 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-jiqiao-3/</guid><description>&lt;h2 id="你可以使用-delete-和-set-命令来修改-network-group-的子网"&gt;你可以使用 delete 和 set 命令来修改 network-group 的子网。&lt;/h2&gt;
 &lt;p&gt;修改 LAN-v4 的网络&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;删除原来的 192.168.10.0/24&lt;/li&gt;
 &lt;/ol&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;delete firewall group network-group LAN-v4 network 192.168.10.0/24
-&lt;/code&gt;&lt;/pre&gt;&lt;ol start="2"&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;delete firewall group network-group LAN-v4 network 192.168.10.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
 &lt;li&gt;添加新的 192.168.100.0/24&lt;/li&gt;
 &lt;/ol&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set firewall group network-group LAN-v4 network 192.168.100.0/24
-&lt;/code&gt;&lt;/pre&gt;&lt;ol start="3"&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group LAN-v4 network 192.168.100.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
 &lt;li&gt;提交并保存&lt;/li&gt;
 &lt;/ol&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;commit
-save
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;验证修改是否生效&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;commit
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;save
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;验证修改是否生效&lt;/p&gt;
 &lt;p&gt;执行以下命令：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;show firewall group network-group LAN-v4
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果输出如下，就说明修改成功：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt; network-group LAN-v4 {
- network 192.168.100.0/24
- }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在 VyOS 中，你可以使用以下命令查看 所有配置：
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;show firewall group network-group LAN-v4
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果输出如下，就说明修改成功：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; network-group LAN-v4 {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; network 192.168.100.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在 VyOS 中，你可以使用以下命令查看 所有配置：
 显示完整的层级配置（推荐）&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;show configuration
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这个命令会以 层级结构 显示整个配置，类似于 show running-config。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;show configuration
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个命令会以 层级结构 显示整个配置，类似于 show running-config。&lt;/p&gt;
 &lt;p&gt;显示所有配置命令（适合复制）($ 模式下）&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;show configuration commands
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这个命令会以 show 命令的格式 展示所有配置，适用于备份或复制配置：&lt;/p&gt;
-&lt;p&gt;按层级展开查看（交互式）&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;show configuration level 2
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;level 2 代表展开到第 2 层，你可以调整 level 数值来控制显示的详细程度。&lt;/p&gt;</description></item><item><title>Vyos上网系列之-Fakeip配置(2)</title><link>https://hanigege.github.io/posts/routers/vyos-fakeip-2/</link><pubDate>Sat, 10 May 2025 21:25:08 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-fakeip-2/</guid><description>&lt;h2 id="对于终端网关是vyos的通过mosdns来分流realip和fakeip的流量-可这样配置"&gt;对于终端网关是vyos的，通过mosdns来分流realip和fakeip的流量, 可这样配置:&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;show configuration commands
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个命令会以 show 命令的格式 展示所有配置，适用于备份或复制配置：&lt;/p&gt;</description></item><item><title>Vyos上网系列之-Fakeip配置(2)</title><link>https://hanigege.github.io/posts/routers/vyos-fakeip-2/</link><pubDate>Sat, 10 May 2025 21:25:08 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-fakeip-2/</guid><description>&lt;h2 id="对于终端网关是vyos的通过mosdns来分流realip和fakeip的流量-可这样配置"&gt;对于终端网关是vyos的，通过mosdns来分流realip和fakeip的流量, 可这样配置:&lt;/h2&gt;
 &lt;p&gt;(vyos的group分为address-group,network-group等)&lt;/p&gt;
 &lt;h4 id="定义组-ip例"&gt;定义组 IP例:&lt;/h4&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set firewall group address-group Telegram-v4 address &amp;#39;157.148.47.204&amp;#39;
-set firewall group address-group Telegram-v4 address &amp;#39;182.43.124.6&amp;#39;
-...
-&lt;/code&gt;&lt;/pre&gt;&lt;h4 id="定义组网段v4例"&gt;定义组网段V4例：&lt;/h4&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.56.0/22&amp;#39;
-set firewall group network-group Telegram-v4 network &amp;#39;91.108.4.0/22&amp;#39;
-...
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;定义组telegram V4:&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.56.0/22&amp;#39;
-set firewall group network-group Telegram-v4 network &amp;#39;91.108.4.0/22&amp;#39;
-set firewall group network-group Telegram-v4 network &amp;#39;91.108.8.0/22&amp;#39;
-set firewall group network-group Telegram-v4 network &amp;#39;91.108.16.0/22&amp;#39;
-set firewall group network-group Telegram-v4 network &amp;#39;91.108.12.0/22&amp;#39;
-set firewall group network-group Telegram-v4 network &amp;#39;149.154.160.0/20&amp;#39;
-set firewall group network-group Telegram-v4 network &amp;#39;91.105.192.0/23&amp;#39;
-set firewall group network-group Telegram-v4 network &amp;#39;91.108.20.0/22&amp;#39;
-set firewall group network-group Telegram-v4 network &amp;#39;185.76.151.0/24&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;&lt;h4 id="定义组ip-v6例"&gt;定义组ip-V6例：&lt;/h4&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set firewall group ipv6-address-group Telegram-v6 address &amp;#39;2a00:1098:80:2::1004&amp;#39;
-set firewall group ipv6-address-group Telegram-v6 address &amp;#39;2a00:1098:80:2::1001&amp;#39;
-...
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;定义组网段V6例：&lt;/p&gt;</description></item><item><title>Vyos上网系列之-上网配置（1）</title><link>https://hanigege.github.io/posts/routers/vyos-jibenshangwang-1/</link><pubDate>Sat, 10 May 2025 21:04:17 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-jibenshangwang-1/</guid><description>&lt;h4 id="vyos的命令行界面是基于shell的没有图形界面-但是可以用tab自动补全"&gt;vyos的命令行界面是基于shell的，没有图形界面, 但是可以用tab自动补全.&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group address-group Telegram-v4 address &amp;#39;157.148.47.204&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group address-group Telegram-v4 address &amp;#39;182.43.124.6&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="定义组网段v4例"&gt;定义组网段V4例：&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.56.0/22&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.4.0/22&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;定义组telegram V4:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.56.0/22&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.4.0/22&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.8.0/22&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.16.0/22&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.12.0/22&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;149.154.160.0/20&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.105.192.0/23&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;91.108.20.0/22&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group network-group Telegram-v4 network &amp;#39;185.76.151.0/24&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="定义组ip-v6例"&gt;定义组ip-V6例：&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group ipv6-address-group Telegram-v6 address &amp;#39;2a00:1098:80:2::1004&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set firewall group ipv6-address-group Telegram-v6 address &amp;#39;2a00:1098:80:2::1001&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;定义组网段V6例：&lt;/p&gt;</description></item><item><title>Vyos上网系列之-上网配置（1）</title><link>https://hanigege.github.io/posts/routers/vyos-jibenshangwang-1/</link><pubDate>Sat, 10 May 2025 21:04:17 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-jibenshangwang-1/</guid><description>&lt;h4 id="vyos的命令行界面是基于shell的没有图形界面-但是可以用tab自动补全"&gt;vyos的命令行界面是基于shell的，没有图形界面, 但是可以用tab自动补全.&lt;/h4&gt;
 &lt;p&gt;本文的vyos命令是基于vyos的vyos-rolling-nightly-builds的1.5.x版本.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;**特别感谢大卫佬给予的指导与帮助**&lt;/code&gt;&lt;/p&gt;
 &lt;h2 id="pve安装vyos"&gt;pve安装vyos:&lt;/h2&gt;
 &lt;p&gt;下载nightly-build: &lt;a href="https://github.com/vyos/vyos-nightly-build/releases"&gt;https://github.com/vyos/vyos-nightly-build/releases&lt;/a&gt;
 pve的虚拟机设置和安装(略), 建议内存2G, 磁盘10G或更大, 因为vyos可以运行容器, vyos用podman管理容器.&lt;/p&gt;
 &lt;p&gt;vm运行后, 用vyos:vyos登录. 用命令&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;install image
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;安装vyos.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;install image
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;安装vyos.&lt;/p&gt;
 &lt;p&gt;进入配置模式：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;configure
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生效：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;commit
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;保存配置：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;save
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;取消生效的,未保存的配置：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;discard
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="下面开始配置随时都可以输入生效命令如果不保存重启后配置会失效"&gt;下面开始配置，随时都可以输入生效命令，如果不保存，重启后配置会失效&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;configure
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;生效：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;commit
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;保存配置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;save
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;取消生效的,未保存的配置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;discard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="下面开始配置随时都可以输入生效命令如果不保存重启后配置会失效"&gt;下面开始配置，随时都可以输入生效命令，如果不保存，重启后配置会失效&lt;/h2&gt;
 &lt;p&gt;设置ssh登录:&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set service ssh port &amp;#39;22&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;创建用户gary:&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set system login user gary full-name gary
-set system login user gary authentication plaintext-password &amp;#39;密码&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;建议ssh密钥登录:&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set system login user gary authentication public-keys gary@laptop key &amp;#39;your-public-key&amp;#39;
-set system login user gary authentication public-keys gary@laptop type &amp;#39;ssh-rsa&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;禁用默认的vyos用户:&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set system login user vyos disable
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;设置系统的hostname:&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;set system host-name &amp;#39;vyos&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看系统的hostname&lt;/p&gt;</description></item><item><title>About</title><link>https://hanigege.github.io/about/</link><pubDate>Sat, 10 May 2025 16:14:10 +0800</pubDate><guid>https://hanigege.github.io/about/</guid><description>&lt;h1 id="-简介"&gt;🧑‍💻 简介&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set service ssh port &amp;#39;22&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;创建用户gary:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set system login user gary full-name gary
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set system login user gary authentication plaintext-password &amp;#39;密码&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;建议ssh密钥登录:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set system login user gary authentication public-keys gary@laptop key &amp;#39;your-public-key&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set system login user gary authentication public-keys gary@laptop type &amp;#39;ssh-rsa&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;禁用默认的vyos用户:&lt;/p&gt;</description></item><item><title>About</title><link>https://hanigege.github.io/about/</link><pubDate>Sat, 10 May 2025 16:14:10 +0800</pubDate><guid>https://hanigege.github.io/about/</guid><description>&lt;h1 id="-简介"&gt;🧑‍💻 简介&lt;/h1&gt;
 &lt;br&gt;
 # 歡迎來到我的個人小站 🌐
 你好！👋 這裡是我個人使用的一些業務配置方案的合集，完全是為了方便自己隨時查閱和學習，同時也適用於我的日常生活和家庭環境。✨

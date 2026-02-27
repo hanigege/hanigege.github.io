@@ -98,8 +98,8 @@ SIP设置页面填写中继名、和中继配置（可参考下方我的配置�
 &lt;p&gt;上面的代码中会自建 网络matrix.&lt;/p&gt;
 &lt;h2 id="如果先行自己建立网络如"&gt;如果先行自己建立网络，如：&lt;/h2&gt;
 &lt;p&gt;建立一个 docker network：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;docker network create matrix
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那么您可以按照之前提到的建议在 Docker Compose 文件中将网络定义标记为外部网络，并且指定正确的网络名称。在您的 Docker Compose 文件中，您可以将网络定义修改为类似以下内容：&lt;/p&gt;</description></item><item><title>家庭聊天服务器系列（1）synapse搭建</title><link>https://hanigege.github.io/posts/other/%E5%AE%B6%E5%BA%AD%E8%81%8A%E5%A4%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E5%88%971synapse%E6%90%AD%E5%BB%BA/</link><pubDate>Sun, 11 May 2025 16:24:14 +0800</pubDate><guid>https://hanigege.github.io/posts/other/%E5%AE%B6%E5%BA%AD%E8%81%8A%E5%A4%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E5%88%971synapse%E6%90%AD%E5%BB%BA/</guid><description>&lt;br&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker network create matrix
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;那么您可以按照之前提到的建议在 Docker Compose 文件中将网络定义标记为外部网络，并且指定正确的网络名称。在您的 Docker Compose 文件中，您可以将网络定义修改为类似以下内容：&lt;/p&gt;</description></item><item><title>家庭聊天服务器系列（1）synapse搭建</title><link>https://hanigege.github.io/posts/other/%E5%AE%B6%E5%BA%AD%E8%81%8A%E5%A4%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E5%88%971synapse%E6%90%AD%E5%BB%BA/</link><pubDate>Sun, 11 May 2025 16:24:14 +0800</pubDate><guid>https://hanigege.github.io/posts/other/%E5%AE%B6%E5%BA%AD%E8%81%8A%E5%A4%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E5%88%971synapse%E6%90%AD%E5%BB%BA/</guid><description>&lt;br&gt;
 &lt;h2 id="设计思路"&gt;设计思路&lt;/h2&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202025-05-11%20at%2016.27.38@2x.png" alt="CleanShot 2025-05-11 at 16.27.38@2x"&gt;&lt;/p&gt;
 &lt;h3 id="服务器需要2台外网一台vps即可搭建coturn服务本地一台搭建synapse及ntfy服务所有服务均以docker的方式来搭建"&gt;服务器需要2台，外网一台vps即可，搭建coturn服务。本地一台，搭建synapse及ntfy服务，所有服务均以docker的方式来搭建&lt;/h3&gt;
@@ -140,36 +140,36 @@ SIP设置页面填写中继名、和中继配置（可参考下方我的配置�
 你需要编写一个脚本，使用 Telegram 机器人获取信息，并通过 HTTP 请求将短信发送到三汇网关。&lt;/p&gt;
 &lt;p&gt;步骤 3.1：安装 Telegram Bot 库（例如 Python 的 python-telegram-bot）（详情，请看voip出国系列三）&lt;/p&gt;</description></item><item><title>出国自建voip(三.2）Telegram机器人连接程序自启动(补充篇)</title><link>https://hanigege.github.io/posts/other/telegram-sms-bot2/</link><pubDate>Sun, 11 May 2025 00:58:10 +0800</pubDate><guid>https://hanigege.github.io/posts/other/telegram-sms-bot2/</guid><description>&lt;h2 id="rootsms-source-myenvbinactivate"&gt;root@sms:~# source myenv/bin/activate&lt;/h2&gt;
 &lt;h2 id="激活虚拟环境"&gt;激活虚拟环境&lt;/h2&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;source myenv/bin/activate 
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;(myenv) root@sms:~# nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;后台启动sms.py&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
-or
-nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
-(myenv) root@sms:~#
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面的两条命令能不能做成脚本，设置为开机自启动&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source myenv/bin/activate 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(myenv) root@sms:~# nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;后台启动sms.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;or
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nohup python sms.py &amp;gt; sms.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(myenv) root@sms:~#
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上面的两条命令能不能做成脚本，设置为开机自启动&lt;/p&gt;
 &lt;p&gt;可以的，你可以创建一个 systemd 服务 或者 编写一个 shell 脚本 来实现 Python 虚拟环境的激活 并 运行 sms.py 脚本，同时设置为 开机自启动。&lt;/p&gt;
 &lt;p&gt;方法 1：使用 systemd (推荐)
 适用于 Debian/Ubuntu 及大多数 Linux 发行版。&lt;/p&gt;
 &lt;p&gt;步骤 1：创建 systemd 服务文件
 运行以下命令，创建 sms.service：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;nano /etc/systemd/system/sms.service
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;填入以下内容：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;[Unit]
-Description=SMS Python Service
-After=network.target
-
-[Service]
-User=root
-WorkingDirectory=/root
-ExecStart=/root/myenv/bin/python /root/sms.py
-Restart=always
-StandardOutput=append:/root/sms.log
-StandardError=append:/root/sms.log
-
-[Install]
-WantedBy=multi-user.target
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;⚠ 注意：&lt;/p&gt;</description></item><item><title>出国自建voip(三）连接Telegram机器人本地安装</title><link>https://hanigege.github.io/posts/other/telegram-sms-bot/</link><pubDate>Sun, 11 May 2025 00:39:56 +0800</pubDate><guid>https://hanigege.github.io/posts/other/telegram-sms-bot/</guid><description>&lt;h3 id="前提是telegram自己的机器人提前生成好并获取相应的密钥"&gt;前提是telegram自己的机器人提前生成好，并获取相应的密钥&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nano /etc/systemd/system/sms.service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;填入以下内容：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Unit]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Description=SMS Python Service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;After=network.target
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Service]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;User=root
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;WorkingDirectory=/root
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ExecStart=/root/myenv/bin/python /root/sms.py
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Restart=always
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StandardOutput=append:/root/sms.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StandardError=append:/root/sms.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Install]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;WantedBy=multi-user.target
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠ 注意：&lt;/p&gt;</description></item><item><title>出国自建voip(三）连接Telegram机器人本地安装</title><link>https://hanigege.github.io/posts/other/telegram-sms-bot/</link><pubDate>Sun, 11 May 2025 00:39:56 +0800</pubDate><guid>https://hanigege.github.io/posts/other/telegram-sms-bot/</guid><description>&lt;h3 id="前提是telegram自己的机器人提前生成好并获取相应的密钥"&gt;前提是telegram自己的机器人提前生成好，并获取相应的密钥&lt;/h3&gt;
 &lt;h1 id="打开一台虚拟机建议debian12"&gt;打开一台虚拟机（建议debian12)&lt;/h1&gt;
 &lt;h2 id="方法-1使用虚拟环境"&gt;方法 1：使用虚拟环境&lt;/h2&gt;
 &lt;p&gt;创建一个 Python 虚拟环境，并在其中安装所需的库。这样可以避免系统级 Python 环境的冲突。&lt;/p&gt;
@@ -191,15 +191,15 @@ WantedBy=multi-user.target
 &lt;p&gt;以上要运行在虚拟窗口下，建议使用tmux&lt;/p&gt;
 &lt;h4 id="1使用-tmux"&gt;1.使用 tmux&lt;/h4&gt;
 &lt;p&gt;安装（如果未安装）：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;apt-get install tmux # Debian/Ubuntu 
-yum install tmux # CentOS/RHEL
-启动 Tmux 会话：
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;tmux&lt;/strong&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt-get install tmux # Debian/Ubuntu 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install tmux # CentOS/RHEL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;启动 Tmux 会话：
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;tmux&lt;/strong&gt;
 按 Ctrl+B，然后按 D，会返回终端。&lt;/p&gt;
 &lt;p&gt;关闭 SSH，程序继续运行。&lt;/p&gt;
 &lt;p&gt;重新连接：&lt;/p&gt;
 &lt;p&gt;列出会话：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;tmux ls
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;输出示例：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;0: 1 windows (created ...)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;恢复会话：&lt;/p&gt;</description></item></channel></rss>
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tmux ls
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出示例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;0: 1 windows (created ...)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;恢复会话：&lt;/p&gt;</description></item></channel></rss>

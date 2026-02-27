@@ -1,48 +1,48 @@
-<!doctype html><html lang=zh><head><title>Vyos Wireguard Ipv4 &ndash; 代碼倉庫</title><meta name=description content="個人自留地，如果能幫到你，我也會很高興。"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://hanigege.github.io/css/palettes/base16-dark.css><link rel=stylesheet href=https://hanigege.github.io/css/risotto.css><link rel=stylesheet href=https://hanigege.github.io/css/custom.css></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><link rel=stylesheet href=/css/custom.css><ul><li class=nomarker><h1 class=page__logo><a href=https://hanigege.github.io/ class=page__logo-inner>代碼倉庫</a></h1></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/freebsd/ title>FreeBSD</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/linux/ title>Linux</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/routers/ title>Routers</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/other/ title>Other</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/about/ title>About</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>Vyos Wireguard Ipv4</h1></header><div class=content__body><h1 id=vyos上配置wireguard-ipv4>vyos上配置wireguard （IPV4）</h1><h2 id=1-生成-wireguard-密钥>1. 生成 WireGuard 密钥</h2><pre tabindex=0><code>wg genkey | tee privatekey | wg pubkey &gt; publickey
-</code></pre><p>• privatekey 文件中存储 私钥</p><p>• publickey 文件中存储 公钥</p><p>然后使用：</p><pre tabindex=0><code>cat privatekey
-</code></pre><p>把私钥填入 第一步 的 &lt;服务器私钥> 位置。</p><p>配置wireguard:</p><pre tabindex=0><code>set interfaces wireguard wg0 address  &#39;10.20.30.1/24&#39;
-set interfaces wireguard wg0 port &#39;11133&#39;
-set interfaces wireguard wg0 private-key &#39;private-key&#39;
-set interfaces wireguard wg0 peer iphone allowed-ips &#39;10.20.30.2/32&#39;
-set interfaces wireguard wg0 peer iphone public-key &#39;public-key&#39;
-set interfaces wireguard wg0 peer iphone preshared-key &#39;preshared-key&#39;
-</code></pre><p>上面这是添加过peer的。</p><p>如果让wg科学，下面接着操作：</p><pre tabindex=0><code>添加组：
-
-set firewall group network-group LAN-v4 network &#39;10.20.20.0/24&#39;  # 内网段
-set firewall group network-group LAN-v4 network &#39;10.20.23.0/24&#39;  # wg网段
-set firewall group ipv6-network-group LAN-v6 network &#39;fd88::/64&#39;
-
-设置策略路由:
-举例: 让wg0的流量走100号路由表, 100号路由表是sb的路由表
-set policy route WG0-to-SB interface &#39;wg0&#39;
-set policy route WG0-to-SB rule 10 destination group network-group &#39;!LAN-v4&#39;
-set policy route WG0-to-SB rule 10 set table &#39;100&#39;
-
-
-# 这下面三条仅供参考，添加后电报容易断连。
-set policy route6 WG0-to-SB interface &#39;wg0&#39;
-set policy route6 WG0-to-SB rule 10 destination group network-group &#39;!LAN-v6&#39;
-set policy route6 WG0-to-SB rule 10 set table &#39;106&#39;
-
-#路由表（之前添加过就不要重复添加）
-set protocols static table 100 route 0.0.0.0/0 next-hop 10.20.20.9
-or
-set protocols static table 100 route 0.0.0.0/0 next-hop 172.23.0.99
-
-
-set protocols static table 100 route 0.0.0.0/0 next-hop 192.168.100.9
-set protocols static table 106 route6 ::/0 next-hop fd88::9999
------
-
-Happy Routing!
-</code></pre><h2 id=2vyos上配置wireguard-ipv4预共享密钥>2.vyos上配置wireguard （IPV4）预共享密钥</h2><p>配置 WireGuard 的 预共享密钥（Preshared Key，简称 PSK），可以为现有的公私钥握手再加一层加密，提升安全性。</p><p>🧩 PSK 是什么？
+<!doctype html><html lang=zh><head><title>Vyos Wireguard Ipv4 &ndash; 代碼倉庫</title><meta name=description content="個人自留地，如果能幫到你，我也會很高興。"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://hanigege.github.io/css/palettes/base16-dark.css><link rel=stylesheet href=https://hanigege.github.io/css/risotto.css><link rel=stylesheet href=https://hanigege.github.io/css/custom.css><style>pre{position:relative;padding-top:40px!important;background-color:#1e1e1e!important;border:1px solid #333!important;border-radius:10px!important;box-shadow:0 4px 15px rgba(0,0,0,.4);overflow:hidden;margin:1.5em 0}code{font-family:jetbrains mono,fira code,Menlo,monospace!important;font-size:.92em!important;line-height:1.6!important;color:#d4d4d4!important}.copy-code-button{position:absolute;top:10px;right:12px;padding:5px 12px;background:rgba(255,255,255,8%);color:#aaa;border:1px solid rgba(255,255,255,.15);border-radius:6px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);cursor:pointer;font-size:11px;font-weight:500;z-index:100;transition:all .25s ease}.copy-code-button:hover{background:rgba(102,217,239,.2);color:#66d9ef;border-color:#66d9ef;transform:translateY(-1px)}.copy-code-button:active{transform:translateY(0)}</style><script>document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("pre").forEach(e=>{if(e.querySelector(".copy-code-button"))return;const t=document.createElement("button");t.className="copy-code-button",t.type="button",t.innerText="Copy",t.addEventListener("click",()=>{const n=e.querySelector("code"),s=n?n.innerText:e.innerText;navigator.clipboard.writeText(s).then(()=>{t.innerText="Copied!",t.style.background="rgba(166, 226, 46, 0.2)",t.style.color="#a6e22e",setTimeout(()=>{t.innerText="Copy",t.style.background="",t.style.color=""},2e3)})}),e.appendChild(t)})})</script></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><link rel=stylesheet href=/css/custom.css><ul><li class=nomarker><h1 class=page__logo><a href=https://hanigege.github.io/ class=page__logo-inner>代碼倉庫</a></h1></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/freebsd/ title>FreeBSD</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/linux/ title>Linux</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/routers/ title>Routers</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/other/ title>Other</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/about/ title>About</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>Vyos Wireguard Ipv4</h1></header><div class=content__body><h1 id=vyos上配置wireguard-ipv4>vyos上配置wireguard （IPV4）</h1><h2 id=1-生成-wireguard-密钥>1. 生成 WireGuard 密钥</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>wg genkey | tee privatekey | wg pubkey &gt; publickey
+</span></span></code></pre></div><p>• privatekey 文件中存储 私钥</p><p>• publickey 文件中存储 公钥</p><p>然后使用：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>cat privatekey
+</span></span></code></pre></div><p>把私钥填入 第一步 的 &lt;服务器私钥> 位置。</p><p>配置wireguard:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>set interfaces wireguard wg0 address  &#39;10.20.30.1/24&#39;
+</span></span><span style=display:flex><span>set interfaces wireguard wg0 port &#39;11133&#39;
+</span></span><span style=display:flex><span>set interfaces wireguard wg0 private-key &#39;private-key&#39;
+</span></span><span style=display:flex><span>set interfaces wireguard wg0 peer iphone allowed-ips &#39;10.20.30.2/32&#39;
+</span></span><span style=display:flex><span>set interfaces wireguard wg0 peer iphone public-key &#39;public-key&#39;
+</span></span><span style=display:flex><span>set interfaces wireguard wg0 peer iphone preshared-key &#39;preshared-key&#39;
+</span></span></code></pre></div><p>上面这是添加过peer的。</p><p>如果让wg科学，下面接着操作：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>添加组：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>set firewall group network-group LAN-v4 network &#39;10.20.20.0/24&#39;  # 内网段
+</span></span><span style=display:flex><span>set firewall group network-group LAN-v4 network &#39;10.20.23.0/24&#39;  # wg网段
+</span></span><span style=display:flex><span>set firewall group ipv6-network-group LAN-v6 network &#39;fd88::/64&#39;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>设置策略路由:
+</span></span><span style=display:flex><span>举例: 让wg0的流量走100号路由表, 100号路由表是sb的路由表
+</span></span><span style=display:flex><span>set policy route WG0-to-SB interface &#39;wg0&#39;
+</span></span><span style=display:flex><span>set policy route WG0-to-SB rule 10 destination group network-group &#39;!LAN-v4&#39;
+</span></span><span style=display:flex><span>set policy route WG0-to-SB rule 10 set table &#39;100&#39;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># 这下面三条仅供参考，添加后电报容易断连。
+</span></span><span style=display:flex><span>set policy route6 WG0-to-SB interface &#39;wg0&#39;
+</span></span><span style=display:flex><span>set policy route6 WG0-to-SB rule 10 destination group network-group &#39;!LAN-v6&#39;
+</span></span><span style=display:flex><span>set policy route6 WG0-to-SB rule 10 set table &#39;106&#39;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>#路由表（之前添加过就不要重复添加）
+</span></span><span style=display:flex><span>set protocols static table 100 route 0.0.0.0/0 next-hop 10.20.20.9
+</span></span><span style=display:flex><span>or
+</span></span><span style=display:flex><span>set protocols static table 100 route 0.0.0.0/0 next-hop 172.23.0.99
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>set protocols static table 100 route 0.0.0.0/0 next-hop 192.168.100.9
+</span></span><span style=display:flex><span>set protocols static table 106 route6 ::/0 next-hop fd88::9999
+</span></span><span style=display:flex><span>-----
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Happy Routing!
+</span></span></code></pre></div><h2 id=2vyos上配置wireguard-ipv4预共享密钥>2.vyos上配置wireguard （IPV4）预共享密钥</h2><p>配置 WireGuard 的 预共享密钥（Preshared Key，简称 PSK），可以为现有的公私钥握手再加一层加密，提升安全性。</p><p>🧩 PSK 是什么？
 预共享密钥是在通信双方私下共享的额外密钥，用作对称加密（混淆 DH 密钥协商结果），提高抵抗量子计算破解的能力</p><p>✅ 如何生成 PSK
-在 VyOS 或客户端（都可以）执行：</p><pre tabindex=0><code>wg genpsk &gt; psk.key
-</code></pre><p>查看内容：</p><pre tabindex=0><code>cat psk.key
-</code></pre><p>会输出一串 Base64 编码的密钥，比如：</p><pre tabindex=0><code>zT4XEDXe9qJpKRgqz0VjdRm2Vu+I+ZYoY7vI99aAv0Q=
-</code></pre><p>🧩 在 VyOS 中添加 PSK
-假设你已有如下 WireGuard 配置：</p><pre tabindex=0><code>set interfaces wireguard wg0 address &#39;10.20.30.1/24&#39;
-set interfaces wireguard wg0 port &#39;51820&#39;
-set interfaces wireguard wg0 peer iphone public-key &#39;xxx...=&#39;
-</code></pre><p>加入 PSK 的命令如下：</p><pre tabindex=0><code>set interfaces wireguard wg0 peer iphone preshared-key &#39;zT4XEDXe9qJpKRgqz0VjdRm2Vu+I+ZYoY7vI99aAv00=
-</code></pre><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>bash&amp;sh</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2025-06-01</p><hr>On this page:<nav id=TableOfContents><ol><li><a href=#1-生成-wireguard-密钥>1. 生成 WireGuard 密钥</a></li><li><a href=#2vyos上配置wireguard-ipv4预共享密钥>2.vyos上配置wireguard （IPV4）预共享密钥</a></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>felix</strong>.</p><p class=advertisement>Powered by <a>bash&sh</a>.</p></footer></div></body></html>
+在 VyOS 或客户端（都可以）执行：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>wg genpsk &gt; psk.key
+</span></span></code></pre></div><p>查看内容：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>cat psk.key
+</span></span></code></pre></div><p>会输出一串 Base64 编码的密钥，比如：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>zT4XEDXe9qJpKRgqz0VjdRm2Vu+I+ZYoY7vI99aAv0Q=
+</span></span></code></pre></div><p>🧩 在 VyOS 中添加 PSK
+假设你已有如下 WireGuard 配置：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>set interfaces wireguard wg0 address &#39;10.20.30.1/24&#39;
+</span></span><span style=display:flex><span>set interfaces wireguard wg0 port &#39;51820&#39;
+</span></span><span style=display:flex><span>set interfaces wireguard wg0 peer iphone public-key &#39;xxx...=&#39;
+</span></span></code></pre></div><p>加入 PSK 的命令如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>set interfaces wireguard wg0 peer iphone preshared-key &#39;zT4XEDXe9qJpKRgqz0VjdRm2Vu+I+ZYoY7vI99aAv00=
+</span></span></code></pre></div><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>bash&amp;sh</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2025-06-01</p><hr>On this page:<nav id=TableOfContents><ol><li><a href=#1-生成-wireguard-密钥>1. 生成 WireGuard 密钥</a></li><li><a href=#2vyos上配置wireguard-ipv4预共享密钥>2.vyos上配置wireguard （IPV4）预共享密钥</a></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>felix</strong>.</p><p class=advertisement>Powered by <a>bash&sh</a>.</p></footer></div></body></html>
