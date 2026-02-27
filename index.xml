@@ -1238,7 +1238,7 @@ SIP设置页面填写中继名、和中继配置（可参考下方我的配置�
 三汇语音网关一般支持通过 HTTP API 或 SMTP 发送短信。首先，确保三汇网关的短信服务已经启用，并且能够通过接口发送短信。&lt;/p&gt;
 &lt;p&gt;步骤 3：编写 Telegram 机器人和三汇网关的对接脚本 （本站有提供下载）
 你需要编写一个脚本，使用 Telegram 机器人获取信息，并通过 HTTP 请求将短信发送到三汇网关。&lt;/p&gt;
-&lt;p&gt;步骤 3.1：安装 Telegram Bot 库（例如 Python 的 python-telegram-bot）（详情，请看voip出国系列三）&lt;/p&gt;</description></item><item><title>出国自建voip(一)Freepbx16配置</title><link>https://hanigege.github.io/posts/freebsd/freepbx16-set-all-1/</link><pubDate>Sun, 11 May 2025 06:43:58 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freepbx16-set-all-1/</guid><description>&lt;br&gt;
+&lt;p&gt;步骤 3.1：安装 Telegram Bot 库（例如 Python 的 python-telegram-bot）（详情，请看voip出国系列三）&lt;/p&gt;</description></item><item><title>出国自建voip(一)Freepbx16配置</title><link>https://hanigege.github.io/posts/other/freepbx16-set-all-1/</link><pubDate>Sun, 11 May 2025 06:43:58 +0800</pubDate><guid>https://hanigege.github.io/posts/other/freepbx16-set-all-1/</guid><description>&lt;br&gt;
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;为什么要建回家voip系统，出国后，电话就是国际长途，打电话收发短信都不方便，有没有办法可以做到通过网络传递语音和收发短信（利用telegram机器人），当然可以，手机卡可以放在国内的小设备上，自己手机上装一个sip软电话客户端，即可完全实现，接听拨打电话，收发短信，并且不会再受地域限制，仅限学习交流，友情提醒，不要做违反当地法律法规的事。
 &lt;h1 id="开始操作"&gt;开始操作&lt;/h1&gt;
 &lt;h4 id="架构"&gt;架构&lt;/h4&gt;
