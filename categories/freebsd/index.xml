@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Freebsd on 代碼倉庫</title><link>https://hanigege.github.io/categories/freebsd/</link><description>Recent content in Freebsd on 代碼倉庫</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **felix**.</copyright><lastBuildDate>Fri, 27 Feb 2026 08:44:18 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/categories/freebsd/index.xml" rel="self" type="application/rss+xml"/><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</guid><description>&lt;br&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202026-02-27%20at%2009.05.03@2x.png" alt="列表"&gt;&lt;/p&gt;
-&lt;h4 id="新建脚本文件"&gt;新建脚本文件&lt;/h4&gt;
+&lt;h2 id="新建脚本文件"&gt;新建脚本文件&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim pf_manager.sh
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="复制下面的配置"&gt;复制下面的配置&lt;/h4&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="复制下面的配置"&gt;复制下面的配置&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/sh
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FreeBSD 15 PF 交互式防火墙管理脚本 - 终极版&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -141,7 +141,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; *&lt;span style="color:#f92672"&gt;)&lt;/span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;无效选项。&amp;#34;&lt;/span&gt; ;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;esac&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="添加权限并执行"&gt;添加权限并执行&lt;/h4&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="添加权限并执行"&gt;添加权限并执行&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x iptables_manager.sh
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./iptables_manager.sh
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd14下配置服务器端hysteria2"&gt;FreeBSD14下配置服务器端Hysteria2&lt;/h2&gt;
