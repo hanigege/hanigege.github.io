@@ -688,18 +688,23 @@
 &lt;p&gt;pve下安装ubuntu或者debian.然后看下面ck佬的教程操作：&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://drive.google.com/file/d/1ETrZhXvuLgmXs_-6rdMwsPHz0QJ2JmqY/view?usp=sharing"&gt;wg-easy.zip&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="安装教程"&gt;安装教程&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1、迁移代码
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# vm ubuntu22.04测试通过，新版本注意下面改了个组件，即：npm@11.6.2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1、迁移代码
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;复制app文件夹到 /app
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /app
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2、安装依赖
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt install -y wireguard iptables
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y nodejs
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo npm install -g npm@11.3.0 bcryptjs debug express-session h3 qrcode
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo npm install -g npm@11.6.2 bcryptjs debug express-session h3 qrcode
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3、配置环境
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export NODE_PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/usr/lib/node_modules
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;export NODE_PATH=/usr/lib/node_modules&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source ~/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm audit fix
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4、启用 IPv4 和 IPv6 转发
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo sysctl -w net.ipv4.ip_forward&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo sysctl -w net.ipv6.conf.all.forwarding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
@@ -715,7 +720,11 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;登录WebUI： http://ip:51821/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;详细参数请修改 /app/config.js
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/1.png" alt="图例"&gt;&lt;/p&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd15下配置服务器端hysteria2"&gt;FreeBSD15下配置服务器端Hysteria2&lt;/h2&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 如果报500错误的话&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /app
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm audit fix
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/CleanShot%202026-02-27%20at%2021.34.48@2x.png" alt="CleanShot 2026-02-27 at 21.34.48@2x"&gt;&lt;/p&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd15下配置服务器端hysteria2"&gt;FreeBSD15下配置服务器端Hysteria2&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;建议用root用户运行：&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;特权端口限制：非 root 用户无法监听 1024 以下的端口（如 443）。
 Hysteria2设置简单，性能强劲，强力推荐，只自己用，很方便。&lt;/p&gt;

@@ -283,18 +283,23 @@
 &lt;p&gt;pve下安装ubuntu或者debian.然后看下面ck佬的教程操作：&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://drive.google.com/file/d/1ETrZhXvuLgmXs_-6rdMwsPHz0QJ2JmqY/view?usp=sharing"&gt;wg-easy.zip&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="安装教程"&gt;安装教程&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1、迁移代码
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# vm ubuntu22.04测试通过，新版本注意下面改了个组件，即：npm@11.6.2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1、迁移代码
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;复制app文件夹到 /app
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /app
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2、安装依赖
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt install -y wireguard iptables
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y nodejs
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo npm install -g npm@11.3.0 bcryptjs debug express-session h3 qrcode
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo npm install -g npm@11.6.2 bcryptjs debug express-session h3 qrcode
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3、配置环境
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export NODE_PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/usr/lib/node_modules
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;export NODE_PATH=/usr/lib/node_modules&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source ~/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm audit fix
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4、启用 IPv4 和 IPv6 转发
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo sysctl -w net.ipv4.ip_forward&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo sysctl -w net.ipv6.conf.all.forwarding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
@@ -310,7 +315,11 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;登录WebUI： http://ip:51821/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;详细参数请修改 /app/config.js
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/1.png" alt="图例"&gt;&lt;/p&gt;</description></item><item><title>手动申请域名ssl证书</title><link>https://hanigege.github.io/posts/linux/%E6%89%8B%E5%8A%A8%E7%94%B3%E8%AF%B7%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6/</link><pubDate>Mon, 12 May 2025 08:22:29 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/%E6%89%8B%E5%8A%A8%E7%94%B3%E8%AF%B7%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6/</guid><description>&lt;h1 id="acmesh脚本申请cloudflare的证书-支持泛域名"&gt;acme.sh脚本申请cloudflare的证书 支持泛域名&lt;/h1&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 如果报500错误的话&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /app
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm audit fix
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/CleanShot%202026-02-27%20at%2021.34.48@2x.png" alt="CleanShot 2026-02-27 at 21.34.48@2x"&gt;&lt;/p&gt;</description></item><item><title>手动申请域名ssl证书</title><link>https://hanigege.github.io/posts/linux/%E6%89%8B%E5%8A%A8%E7%94%B3%E8%AF%B7%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6/</link><pubDate>Mon, 12 May 2025 08:22:29 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/%E6%89%8B%E5%8A%A8%E7%94%B3%E8%AF%B7%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6/</guid><description>&lt;h1 id="acmesh脚本申请cloudflare的证书-支持泛域名"&gt;acme.sh脚本申请cloudflare的证书 支持泛域名&lt;/h1&gt;
 &lt;p&gt;前言：&lt;code&gt;acme.sh&lt;/code&gt;是一个非常好用的用于申请证书的脚本，它开源在Github，它极大地降低了申请证书的难度，支持使用cloudflare api等多种api来申请证书。&lt;/p&gt;
 &lt;p&gt;本文主要介绍使用此脚本来申请 ssl 证书，给你的http请求加把锁，具体可以用来cloudflare api介绍。&lt;/p&gt;
 &lt;h2 id="准备条件"&gt;准备条件：&lt;/h2&gt;
