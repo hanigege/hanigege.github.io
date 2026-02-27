@@ -3,32 +3,32 @@
 &lt;p&gt;当你从内网请求公网 IP 时，ROS 收到包后转发给内网服务器，但服务器发现请求方和自己在同一个网段，会直接把回包传给手机。手机发现自己发给公网 IP 的请求却收到了来自内网私有 IP 的响应，会因为安全机制直接丢弃该包。回流规则通过让 ROS 中转这个“回头包”来解决这个问题。&lt;/p&gt;
 &lt;h2 id="2-完整的-ros-nat-脚本包含-web-回流"&gt;2. 完整的 ROS NAT 脚本（包含 Web 回流）&lt;/h2&gt;
 &lt;h4 id="请根据你的实际端口修改-12335-web-和-21-ftp-等"&gt;请根据你的实际端口修改 12335 (Web) 和 21 (FTP) 等。&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;/ip firewall nat&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# --- 基础规则 ---&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. 核心上网伪装（必须限制在 WAN 口，防止干扰其他转发）&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add chain=srcnat action=masquerade out-interface=pppoe-out1 comment=&amp;#34;Standard Internet Access&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall nat
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# --- 基础规则 ---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 1. 核心上网伪装（必须限制在 WAN 口，防止干扰其他转发）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=srcnat action=masquerade out-interface=pppoe-out1 comment=&amp;#34;Standard Internet Access&amp;#34;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# --- 端口转发 (DST-NAT) ---&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. DERP 转发&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add chain=dstnat protocol=tcp dst-port=12340 action=dst-nat to-addresses=10.20.20.4 to-ports=12340 comment=&amp;#34;DERP TCP&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add chain=dstnat protocol=udp dst-port=3478 action=dst-nat to-addresses=10.20.20.4 to-ports=3478 comment=&amp;#34;DERP STUN&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# --- 端口转发 (DST-NAT) ---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 2. DERP 转发
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=dstnat protocol=tcp dst-port=12340 action=dst-nat to-addresses=10.20.20.4 to-ports=12340 comment=&amp;#34;DERP TCP&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=dstnat protocol=udp dst-port=3478 action=dst-nat to-addresses=10.20.20.4 to-ports=3478 comment=&amp;#34;DERP STUN&amp;#34;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. Web 服务转发 (示例)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add chain=dstnat protocol=tcp dst-port=12335 action=dst-nat to-addresses=10.20.20.x to-ports=12335 comment=&amp;#34;web&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 3. Web 服务转发 (示例)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=dstnat protocol=tcp dst-port=12335 action=dst-nat to-addresses=10.20.20.x to-ports=12335 comment=&amp;#34;web&amp;#34;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. FTP 服务转发 (示例)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add chain=dstnat protocol=tcp dst-port=21 action=dst-nat to-addresses=10.20.20.x to-ports=21 comment=&amp;#34;vsftpd&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 4. FTP 服务转发 (示例)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=dstnat protocol=tcp dst-port=21 action=dst-nat to-addresses=10.20.20.x to-ports=21 comment=&amp;#34;vsftpd&amp;#34;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# --- 回流规则 (Hairpin NAT) ---&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 只有当内网访问内网服务器时才触发。建议将所有内网服务器放在一个规则里，或者逐个添加。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# --- 回流规则 (Hairpin NAT) ---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 只有当内网访问内网服务器时才触发。建议将所有内网服务器放在一个规则里，或者逐个添加。
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 给 DERP 添加回流&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add chain=srcnat src-address=10.20.20.0/24 dst-address=10.20.20.4 protocol=tcp dst-port=12340 action=masquerade comment=&amp;#34;Hairpin DERP TCP&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add chain=srcnat src-address=10.20.20.0/24 dst-address=10.20.20.4 protocol=udp dst-port=3478 action=masquerade comment=&amp;#34;Hairpin DERP STUN&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 给 DERP 添加回流
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=srcnat src-address=10.20.20.0/24 dst-address=10.20.20.4 protocol=tcp dst-port=12340 action=masquerade comment=&amp;#34;Hairpin DERP TCP&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=srcnat src-address=10.20.20.0/24 dst-address=10.20.20.4 protocol=udp dst-port=3478 action=masquerade comment=&amp;#34;Hairpin DERP STUN&amp;#34;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 给 Web 服务添加回流 (假设内网 IP 为 10.20.20.5)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add chain=srcnat src-address=10.20.20.0/24 dst-address=10.20.20.5 protocol=tcp dst-port=12335 action=masquerade comment=&amp;#34;Hairpin Web&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 给 Web 服务添加回流 (假设内网 IP 为 10.20.20.5)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=srcnat src-address=10.20.20.0/24 dst-address=10.20.20.5 protocol=tcp dst-port=12335 action=masquerade comment=&amp;#34;Hairpin Web&amp;#34;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-操作建议使用地址列表简化回流"&gt;3. 操作建议：使用“地址列表”简化回流&lt;/h2&gt;
 &lt;p&gt;如果你有很多内网服务器需要回流，一条条加 srcnat 很麻烦。你可以这样做：&lt;/p&gt;</description></item><item><title>04.RouterOS使用queue_tree配置流量整形</title><link>https://hanigege.github.io/posts/routers/04.routeros%E4%BD%BF%E7%94%A8queue_tree%E9%85%8D%E7%BD%AE%E6%B5%81%E9%87%8F%E6%95%B4%E5%BD%A2/</link><pubDate>Fri, 27 Feb 2026 16:59:27 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/04.routeros%E4%BD%BF%E7%94%A8queue_tree%E9%85%8D%E7%BD%AE%E6%B5%81%E9%87%8F%E6%95%B4%E5%BD%A2/</guid><description>&lt;h1 id="本教程介绍使用-queue-tree-开启-ros-的流控功能"&gt;本教程介绍使用 queue tree 开启 ROS 的流控功能&lt;/h1&gt;
 &lt;p&gt;本教程介绍如何使用 RouterOS 的 &lt;code&gt;queue tree&lt;/code&gt; 实现流量整形。
