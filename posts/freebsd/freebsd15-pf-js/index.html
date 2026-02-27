@@ -1,0 +1,142 @@
+<!doctype html><html lang=zh><head><title>FreeBSD 15 PF 终极交互式管理脚本 &ndash; 代碼倉庫</title><meta name=description content="個人自留地，如果能幫到你，我也會很高興。"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://hanigege.github.io/css/palettes/base16-dark.css><link rel=stylesheet href=https://hanigege.github.io/css/risotto.css><link rel=stylesheet href=https://hanigege.github.io/css/custom.css></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><link rel=stylesheet href=/css/custom.css><ul><li class=nomarker><h1 class=page__logo><a href=https://hanigege.github.io/ class=page__logo-inner>代碼倉庫</a></h1></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/freebsd/ title>FreeBSD</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/linux/ title>Linux</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/routers/ title>Routers</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/other/ title>Other</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/about/ title>About</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>FreeBSD 15 PF 终极交互式管理脚本</h1></header><div class=content__body><br><p><img src=assets/CleanShot%202026-02-27%20at%2009.05.03@2x.png alt=列表></p><h4 id=新建脚本文件>新建脚本文件</h4><pre tabindex=0><code>nvim pf_manager.sh
+</code></pre><h4 id=复制下面的配置>复制下面的配置</h4><pre tabindex=0><code>#!/bin/sh
+# FreeBSD 15 PF 交互式防火墙管理脚本 - 终极版
+
+STATE_FILE=&#34;/etc/pf_ports.list&#34;
+PF_CONF=&#34;/etc/pf.conf&#34;
+
+if [ &#34;$(id -u)&#34; != &#34;0&#34; ]; then
+    echo &#34;错误：必须使用 root 权限运行。&#34;
+    exit 1
+fi
+
+get_active_ssh_ports() {
+    ports=$(sockstat -46 -l -P tcp | grep -E &#39;\bsshd\b&#39; | awk &#39;{print $6}&#39; | awk -F&#39;:&#39; &#39;{print $NF}&#39; | sort -u)
+    if [ -z &#34;$ports&#34; ]; then echo &#34;22&#34;; else echo &#34;$ports&#34;; fi
+}
+
+init_env() {
+    if ! grep -q &#34;^pf_enable=\&#34;YES\&#34;&#34; /etc/rc.conf; then
+        sysrc pf_enable=&#34;YES&#34; &gt;/dev/null
+        service pf start &gt;/dev/null 2&gt;&amp;1
+    fi
+    [ ! -f &#34;$STATE_FILE&#34; ] &amp;&amp; init_zero
+}
+
+init_zero() {
+    &gt; &#34;$STATE_FILE&#34;
+    active_ports=$(get_active_ssh_ports)
+    for port in $active_ports; do
+        echo &#34;tcp $port&#34; &gt;&gt; &#34;$STATE_FILE&#34;
+    done
+    apply_rules &gt;/dev/null 2&gt;&amp;1
+    echo &#34;✅ 已清空所有自定义规则。&#34;
+    echo &#34;🔒 自动检测并放行当前活动 SSH 端口: [ $active_ports ]&#34;
+}
+
+apply_rules() {
+    cat &lt;&lt;EOF &gt; &#34;$PF_CONF&#34;
+# 宏定义与全局选项
+set skip on lo0
+set block-policy drop
+
+# 流量清理
+scrub in all fragment reassemble
+
+# 基础过滤规则 (状态机制处理新老连接)
+block in all
+pass out all keep state
+pass in quick inet proto icmp all icmp-type echoreq keep state
+EOF
+
+    if grep -q &#34;^ALL PORTS OPEN$&#34; &#34;$STATE_FILE&#34;; then
+        echo &#34;pass in quick all keep state&#34; &gt;&gt; &#34;$PF_CONF&#34;
+    else
+        while read -r proto port; do
+            [ -z &#34;$proto&#34; ] || [ -z &#34;$port&#34; ] &amp;&amp; continue
+            echo &#34;pass in quick inet proto $proto from any to any port $port keep state&#34; &gt;&gt; &#34;$PF_CONF&#34;
+        done &lt; &#34;$STATE_FILE&#34;
+    fi
+
+    pfctl -nf &#34;$PF_CONF&#34; &gt;/dev/null 2&gt;&amp;1
+    if [ $? -eq 0 ]; then
+        pfctl -f &#34;$PF_CONF&#34; &gt;/dev/null 2&gt;&amp;1
+        echo &#34;✅ 规则已成功更新并生效！&#34;
+    else
+        echo &#34;❌ 规则语法错误，未应用更改！&#34;
+    fi
+}
+
+view_rules() {
+    echo &#34;--- 当前系统生效的 PF 规则 (pfctl -sr) ---&#34;
+    pfctl -sr
+    echo &#34;------------------------------------------&#34;
+}
+
+open_port() {
+    read -p &#34;请输入要开放的端口号 (1-65535): &#34; port
+    if ! [ &#34;$port&#34; -eq &#34;$port&#34; ] 2&gt;/dev/null || [ &#34;$port&#34; -lt 1 ] || [ &#34;$port&#34; -gt 65535 ]; then
+        echo &#34;错误：端口号无效。&#34;
+        return
+    fi
+    echo &#34;请选择协议: 1) TCP  2) UDP  3) TCP 和 UDP&#34;
+    read -p &#34;输入选项 (1/2/3): &#34; proto_opt
+    sed -i &#39;&#39; &#39;/^ALL PORTS OPEN$/d&#39; &#34;$STATE_FILE&#34;
+    case $proto_opt in
+        1) grep -q &#34;^tcp $port$&#34; &#34;$STATE_FILE&#34; || echo &#34;tcp $port&#34; &gt;&gt; &#34;$STATE_FILE&#34; ;;
+        2) grep -q &#34;^udp $port$&#34; &#34;$STATE_FILE&#34; || echo &#34;udp $port&#34; &gt;&gt; &#34;$STATE_FILE&#34; ;;
+        3) 
+           grep -q &#34;^tcp $port$&#34; &#34;$STATE_FILE&#34; || echo &#34;tcp $port&#34; &gt;&gt; &#34;$STATE_FILE&#34;
+           grep -q &#34;^udp $port$&#34; &#34;$STATE_FILE&#34; || echo &#34;udp $port&#34; &gt;&gt; &#34;$STATE_FILE&#34; ;;
+        *) echo &#34;错误：无效选项。&#34; ; return ;;
+    esac
+    apply_rules
+}
+
+delete_port() {
+    read -p &#34;请输入要关闭的端口号: &#34; port
+    if grep -q &#34; $port$&#34; &#34;$STATE_FILE&#34;; then
+        sed -i &#39;&#39; &#34;/ $port$/d&#34; &#34;$STATE_FILE&#34;
+        apply_rules
+    else
+        echo &#34;该端口未在管理列表中。&#34;
+    fi
+}
+
+open_all_ports() {
+    echo &#34;⚠️ 警告：这将放行所有入站流量！&#34;
+    read -p &#34;确认执行？(y/n): &#34; confirm
+    [ &#34;$confirm&#34; = &#34;y&#34; ] || [ &#34;$confirm&#34; = &#34;Y&#34; ] &amp;&amp; { echo &#34;ALL PORTS OPEN&#34; &gt; &#34;$STATE_FILE&#34;; apply_rules; }
+}
+
+init_env
+
+while true; do
+    echo &#34;&#34;
+    echo &#34;=== PF 防火墙管理菜单 ===&#34;
+    echo &#34;1. 查看当前底层生效规则&#34;
+    echo &#34;2. 查看已开放端口列表&#34;
+    echo &#34;3. 开放新端口 (支持 TCP/UDP)&#34;
+    echo &#34;4. 删除/关闭端口&#34;
+    echo &#34;5. 关闭所有端口并从零开始 (保留当前活动 SSH 端口)&#34;
+    echo &#34;6. 开放所有端口 (高危)&#34;
+    echo &#34;0. 退出&#34;
+    read -p &#34;请选择操作 [0-6]: &#34; choice
+
+    case $choice in
+        1) view_rules ;;
+        2) echo &#34;--- 当前管理的端口 ---&#34;; cat &#34;$STATE_FILE&#34; ;;
+        3) open_port ;;
+        4) delete_port ;;
+        5) 
+           echo &#34;⚠️ 警告：这将清除所有记录，并重新抓取当前 SSH 端口作为唯一放行规则！&#34;
+           read -p &#34;确认执行？(y/n): &#34; confirm
+           [ &#34;$confirm&#34; = &#34;y&#34; ] || [ &#34;$confirm&#34; = &#34;Y&#34; ] &amp;&amp; init_zero ;;
+        6) open_all_ports ;;
+        0) exit 0 ;;
+        *) echo &#34;无效选项。&#34; ;;
+    esac
+done
+</code></pre><h4 id=添加权限并执行>添加权限并执行</h4><pre tabindex=0><code>chmod +x iptables_manager.sh
+./iptables_manager.sh
+</code></pre><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>bash&amp;sh</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2026-02-27</p><hr>On this page:<nav id=TableOfContents><ol><li><ol><li></li></ol></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>felix</strong>.</p><p class=advertisement>Powered by <a>大佬們</a>.</p></footer></div></body></html>

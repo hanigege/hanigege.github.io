@@ -1,0 +1,31 @@
+<!doctype html><html lang=zh><head><title>出国自建voip(三.2）Telegram机器人连接程序自启动(补充篇) &ndash; 代碼倉庫</title><meta name=description content="個人自留地，如果能幫到你，我也會很高興。"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=UTF-8><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=https://hanigege.github.io/css/palettes/base16-dark.css><link rel=stylesheet href=https://hanigege.github.io/css/risotto.css><link rel=stylesheet href=https://hanigege.github.io/css/custom.css></head><body><div class=page><header class=page__header><nav class="page__nav main-nav"><link rel=stylesheet href=/css/custom.css><ul><li class=nomarker><h1 class=page__logo><a href=https://hanigege.github.io/ class=page__logo-inner>代碼倉庫</a></h1></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/freebsd/ title>FreeBSD</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/linux/ title>Linux</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/routers/ title>Routers</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/categories/other/ title>Other</a></li><li class=main-nav__item><a class=nav-main-item href=https://hanigege.github.io/about/ title>About</a></li></ul></nav></header><section class=page__body><header class=content__header><h1>出国自建voip(三.2）Telegram机器人连接程序自启动(补充篇)</h1></header><div class=content__body><h2 id=rootsms-source-myenvbinactivate>root@sms:~# source myenv/bin/activate</h2><h2 id=激活虚拟环境>激活虚拟环境</h2><pre tabindex=0><code>source myenv/bin/activate 
+</code></pre><pre tabindex=0><code>(myenv) root@sms:~# nohup python sms.py &gt; sms.log 2&gt;&amp;1 &amp;
+</code></pre><p>后台启动sms.py</p><pre tabindex=0><code>nohup python sms.py &gt; sms.log 2&gt;&amp;1 &amp;
+or
+nohup python sms.py &gt; sms.log 2&gt;&amp;1 &amp;
+(myenv) root@sms:~#
+</code></pre><p>上面的两条命令能不能做成脚本，设置为开机自启动</p><p>可以的，你可以创建一个 systemd 服务 或者 编写一个 shell 脚本 来实现 Python 虚拟环境的激活 并 运行 sms.py 脚本，同时设置为 开机自启动。</p><p>方法 1：使用 systemd (推荐)
+适用于 Debian/Ubuntu 及大多数 Linux 发行版。</p><p>步骤 1：创建 systemd 服务文件
+运行以下命令，创建 sms.service：</p><pre tabindex=0><code>nano /etc/systemd/system/sms.service
+</code></pre><p>填入以下内容：</p><pre tabindex=0><code>[Unit]
+Description=SMS Python Service
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root
+ExecStart=/root/myenv/bin/python /root/sms.py
+Restart=always
+StandardOutput=append:/root/sms.log
+StandardError=append:/root/sms.log
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><p>⚠ 注意：</p><p><code>WorkingDirectory=/root</code> 需要修改成你的 Python 虚拟环境和 sms.py 所在目录。</p><p><code>ExecStart=/root/myenv/bin/python /root/sms.py</code> 确保路径正确。</p><p>Restart=always 让进程崩溃后自动重启。</p><p>步骤 2：启用并启动服务</p><pre tabindex=0><code>systemctl daemon-reload
+systemctl enable sms
+systemctl start sms
+查看运行状态：
+
+systemctl status sms
+如果 显示 active (running) 说明成功。
+</code></pre><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>bash&amp;sh</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2025-05-11</p><hr>On this page:<nav id=TableOfContents><ol><li><a href=#rootsms-source-myenvbinactivate>root@sms:~# source myenv/bin/activate</a></li><li><a href=#激活虚拟环境>激活虚拟环境</a></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>felix</strong>.</p><p class=advertisement>Powered by <a>大佬們</a>.</p></footer></div></body></html>
