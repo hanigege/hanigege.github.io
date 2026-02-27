@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 代碼倉庫</title><link>https://hanigege.github.io/categories/linux/</link><description>Recent content in Linux on 代碼倉庫</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **felix**.</copyright><lastBuildDate>Mon, 12 May 2025 16:09:56 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>CK佬的wg-Easy一键脚本程序</title><link>https://hanigege.github.io/posts/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link><pubDate>Mon, 12 May 2025 16:09:56 +0800</pubDate><guid>https://hanigege.github.io/posts/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p&gt;&lt;img src="assets/1.png" alt="图示"&gt;&lt;/p&gt;
+&lt;p&gt;pve下安装ubuntu或者debian.然后看下面ck佬的教程操作：&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://drive.google.com/file/d/1ETrZhXvuLgmXs_-6rdMwsPHz0QJ2JmqY/view?usp=sharing"&gt;wg-easy.zip&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="安装教程"&gt;安装教程&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1、迁移代码
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;复制app文件夹到 /app
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2、安装依赖
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt install -y wireguard iptables
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y nodejs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo npm install -g npm@11.3.0 bcryptjs debug express-session h3 qrcode
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3、配置环境
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export NODE_PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/usr/lib/node_modules
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;export NODE_PATH=/usr/lib/node_modules&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; ~/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source ~/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4、启用 IPv4 和 IPv6 转发
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo sysctl -w net.ipv4.ip_forward&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo sysctl -w net.ipv6.conf.all.forwarding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo bash -c &lt;span style="color:#e6db74"&gt;&amp;#39;echo &amp;#34;net.ipv4.ip_forward = 1&amp;#34; &amp;gt;&amp;gt; /etc/sysctl.conf&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo bash -c &lt;span style="color:#e6db74"&gt;&amp;#39;echo &amp;#34;net.ipv6.conf.all.forwarding = 1&amp;#34; &amp;gt;&amp;gt; /etc/sysctl.conf&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo sysctl -p
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;5、配置 systemd 服务
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;复制wg-easy.service到 /etc/systemd/system/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x /etc/systemd/system/wg-easy.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable wg-easy.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl start wg-easy.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl status wg-easy.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;登录WebUI： http://ip:51821/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;详细参数请修改 /app/config.js
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/1.png" alt="图例"&gt;&lt;/p&gt;</description></item><item><title>手动申请域名ssl证书</title><link>https://hanigege.github.io/posts/%E6%89%8B%E5%8A%A8%E7%94%B3%E8%AF%B7%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6/</link><pubDate>Mon, 12 May 2025 08:22:29 +0800</pubDate><guid>https://hanigege.github.io/posts/%E6%89%8B%E5%8A%A8%E7%94%B3%E8%AF%B7%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6/</guid><description>&lt;h1 id="acmesh脚本申请cloudflare的证书-支持泛域名"&gt;acme.sh脚本申请cloudflare的证书 支持泛域名&lt;/h1&gt;
+&lt;p&gt;前言：&lt;code&gt;acme.sh&lt;/code&gt;是一个非常好用的用于申请证书的脚本，它开源在Github，它极大地降低了申请证书的难度，支持使用cloudflare api等多种api来申请证书。&lt;/p&gt;
+&lt;p&gt;本文主要介绍使用此脚本来申请 ssl 证书，给你的http请求加把锁，具体可以用来cloudflare api介绍。&lt;/p&gt;
+&lt;h2 id="准备条件"&gt;准备条件：&lt;/h2&gt;
+&lt;p&gt;一台被分配了公网IP的主机&lt;/p&gt;
+&lt;p&gt;一个域名(建议购买收费域名)&lt;/p&gt;
+&lt;p&gt;电脑ssh客户端&lt;/p&gt;
+&lt;p&gt;能解决个体的问题&lt;/p&gt;
+&lt;h2 id="一全球api申请证书"&gt;一、全球API申请证书&lt;/h2&gt;
+&lt;p&gt;1.1、安装脚本文件
+以root用户ssh连接到主机，使用下面的命令安装脚本：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt -y install socat //更新源并安装socat
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wget -qO- get.acme.sh | bash //安装此脚本
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source ~/.bashrc //让别名生效，此后无论在哪里直接使用acme.sh，不用输绝对路径
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 由于最新acme.sh脚本默认ca变成了zerossl，现## 执行下面命令修改脚本默认ca为letsencrypt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;acme.sh --set-default-ca --server letsencrypt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;1.2、证书配置
+1.2.1 获取Cloudflare api key
+注册好cloudflare账号，把域名解析的解析权限锁定cloudflare处理，这样以后只需要在cloudflare这里配置解析记录。按照图标获取cloudflare api key。
+&lt;img src="assets/CleanShot%202025-05-12%20at%2008.24.26@2x.png" alt="CleanShot 2025-05-12 at 08.24.26@2x"&gt;
+1.2.2 申请证书（二选一）
+这里假设您的域名是yourdomain.com，执行下面命令申请证书：&lt;/p&gt;
+&lt;p&gt;1.2.2.1 dns方式验证&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export CF_Key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;slfjksjffjfhfhkjhfksjf&amp;#34;&lt;/span&gt; //此处替换成你自己的Key
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export CF_Email&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;yourcloudflare@gmail.com&amp;#34;&lt;/span&gt; //此处填写你给Cloudflare绑定的邮箱账号
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;acme.sh --issue --dns dns_cf -d yourdomain.com -d www.yourdomain.com -k ec-256
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;说明：Cloudflare 目前不支持.tk .cf .ml等免费申请来的域名后缀使用此 DNS 验证方式，付费域名才受支持，免费域名使用低于 2.2.2 方式。脚本申请到的证书和密钥都放在目录下~/.acme.sh/yourdomain.com_ecc。&lt;/p&gt;</description></item><item><title>Alpine Linux搭建sing-box服务端</title><link>https://hanigege.github.io/posts/alpine-linux-sing-box/</link><pubDate>Sun, 11 May 2025 12:14:50 +0800</pubDate><guid>https://hanigege.github.io/posts/alpine-linux-sing-box/</guid><description>&lt;br&gt;
+现在有很多便宜NAT鸡因为配置较低，所以只选用的是Alpine Linux,所以我就随便写了个教程方便使用。
+&lt;h2 id="安装依赖"&gt;安装依赖&lt;/h2&gt;
+&lt;p&gt;首先先安装singbox,还有vim（方便编辑）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#f92672"&gt;/&lt;/span&gt;etc&lt;span style="color:#f92672"&gt;/&lt;/span&gt;apk&lt;span style="color:#f92672"&gt;/&lt;/span&gt;repositories
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apk add sing&lt;span style="color:#f92672"&gt;-&lt;/span&gt;box&lt;span style="color:#a6e22e"&gt;@testing&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apk add vim
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rc&lt;span style="color:#f92672"&gt;-&lt;/span&gt;update add sing&lt;span style="color:#f92672"&gt;-&lt;/span&gt;box default
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="设置自启"&gt;设置自启.&lt;/h2&gt;
+&lt;h4 id="1这里要说明一下上面安装好后默认会自动生成启动文件etcinitdsing-box-"&gt;1.这里要说明一下，上面安装好后默认会自动生成启动文件&lt;code&gt;/etc/init.d/sing-box &lt;/code&gt;,&lt;/h4&gt;
+&lt;p&gt;配置文件在
+&lt;code&gt;/etc/sing-box/config.json&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id="2如果用下面自建的默认的就不用启动就行了更不要设置自启动以免冲突"&gt;2.如果用下面自建的，默认的就不用启动就行了，更不要设置自启动，以免冲突。&lt;/h4&gt;
+&lt;p&gt;编辑这个文件：&lt;code&gt;vim /etc/init.d/singbox&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/sbin/openrc-run
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;command&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/usr/bin/sing-box&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;command_args&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;run -c /root/config.json&amp;#34;&lt;/span&gt; &lt;span style="color:#75715e"&gt;#是您的配置文件位置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;singbox service&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;depend&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; need net
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; use logger
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;start&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ebegin &lt;span style="color:#e6db74"&gt;&amp;#34;Starting singbox&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; start-stop-daemon --start --background --exec $command -- $command_args
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; eend $?
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;stop&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ebegin &lt;span style="color:#e6db74"&gt;&amp;#34;Stopping singbox&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; start-stop-daemon --stop --exec $command
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; eend $?
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后加入OpenRC自启动&lt;/p&gt;</description></item></channel></rss>

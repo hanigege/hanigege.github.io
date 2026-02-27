@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>代碼倉庫</title><link>https://hanigege.github.io/</link><description>Recent content on 代碼倉庫</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **felix**.</copyright><lastBuildDate>Fri, 27 Feb 2026 08:44:18 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd15-pf-js/</guid><description>&lt;br&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>代码仓库 on 代碼倉庫</title><link>https://hanigege.github.io/</link><description>Recent content in 代码仓库 on 代碼倉庫</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **felix**.</copyright><lastBuildDate>Fri, 27 Feb 2026 08:44:18 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd15-pf-js/</guid><description>&lt;br&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202026-02-27%20at%2009.05.03@2x.png" alt="列表"&gt;&lt;/p&gt;
 &lt;h4 id="新建脚本文件"&gt;新建脚本文件&lt;/h4&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;nvim pf_manager.sh
@@ -928,44 +928,24 @@ set system login user gary authentication public-keys gary@laptop type &amp;#39;
 &lt;pre tabindex="0"&gt;&lt;code&gt;set system login user vyos disable
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;设置系统的hostname:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;set system host-name &amp;#39;vyos&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看系统的hostname&lt;/p&gt;</description></item><item><title>About</title><link>https://hanigege.github.io/about/</link><pubDate>Sat, 10 May 2025 15:24:57 +0800</pubDate><guid>https://hanigege.github.io/about/</guid><description>&lt;br&gt;
-&gt; 🌍 **“以我為人人，人人為我”** 這句話看似樸素，實則蘊含著深刻的哲理。它強調了個體與集體的和諧關係：既要樂於奉獻，也要彼此扶持。這是構建和諧社會、溫暖人心的重要思想基礎。
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看系统的hostname&lt;/p&gt;</description></item><item><title>About</title><link>https://hanigege.github.io/about/</link><pubDate>Sat, 10 May 2025 16:14:10 +0800</pubDate><guid>https://hanigege.github.io/about/</guid><description>&lt;h1 id="-简介"&gt;🧑‍💻 简介&lt;/h1&gt;
+&lt;br&gt;
+# 歡迎來到我的個人小站 🌐
+你好！👋 這裡是我個人使用的一些業務配置方案的合集，完全是為了方便自己隨時查閱和學習，同時也適用於我的日常生活和家庭環境。✨
 &lt;hr&gt;
-&lt;h2 id="-以我為人人樂於助人從我做起"&gt;👐 “以我為人人”：樂於助人，從我做起&lt;/h2&gt;
-&lt;p&gt;在我們的日常生活中，“以我為人人”意味著主動承擔責任，服務他人：&lt;/p&gt;
+&lt;h2 id="-主要涉及的技術領域"&gt;🖥️ 主要涉及的技術領域&lt;/h2&gt;
+&lt;p&gt;我的小站主要涵蓋以下幾個技術領域：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;👨‍👩‍👧 在家庭中，分擔家務，孝敬父母；&lt;/li&gt;
-&lt;li&gt;🎓 在校園裡，幫助同學，尊重師長；&lt;/li&gt;
-&lt;li&gt;🏙 在社會上，關心公益，樂於助人。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Linux 系統&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;FreeBSD 系統&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;軟路由技術&lt;/strong&gt;（如：RouterOS、VyOS、OPNsense）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;通訊軟件方案&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;blockquote&gt;
-&lt;p&gt;“哪怕只是一個微笑、一句問候，也可能照亮他人灰暗的一天。”&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;這些配置方案在我的家庭網絡中廣泛使用，提供了豐富的功能和保障，既能滿足個人需求，又能提高網絡效率和安全性。🛠️&lt;/p&gt;
 &lt;hr&gt;
-&lt;h2 id="-人人為我集體溫暖心心相印"&gt;🤝 “人人為我”：集體溫暖，心心相印&lt;/h2&gt;
-&lt;p&gt;我們每個人都會遇到困難和挫折，這時，來自他人的幫助便顯得尤為珍貴：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;🩺 生病時，有人照顧；&lt;/li&gt;
-&lt;li&gt;🧭 迷茫時，有人指引；&lt;/li&gt;
-&lt;li&gt;🆘 困境中，有人拉你一把。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;“我們不是孤島，而是彼此相連的大地。”&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;h2 id="-小站目的"&gt;💡 小站目的&lt;/h2&gt;
+&lt;p&gt;這個站點不僅僅是我個人的技術備忘錄，也希望能為有類似需求的朋友們提供一些實用的參考。🙏 如果你和我有相同的興趣，或者正在尋找相關的技術方案，歡迎隨時訪問這裡。大家一起學習，共同進步！🚀&lt;/p&gt;
 &lt;hr&gt;
-&lt;h2 id="-和諧社會從我做起"&gt;🌈 和諧社會，從“我”做起&lt;/h2&gt;
-&lt;p&gt;“以我為人人，人人為我”不是簡單的“你幫我，我幫你”，而是一種 &lt;strong&gt;共建共榮的社會意識&lt;/strong&gt;。只有人人願意多付出一點，整個社會才會變得更加溫暖。&lt;/p&gt;
-&lt;hr&gt;
-&lt;h2 id="-我們該怎麼做"&gt;✅ 我們該怎麼做？&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;🌱 從小事做起，從身邊人做起；&lt;/li&gt;
-&lt;li&gt;💬 多一句鼓勵，多一次分享；&lt;/li&gt;
-&lt;li&gt;🚀 用行動影響他人，讓溫暖傳遞下去。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;blockquote&gt;
-&lt;p&gt;📝 &lt;strong&gt;結語：&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;讓我們一起踐行“以我為人人，人人為我”的理念，讓溫情在人與人之間流淌不息，構建一個有愛、有光、有溫度的世界。✨&lt;/p&gt;
-&lt;/blockquote&gt;</description></item><item><title>RosIPV6配置方案</title><link>https://hanigege.github.io/posts/ros-ipv6-set/</link><pubDate>Thu, 08 May 2025 20:37:25 +0800</pubDate><guid>https://hanigege.github.io/posts/ros-ipv6-set/</guid><description>&lt;h2 id="ipv6最终配置定型"&gt;ipv6最终配置定型：&lt;/h2&gt;</description></item><item><title>vyos多网口小主机桥接配置(完整)</title><link>https://hanigege.github.io/posts/vyos-qiaojie-4kou/</link><pubDate>Wed, 07 May 2025 23:30:18 +0800</pubDate><guid>https://hanigege.github.io/posts/vyos-qiaojie-4kou/</guid><description>&lt;h3 id="一基本上网配置"&gt;一.基本上网配置&lt;/h3&gt;
+&lt;p&gt;感謝你的訪問！💖 希望你能在這裡找到有用的內容。🚀&lt;/p&gt;</description></item><item><title>RosIPV6配置方案</title><link>https://hanigege.github.io/posts/ros-ipv6-set/</link><pubDate>Thu, 08 May 2025 20:37:25 +0800</pubDate><guid>https://hanigege.github.io/posts/ros-ipv6-set/</guid><description>&lt;h2 id="ipv6最终配置定型"&gt;ipv6最终配置定型：&lt;/h2&gt;</description></item><item><title>vyos多网口小主机桥接配置(完整)</title><link>https://hanigege.github.io/posts/vyos-qiaojie-4kou/</link><pubDate>Wed, 07 May 2025 23:30:18 +0800</pubDate><guid>https://hanigege.github.io/posts/vyos-qiaojie-4kou/</guid><description>&lt;h3 id="一基本上网配置"&gt;一.基本上网配置&lt;/h3&gt;
 &lt;h3 id="vyos的命令行界面是基于shell的没有图形界面-但是可以用tab自动补全"&gt;vyos的命令行界面是基于shell的，没有图形界面, 但是可以用tab自动补全&lt;/h3&gt;
 &lt;p&gt;本文的vyos命令是基于vyos的vyos-rolling-nightly-builds的1.5.x版本.&lt;/p&gt;</description></item><item><title>搜索</title><link>https://hanigege.github.io/search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://hanigege.github.io/search/</guid><description/></item></channel></rss>
