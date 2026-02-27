@@ -174,9 +174,9 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;User&lt;/strong&gt;: 填入宽带账号&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Password&lt;/strong&gt;: 填入宽带密码&lt;/li&gt;
-&lt;li&gt;如果不使用运营商提供的 DNS，可不勾选 &lt;strong&gt;Use Peer DNS&lt;/strong&gt;。
-&lt;img src="assets/0.png" alt="0"&gt;&lt;/li&gt;
+&lt;li&gt;如果不使用运营商提供的 DNS，可不勾选 &lt;strong&gt;Use Peer DNS&lt;/strong&gt;。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;&lt;img src="assets/0.png" alt="0"&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;注&lt;/strong&gt;：接口前出现 “R” 代表拨号成功。拨号成功后建议先禁用，待防火墙配置完毕后再开启！
 &lt;img src="assets/2.png" alt="2"&gt;&lt;/p&gt;

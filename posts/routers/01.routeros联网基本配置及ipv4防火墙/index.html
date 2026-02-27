@@ -2,8 +2,7 @@
 </span></span><span style=display:flex><span>桥接接口 <span style=color:#e6db74>`bridge1`</span>、拨号接口 <span style=color:#e6db74>`pppoe-out1`</span> 名称若不同则自行替换。
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>作者：Tom
-</span></span></code></pre></div><h2 id=1-pppoe-拨号配置>1. PPPoE 拨号配置</h2><p>手动配置 <code>pppoe-out1</code> 接口拨号：</p><ul><li><strong>User</strong>: 填入宽带账号</li><li><strong>Password</strong>: 填入宽带密码</li><li>如果不使用运营商提供的 DNS，可不勾选 <strong>Use Peer DNS</strong>。
-<img src=assets/0.png alt=0></li></ul><blockquote><p><strong>注</strong>：接口前出现 “R” 代表拨号成功。拨号成功后建议先禁用，待防火墙配置完毕后再开启！
+</span></span></code></pre></div><h2 id=1-pppoe-拨号配置>1. PPPoE 拨号配置</h2><p>手动配置 <code>pppoe-out1</code> 接口拨号：</p><ul><li><strong>User</strong>: 填入宽带账号</li><li><strong>Password</strong>: 填入宽带密码</li><li>如果不使用运营商提供的 DNS，可不勾选 <strong>Use Peer DNS</strong>。</li></ul><p><img src=assets/0.png alt=0></p><blockquote><p><strong>注</strong>：接口前出现 “R” 代表拨号成功。拨号成功后建议先禁用，待防火墙配置完毕后再开启！
 <img src=assets/2.png alt=2></p></blockquote><h2 id=2-配置-dhcp-服务器>2. 配置 DHCP 服务器</h2><p>DHCP IP 范围为 <code>10.0.0.100-10.0.0.250</code>，网关和 DNS 默认为 ROS。如果希望全局配置透明代理，<code>dns-server</code> 可配置为 mosdns。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>/ip pool add name=dhcpv4-pool1 ranges=10.0.0.100-10.0.0.250
 </span></span><span style=display:flex><span>/ip dhcp-server add name=dhcpv4-server1 interface=bridge1 address-pool=dhcpv4-pool1 lease-time=1d
 </span></span><span style=display:flex><span>/ip dhcp-server network add address=10.0.0.0/24 gateway=10.0.0.1 dns-server=10.0.0.1
