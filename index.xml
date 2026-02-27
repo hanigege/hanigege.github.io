@@ -715,56 +715,38 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;登录WebUI： http://ip:51821/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;详细参数请修改 /app/config.js
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/1.png" alt="图例"&gt;&lt;/p&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd14下配置服务器端hysteria2"&gt;FreeBSD14下配置服务器端Hysteria2&lt;/h2&gt;
-&lt;p&gt;我的系统是FreeBSD14的，官方提供的无法正常运行，不知道，是什么原因。&lt;/p&gt;
-&lt;p&gt;只好在自己的build一个，不过还好很简单。建议用好一点的VPS来build，用国内的，各种time out。&lt;/p&gt;
-&lt;p&gt;准备&lt;/p&gt;
-&lt;h2 id="1软件准备"&gt;1，软件准备&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkg install python39 go121 git
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;注意go版本一定要121的，前面我安装120，不行，只能重新安装121版本的。(我后期用的是自编译1.23的go)&lt;/p&gt;
-&lt;p&gt;还要记得建个链拉，要不，系统老提示Go没安装&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /usr/local/bin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/1.png" alt="图例"&gt;&lt;/p&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd15下配置服务器端hysteria2"&gt;FreeBSD15下配置服务器端Hysteria2&lt;/h2&gt;
+&lt;p&gt;建议用root用户运行：
+特权端口限制：非 root 用户无法监听 1024 以下的端口（如 443）。
+Hysteria2设置简单，性能强劲，强力推荐，只自己用，很方便。&lt;/p&gt;
+&lt;p&gt;先到官网下载最新的for freebsd版 &lt;a href="https://github.com/apernet/hysteria/releases"&gt;官网下载&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="1-安装hysteria"&gt;1. 安装hysteria&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;$&lt;/span&gt; fetch https:&lt;span style="color:#f92672"&gt;//&lt;/span&gt;github&lt;span style="color:#f92672"&gt;.&lt;/span&gt;com&lt;span style="color:#f92672"&gt;/&lt;/span&gt;apernet&lt;span style="color:#f92672"&gt;/&lt;/span&gt;hysteria&lt;span style="color:#f92672"&gt;/&lt;/span&gt;releases&lt;span style="color:#f92672"&gt;/&lt;/span&gt;download&lt;span style="color:#f92672"&gt;/&lt;/span&gt;app&lt;span style="color:#f92672"&gt;%&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;Fv2&lt;span style="color:#f92672"&gt;.&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;7.0&lt;/span&gt;&lt;span style="color:#f92672"&gt;/&lt;/span&gt;hysteria&lt;span style="color:#f92672"&gt;-&lt;/span&gt;freebsd&lt;span style="color:#f92672"&gt;-&lt;/span&gt;amd64 &lt;span style="color:#75715e"&gt;#下载目前最新的2.7.0版&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ln -s go121 go
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;bash
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 2，同步代码&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;bash
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/apernet/hysteria.git
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;bash
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 3,编译&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;$&lt;/span&gt; mv hysteria&lt;span style="color:#f92672"&gt;-&lt;/span&gt;freebsd&lt;span style="color:#f92672"&gt;-&lt;/span&gt;amd64 hysteria &lt;span style="color:#75715e"&gt;#把文件改名成hysteria&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;进入源代码目录执行：
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;bash
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;python hyperbole.py build
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;等待几分钟，就OK了，编译的程序在build目录下面。&lt;/p&gt;
-&lt;h1 id="配置服务器端"&gt;配置服务器端&lt;/h1&gt;
-&lt;h4 id="1配置configyaml"&gt;1，配置config.yaml&lt;/h4&gt;
-&lt;p&gt;只要创建一个config.yaml文件，输入相关信息，然后把文件放到/usr/local/etc目录下面。&lt;/p&gt;
-&lt;p&gt;config.yaml信息如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# listen: :443&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# chmod +x hysteria #让文件可执行&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tls:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cert: 改成你的cert路径 
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; key: 改成你的Key路径
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;$&lt;/span&gt; mv hysteria &lt;span style="color:#f92672"&gt;/&lt;/span&gt;usr&lt;span style="color:#f92672"&gt;/&lt;/span&gt;local&lt;span style="color:#f92672"&gt;/&lt;/span&gt;bin &lt;span style="color:#75715e"&gt;#将文件移到相应目录&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;auth:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; type: password
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; password: 改成你的密码
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;$&lt;/span&gt; sysrc hysteria_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt; &lt;span style="color:#75715e"&gt;#设置开机启动&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-自签证书"&gt;2. 自签证书：&lt;/h2&gt;
+&lt;p&gt;以下是适配 FreeBSD 的高效执行步骤：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /usr/local/etc/hysteria
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 生成私钥与证书 bing.com也可以改为其它的
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-keyout /usr/local/etc/hysteria/server.key \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-out /usr/local/etc/hysteria/server.crt \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-subj &amp;#34;/CN=bing.com&amp;#34; -days 36500
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bandwidth:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; up: &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; gbps &lt;span style="color:#75715e"&gt;#改成你的VPS上行带宽&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; down: &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; gbps &lt;span style="color:#75715e"&gt;#改成你PVS下行带宽&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 修正权限 (FreeBSD 中 hysteria 用户组名通常也是 hysteria) root用户登录下面命令没有必要
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# chown hysteria:hysteria /usr/local/etc/hysteria/server.key /usr/local/etc/hysteria/server.crt
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;masquerade:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; type: proxy
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; proxy:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; url: https://www.bing.com/ &lt;span style="color:#75715e"&gt;#改成你伪装的网站&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; rewriteHost: true
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; listenHTTP: :80 &lt;span style="color:#75715e"&gt;#官方的解释：本功能仅为执着于 &amp;#34;做戏做全套&amp;#34; 的用户提供。既然要 &amp;#34;做戏做全套&amp;#34;，就没有理由将 HTTP/HTTPS 监听在 80/443 之外的自定义端口上（虽然 Hysteria 允许自定义监听地址）。&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; listenHTTPS: :443
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; forceHTTPS: true
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="2-配置自动启动脚本"&gt;2, 配置自动启动脚本&lt;/h4&gt;
-&lt;p&gt;我不会写，也没去找，随便找了个系统脚本乱改一气。记得脚本要放到/usr/local/etc/rc.d目录下&lt;/p&gt;</description></item><item><title>Freebsd更改默认编辑器vi</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E6%9B%B4%E6%94%B9%E9%BB%98%E8%AE%A4%E7%BC%96%E8%BE%91%E5%99%A8vi/</link><pubDate>Mon, 12 May 2025 12:52:04 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E6%9B%B4%E6%94%B9%E9%BB%98%E8%AE%A4%E7%BC%96%E8%BE%91%E5%99%A8vi/</guid><description>&lt;h2 id="前提是新编辑器已经安装"&gt;前提是新编辑器已经安装&lt;/h2&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 所有用户必须执行包括root,给证书权限
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod 644 /usr/local/etc/hysteria/server.crt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod 600 /usr/local/etc/hysteria/server.key
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="hysteria-服务配置提示"&gt;Hysteria 服务配置提示&lt;/h3&gt;
+&lt;p&gt;在 FreeBSD 上运行 Hysteria 时，请确保 /usr/local/etc/hysteria/config.yaml（或你的配置文件）引用了正确的路径：&lt;/p&gt;</description></item><item><title>Freebsd更改默认编辑器vi</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E6%9B%B4%E6%94%B9%E9%BB%98%E8%AE%A4%E7%BC%96%E8%BE%91%E5%99%A8vi/</link><pubDate>Mon, 12 May 2025 12:52:04 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E6%9B%B4%E6%94%B9%E9%BB%98%E8%AE%A4%E7%BC%96%E8%BE%91%E5%99%A8vi/</guid><description>&lt;h2 id="前提是新编辑器已经安装"&gt;前提是新编辑器已经安装&lt;/h2&gt;
 &lt;p&gt;FreeBSD 下你可以通过设置环境变量 EDITOR 来更改 crontab -e 使用的默认编辑器。下面是几种常见方法：&lt;/p&gt;
 &lt;h2 id="-临时更改当前-shell-有效"&gt;✅ 临时更改（当前 shell 有效）&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EDITOR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;nano crontab -e
