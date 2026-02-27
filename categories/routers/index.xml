@@ -1,4 +1,194 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Routers on 代碼倉庫</title><link>https://hanigege.github.io/categories/routers/</link><description>Recent content in Routers on 代碼倉庫</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **felix**.</copyright><lastBuildDate>Sun, 01 Jun 2025 20:42:39 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/categories/routers/index.xml" rel="self" type="application/rss+xml"/><item><title>Vyos Wireguard Ipv4</title><link>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</link><pubDate>Sun, 01 Jun 2025 20:42:39 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</guid><description>&lt;h1 id="vyos上配置wireguard-ipv4"&gt;vyos上配置wireguard （IPV4）&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Routers on 代碼倉庫</title><link>https://hanigege.github.io/categories/routers/</link><description>Recent content in Routers on 代碼倉庫</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **felix**.</copyright><lastBuildDate>Fri, 27 Feb 2026 16:41:22 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/categories/routers/index.xml" rel="self" type="application/rss+xml"/><item><title>03.RouterOS配置FakeIP</title><link>https://hanigege.github.io/posts/routers/03.routeros%E9%85%8D%E7%BD%AEfakeip/</link><pubDate>Fri, 27 Feb 2026 16:41:22 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/03.routeros%E9%85%8D%E7%BD%AEfakeip/</guid><description>&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;本文介绍使用 FakeIP 分流法实现局域网内设备透明代理时，主路由 RouterOS 部分的设置。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;注意：sing-box 及 mosdns 的具体配置不在本文讨论范围内。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;作者：Tom
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="环境设定"&gt;环境设定&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;sing-box IP&lt;/strong&gt;: IPv4 &lt;code&gt;10.0.0.2&lt;/code&gt;, IPv6 &lt;code&gt;dc00::2222&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;FakeIP 网段&lt;/strong&gt;: IPv4 &lt;code&gt;28.0.0.0/8&lt;/code&gt;, IPv6 &lt;code&gt;f2b0::/18&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;注意&lt;/strong&gt;: 开启 FastTrack 后 Mangle 会失效，建议使用 Route 或 Routing Rules 方式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="方案-1使用-mangle-打标签方式"&gt;方案 1：使用 Mangle 打标签方式&lt;/h2&gt;
+&lt;h3 id="ipv4-部分"&gt;IPv4 部分&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;添加sing-box-v4路由表&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; /routing table add name=sing-box-v4 fib
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
+&lt;li&gt;&lt;strong&gt;配置地址列表&lt;/strong&gt;（地址列表中新增proxy_ipv4列表，填入fakeip网段、tg v4网段、奈菲v4网段）：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=28.0.0.0/8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=1.1.1.1/32
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=1.0.0.1/32
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=8.8.8.8/32
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=8.8.4.4/32
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=8.41.4.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=23.23.189.144/28
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=23.246.0.0/18
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=34.195.253.0/25
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=37.77.184.0/21
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=38.72.126.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=45.57.0.0/17
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=52.24.178.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=52.35.140.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=54.204.25.0/28
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=54.213.167.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=64.120.128.0/17
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=66.197.128.0/17
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=69.53.224.0/19
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=103.87.204.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=108.175.32.0/20
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=185.2.220.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=185.9.188.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=192.173.64.0/18
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=198.38.96.0/19
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=198.45.48.0/20
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=203.75.84.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=203.198.13.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=203.198.80.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=207.45.72.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=208.75.76.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=210.0.153.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=91.108.56.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=91.108.4.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=91.108.8.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=91.108.16.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=91.108.12.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=149.154.160.0/20
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=91.105.192.0/23
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=91.108.20.0/22
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=185.76.151.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall address-list add list=proxy_ipv4 address=95.161.64.0/20
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;&lt;strong&gt;为目的ip为proxy_ipv4地址列表的连接打上“sing-box-v4”标记&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall mangle add action=mark-routing chain=prerouting dst-address-list=proxy_ipv4 new-routing-mark=sing-box-v4 passthrough=yes
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="4"&gt;
+&lt;li&gt;&lt;strong&gt;设置路由表sing-box-v4的下一跳网关为sing-box&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip route add dst-address=0.0.0.0/0 gateway=10.0.0.2 routing-table=sing-box-v4
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ipv6-部分"&gt;IPv6 部分&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;添加sing-box-v6路由表&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/routing table add name=sing-box-v6 fib
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
+&lt;li&gt;&lt;strong&gt;地址列表添加添加fakev6及tg v6网段&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 firewall address-list add address=f2b0::/18 list=proxy_ipv6
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 firewall address-list add address=2001:b28:f23d::/48 list=proxy_ipv6
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 firewall address-list add address=2001:b28:f23f::/48 list=proxy_ipv6
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 firewall address-list add address=2001:67c:4e8::/48 list=proxy_ipv6
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 firewall address-list add address=2001:b28:f23c::/48 list=proxy_ipv6
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 firewall address-list add address=2a0a:f280::/32 list=proxy_ipv6
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;&lt;strong&gt;为目的ip为proxy_ipv6的连接打标记&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 firewall mangle add action=mark-routing chain=prerouting dst-address-list=proxy_ipv6 new-routing-mark=sing-box-v6
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;设置路由表sing-box-v6的下一跳网关为sing-box。注意gateway为sing-box的IPv6&lt;/strong&gt;：&lt;/p&gt;</description></item><item><title>02.RouterOS开启IPv6并配置防火墙</title><link>https://hanigege.github.io/posts/routers/02.routeros%E5%BC%80%E5%90%AFipv6%E5%B9%B6%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99/</link><pubDate>Fri, 27 Feb 2026 16:32:31 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/02.routeros%E5%BC%80%E5%90%AFipv6%E5%B9%B6%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99/</guid><description>&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;本文介绍 RouterOS 如何开启 IPv6。以 &lt;span style="font-weight:bold"&gt;**NAT6**&lt;/span&gt; 模式为例，IPv6 内网网段默认为
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;`dc00::/64`&lt;/span&gt;，RouterOS &lt;span style="color:#e6db74"&gt;`bridge1`&lt;/span&gt; 的 IPv6 内网地址为 &lt;span style="color:#e6db74"&gt;`dc00::1111/64`&lt;/span&gt;。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 桥接接口 &lt;span style="color:#e6db74"&gt;`bridge1`&lt;/span&gt;、拨号接口 &lt;span style="color:#e6db74"&gt;`pppoe-out1`&lt;/span&gt; 名称若不同则自行替换。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 作者：Tom
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="1-开启-ipv6-模块"&gt;1. 开启 IPv6 模块&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 settings set disable-ipv6=no
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-获取-ipv6-前缀-prefix"&gt;2. 获取 IPv6 前缀 (Prefix)&lt;/h2&gt;
+&lt;p&gt;从运营商处获取 IPv6 PD：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 dhcp-client add interface=pppoe-out1 pool-name=dhcpv6-gua-pool1 pool-prefix-length=60 request=prefix
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-添加局域网-ula-地址池"&gt;3. 添加局域网 ULA 地址池&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 pool add name=dhcpv6-ula-pool1 prefix=dc00::/64 prefix-length=64
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-配置接口地址"&gt;4. 配置接口地址&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;计算 EUI-64 地址&lt;/strong&gt;：可使用 &lt;a href="https://eui64-calc.princelle.org/"&gt;EUI-64 计算器&lt;/a&gt;，或直接使用 &lt;code&gt;::1&lt;/code&gt;,或使用上面计算得到的后缀（例如::BF24:12FF:FEE1:E81B）配置pppoe-out1的GUA地址&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;配置 PPPoE 接口 GUA 地址&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 address add address=::BF24:12FF:FEE1:E81B/64 from-pool=dhcpv6-gua-pool1 interface=pppoe-out1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;配置 Bridge 接口 ULA 地址，默认dc00::1111（可自行修改）&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 address add address=dc00::1111/64 from-pool=dhcpv6-ula-pool1 interface=bridge1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-开启-nat6-源地址伪装"&gt;5. 开启 NAT6 (源地址伪装)&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ipv6 firewall nat add action=masquerade chain=srcnat src-address=dc00::/64
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-配置邻居发现-nd"&gt;6. 配置邻居发现 (ND)&lt;/h2&gt;
+&lt;p&gt;禁用默认 ND 配置，并新建配置。建议不广播 IPv6 DNS。&lt;/p&gt;</description></item><item><title>01.RouterOS联网基本配置及IPv4防火墙</title><link>https://hanigege.github.io/posts/routers/01.routeros%E8%81%94%E7%BD%91%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE%E5%8F%8Aipv4%E9%98%B2%E7%81%AB%E5%A2%99/</link><pubDate>Fri, 27 Feb 2026 16:19:29 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/01.routeros%E8%81%94%E7%BD%91%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE%E5%8F%8Aipv4%E9%98%B2%E7%81%AB%E5%A2%99/</guid><description>&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;本文介绍 RouterOS 拨号、配置 DHCP 服务器、配置 DNS、开启 IPv4 防火墙等通网的基础配置。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;桥接接口 &lt;span style="color:#e6db74"&gt;`bridge1`&lt;/span&gt;、拨号接口 &lt;span style="color:#e6db74"&gt;`pppoe-out1`&lt;/span&gt; 名称若不同则自行替换。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;作者：Tom
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="1-pppoe-拨号配置"&gt;1. PPPoE 拨号配置&lt;/h2&gt;
+&lt;p&gt;手动配置 &lt;code&gt;pppoe-out1&lt;/code&gt; 接口拨号：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;User&lt;/strong&gt;: 填入宽带账号&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Password&lt;/strong&gt;: 填入宽带密码&lt;/li&gt;
+&lt;li&gt;如果不使用运营商提供的 DNS，可不勾选 &lt;strong&gt;Use Peer DNS&lt;/strong&gt;。
+&lt;img src="assets/0.png" alt="0"&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;注&lt;/strong&gt;：接口前出现 “R” 代表拨号成功。拨号成功后建议先禁用，待防火墙配置完毕后再开启！
+&lt;img src="assets/2.png" alt="2"&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="2-配置-dhcp-服务器"&gt;2. 配置 DHCP 服务器&lt;/h2&gt;
+&lt;p&gt;DHCP IP 范围为 &lt;code&gt;10.0.0.100-10.0.0.250&lt;/code&gt;，网关和 DNS 默认为 ROS。如果希望全局配置透明代理，&lt;code&gt;dns-server&lt;/code&gt; 可配置为 mosdns。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip pool add name=dhcpv4-pool1 ranges=10.0.0.100-10.0.0.250
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip dhcp-server add name=dhcpv4-server1 interface=bridge1 address-pool=dhcpv4-pool1 lease-time=1d
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip dhcp-server network add address=10.0.0.0/24 gateway=10.0.0.1 dns-server=10.0.0.1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/3.png" alt="3"&gt;
+&lt;img src="assets/4.png" alt="4"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="assets/5.png" alt="5"&gt;&lt;/p&gt;
+&lt;h2 id="3-配置-dns"&gt;3. 配置 DNS&lt;/h2&gt;
+&lt;p&gt;设置 ROS 的上游 DNS，此处先设置 &lt;code&gt;223.5.5.5&lt;/code&gt;，也可自定义填入运营商分配的 DNS。&lt;/p&gt;</description></item><item><title>00.RouterOS初始化及基础配置</title><link>https://hanigege.github.io/posts/routers/00.routeros%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8F%8A%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/</link><pubDate>Fri, 27 Feb 2026 15:52:26 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/00.routeros%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8F%8A%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/</guid><description>&lt;hr&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 00.RouterOS 初始化及基础配置
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;作者：Tom
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="第一次进入-routeros"&gt;第一次进入 RouterOS&lt;/h2&gt;
+&lt;p&gt;先恢复原厂设置，使用 &lt;strong&gt;Winbox&lt;/strong&gt; 登录（通过 MAC 地址访问后台配置）。&lt;br&gt;
+建议先配置防火墙，再开启 PPPoE 接口设置帐号密码联网：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/system reset-configuration
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="确认接口并修改名称"&gt;确认接口并修改名称&lt;/h2&gt;
+&lt;p&gt;确认网口功能（区分 lan、wan），并重命名为方便后续操作：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/interface set ether1 name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;lan
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/interface set ether2 name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;wan
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/0.png" alt="图例"&gt;&lt;/p&gt;
+&lt;h2 id="建立网桥bridge"&gt;建立网桥（Bridge）&lt;/h2&gt;
+&lt;p&gt;将所有 LAN 接口添加进桥（bridge）：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/interface bridge add name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;bridge1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/interface bridge port add bridge&lt;span style="color:#f92672"&gt;=&lt;/span&gt;bridge1 interface&lt;span style="color:#f92672"&gt;=&lt;/span&gt;lan
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/1.png" alt="1"&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注：如果双网口，可不建bridge，直接使用lan口，并接入物理交换机。但为方便管理
+并为后期vlan等虚拟接口并入bridge做准备，建议建立bridge。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="为-bridge1-和-wan-设置-ip"&gt;为 bridge1 和 wan 设置 IP&lt;/h2&gt;
+&lt;p&gt;为bridge1设置IP。本教程以bridge1为例，即ros本机ip为10.0.0.1/24
+：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip address add interface&lt;span style="color:#f92672"&gt;=&lt;/span&gt;bridge1 address&lt;span style="color:#f92672"&gt;=&lt;/span&gt;10.0.0.1/24 network&lt;span style="color:#f92672"&gt;=&lt;/span&gt;10.0.0.0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src="assets/2.png" alt="2"&gt;&lt;/p&gt;
+&lt;h2 id="设置时区与-ntp-服务器"&gt;设置时区与 NTP 服务器&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/system clock set time-zone-name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Asia/Shanghai&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/system clock manual set time-zone&lt;span style="color:#f92672"&gt;=&lt;/span&gt;+08:00
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/system ntp client set enabled&lt;span style="color:#f92672"&gt;=&lt;/span&gt;yes servers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;cn.pool.ntp.org,ntp1.aliyun.com,time1.cloud.tencent.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="关闭所有不需要的服务及端口更改winbox登陆端口为5391可自定义并开启仅允许内网访问注意下方address1000024修改为自己的内网网段"&gt;关闭所有不需要的服务及端口，更改Winbox登陆端口为5391（可自定义），并开启仅允许内网访问，注意下方address=10.0.0.0/24修改为自己的内网网段&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip smb set enabled&lt;span style="color:#f92672"&gt;=&lt;/span&gt;no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip smb shares disable numbers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip ssh set forwarding-enabled&lt;span style="color:#f92672"&gt;=&lt;/span&gt;no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip socks set enabled&lt;span style="color:#f92672"&gt;=&lt;/span&gt;no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip upnp set enabled&lt;span style="color:#f92672"&gt;=&lt;/span&gt;no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip proxy set enabled&lt;span style="color:#f92672"&gt;=&lt;/span&gt;no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip service disable api
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip service disable api-ssl
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip service disable ftp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip service disable ssh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip service disable telnet
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip service disable www
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip service disable www-ssl
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip service set winbox port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5391&lt;/span&gt; address&lt;span style="color:#f92672"&gt;=&lt;/span&gt;10.0.0.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/tool bandwidth-server set enabled&lt;span style="color:#f92672"&gt;=&lt;/span&gt;no
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="创建管理员帐号并禁用默认账号"&gt;创建管理员帐号并禁用默认账号&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/user add name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;用户名 password&lt;span style="color:#f92672"&gt;=&lt;/span&gt;密码 group&lt;span style="color:#f92672"&gt;=&lt;/span&gt;full address&lt;span style="color:#f92672"&gt;=&lt;/span&gt;10.0.0.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="禁用默认账户"&gt;禁用默认账户&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/user disable admin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;注意：请先确认新创建的用户名和密码可以正常登录，再禁用默认管理员帐号。&lt;/p&gt;</description></item><item><title>Vyos Wireguard Ipv4</title><link>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</link><pubDate>Sun, 01 Jun 2025 20:42:39 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</guid><description>&lt;h1 id="vyos上配置wireguard-ipv4"&gt;vyos上配置wireguard （IPV4）&lt;/h1&gt;
 &lt;h2 id="1-生成-wireguard-密钥"&gt;1. 生成 WireGuard 密钥&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wg genkey | tee privatekey | wg pubkey &amp;gt; publickey
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;• privatekey 文件中存储 私钥&lt;/p&gt;
