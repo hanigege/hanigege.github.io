@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>代码仓库 on bash</title><link>https://hanigege.github.io/</link><description>Recent content in 代码仓库 on bash</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **mana**.</copyright><lastBuildDate>Fri, 27 Feb 2026 17:20:17 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>05.RouterOS如何nat回流及包含配套防火墙规则</title><link>https://hanigege.github.io/posts/routers/05.routeros%E5%A6%82%E4%BD%95nat%E5%9B%9E%E6%B5%81/</link><pubDate>Fri, 27 Feb 2026 17:20:17 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/05.routeros%E5%A6%82%E4%BD%95nat%E5%9B%9E%E6%B5%81/</guid><description>&lt;h2 id="内网的dst-nat要加外网接口如pppoe-out1"&gt;内网的dst-nat要加外网接口如pppoe-out1&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>代码仓库 on bash</title><link>https://hanigege.github.io/</link><description>Recent content in 代码仓库 on bash</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **Gary**.</copyright><lastBuildDate>Fri, 27 Feb 2026 17:20:17 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>05.RouterOS如何nat回流及包含配套防火墙规则</title><link>https://hanigege.github.io/posts/routers/05.routeros%E5%A6%82%E4%BD%95nat%E5%9B%9E%E6%B5%81/</link><pubDate>Fri, 27 Feb 2026 17:20:17 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/05.routeros%E5%A6%82%E4%BD%95nat%E5%9B%9E%E6%B5%81/</guid><description>&lt;h2 id="内网的dst-nat要加外网接口如pppoe-out1"&gt;内网的dst-nat要加外网接口如pppoe-out1&lt;/h2&gt;
 &lt;h2 id="1-为什么需要回流"&gt;1. 为什么需要回流？&lt;/h2&gt;
 &lt;p&gt;当你从内网请求公网 IP 时，ROS 收到包后转发给内网服务器，但服务器发现请求方和自己在同一个网段，会直接把回包传给手机。手机发现自己发给公网 IP 的请求却收到了来自内网私有 IP 的响应，会因为安全机制直接丢弃该包。回流规则通过让 ROS 中转这个“回头包”来解决这个问题。&lt;/p&gt;
 &lt;h2 id="2-完整的-ros-nat-脚本包含-web-回流"&gt;2. 完整的 ROS NAT 脚本（包含 Web 回流）&lt;/h2&gt;
@@ -1481,24 +1481,8 @@ pve的虚拟机设置和安装(略), 建议内存2G, 磁盘10G或更大, 因为v
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;建议ssh密钥登录:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set system login user gary authentication public-keys gary@laptop key &amp;#39;your-public-key&amp;#39;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set system login user gary authentication public-keys gary@laptop type &amp;#39;ssh-rsa&amp;#39;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;禁用默认的vyos用户:&lt;/p&gt;</description></item><item><title>About</title><link>https://hanigege.github.io/about/</link><pubDate>Sat, 10 May 2025 16:14:10 +0800</pubDate><guid>https://hanigege.github.io/about/</guid><description>&lt;h1 id="-简介"&gt;🧑‍💻 简介&lt;/h1&gt;
-&lt;br&gt;
-# 歡迎來到我的個人小站 🌐
-你好！👋 這裡是我個人使用的一些業務配置方案的合集，完全是為了方便自己隨時查閱和學習，同時也適用於我的日常生活和家庭環境。✨
-&lt;hr&gt;
-&lt;h2 id="-主要涉及的技術領域"&gt;🖥️ 主要涉及的技術領域&lt;/h2&gt;
-&lt;p&gt;我的小站主要涵蓋以下幾個技術領域：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Linux 系統&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;FreeBSD 系統&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;軟路由技術&lt;/strong&gt;（如：RouterOS、VyOS、OPNsense）&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;通訊軟件方案&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;這些配置方案在我的家庭網絡中廣泛使用，提供了豐富的功能和保障，既能滿足個人需求，又能提高網絡效率和安全性。🛠️&lt;/p&gt;
-&lt;hr&gt;
-&lt;h2 id="-小站目的"&gt;💡 小站目的&lt;/h2&gt;
-&lt;p&gt;這個站點不僅僅是我個人的技術備忘錄，也希望能為有類似需求的朋友們提供一些實用的參考。🙏 如果你和我有相同的興趣，或者正在尋找相關的技術方案，歡迎隨時訪問這裡。大家一起學習，共同進步！🚀&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;感謝你的訪問！💖 希望你能在這裡找到有用的內容。🚀&lt;/p&gt;</description></item><item><title>vyos多网口小主机桥接配置(完整)</title><link>https://hanigege.github.io/posts/routers/vyos-qiaojie-4kou/</link><pubDate>Wed, 07 May 2025 23:30:18 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-qiaojie-4kou/</guid><description>&lt;h3 id="一基本上网配置"&gt;一.基本上网配置&lt;/h3&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;禁用默认的vyos用户:&lt;/p&gt;</description></item><item><title>About</title><link>https://hanigege.github.io/about/</link><pubDate>Sat, 10 May 2025 16:14:10 +0800</pubDate><guid>https://hanigege.github.io/about/</guid><description>&lt;div align="center"&gt;
+ &lt;img src="https://hanigege.github.io/images/mood.svg" alt="Gary的心情终端" style="width: 90%; max-width: 600px; margin: 2rem 0; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"&gt;
+&lt;/div&gt;</description></item><item><title>vyos多网口小主机桥接配置(完整)</title><link>https://hanigege.github.io/posts/routers/vyos-qiaojie-4kou/</link><pubDate>Wed, 07 May 2025 23:30:18 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-qiaojie-4kou/</guid><description>&lt;h3 id="一基本上网配置"&gt;一.基本上网配置&lt;/h3&gt;
 &lt;h3 id="vyos的命令行界面是基于shell的没有图形界面-但是可以用tab自动补全"&gt;vyos的命令行界面是基于shell的，没有图形界面, 但是可以用tab自动补全&lt;/h3&gt;
 &lt;p&gt;本文的vyos命令是基于vyos的vyos-rolling-nightly-builds的1.5.x版本.&lt;/p&gt;</description></item><item><title>搜索</title><link>https://hanigege.github.io/search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://hanigege.github.io/search/</guid><description/></item></channel></rss>

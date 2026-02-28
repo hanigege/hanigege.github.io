@@ -6,7 +6,7 @@
   <circle cx="70" cy="30" r="6" fill="#27c93f" />
 
   <g font-family="'JetBrains Mono', 'Fira Code', Menlo, monospace" font-size="16">
-    <text x="30" y="80" fill="#1b5e20">mana@MacBook-Air</text>
+    <text x="30" y="80" fill="#1b5e20">Gary@MacBook-Air</text>
     <text x="180" y="80" fill="#1a1a1a">:</text>
     <text x="190" y="80" fill="#0d47a1">~</text>
     <text x="205" y="80" fill="#1a1a1a">$ cat /var/log/mood.log</text>
