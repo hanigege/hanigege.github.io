@@ -29,69 +29,177 @@
 </span></span><span style=display:flex><span>Name: Internal_Servers | Address: 10.20.20.5 (Web 服务器)
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>(依此类推，将所有有端口转发需求的内网 IP 都加进去)
-</span></span></code></pre></div><p>第二步：添加全局回流规则</p><h3 id=在-ip---firewall---nat-中添加这一条确保它在所有-dst-nat-规则之后但在基础-masquerade-规则之前或者紧随其后>在 IP -> Firewall -> NAT 中添加这一条（确保它在所有 dst-nat 规则之后，但在基础 masquerade 规则之前，或者紧随其后）：</h3><p>代码段</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>/ip firewall nat
-</span></span><span style=display:flex><span>add chain=srcnat src-address=10.20.20.0/24 dst-address-list=Internal_Servers action=masquerade comment=&#34;Global Hairpin NAT&#34;
-</span></span></code></pre></div><p>使用 Address List（地址列表） 的方式最为高效，不需要在 NAT 规则里指定端口。</p><p>当请求的目标地址匹配列表中的 IP 时，RouterOS 会自动对所有协议（TCP/UDP/ICMP 等）和所有端口执行回流操作。</p><h4 id=这一条放在nat列表的最下面就行>这一条放在nat列表的最下面就行。</h4><h2 id=4-验证-web-服务>4. 验证 Web 服务</h2><p>外网测试：手机关 Wi-Fi，访问域名，确认 Web 正常。</p><p>内网测试：手机连 Wi-Fi，访问同一个域名。如果能打开，说明回流配置成功。</p><h2 id=5-配套的防火墙规则也是我自用的>5. 配套的防火墙规则，也是我自用的</h2><h4 id=ipv4防火墙配置>ipv4防火墙配置</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>/ip firewall filter
+</span></span></code></pre></div><p>第二步：添加全局回流规则</p><h3 id=在-ip---firewall---nat-中添加这一条确保它在所有-dst-nat-规则之后但在基础-masquerade-规则之前或者紧随其后>在 IP -> Firewall -> NAT 中添加这一条（确保它在所有 dst-nat 规则之后，但在基础 masquerade 规则之前，或者紧随其后）：</h3><p>代码段</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#ae81ff>/ip firewall nat</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add chain=srcnat src-address=10.20.20.0/24 dst-address-list=Internal_Servers action=masquerade comment=&#34;Global Hairpin NAT&#34;</span>
+</span></span></code></pre></div><p>使用 Address List（地址列表） 的方式最为高效，不需要在 NAT 规则里指定端口。</p><p>当请求的目标地址匹配列表中的 IP 时，RouterOS 会自动对所有协议（TCP/UDP/ICMP 等）和所有端口执行回流操作。</p><h4 id=这一条放在nat列表的最下面就行>这一条放在nat列表的最下面就行。</h4><h2 id=4-验证-web-服务>4. 验证 Web 服务</h2><p>外网测试：手机关 Wi-Fi，访问域名，确认 Web 正常。</p><p>内网测试：手机连 Wi-Fi，访问同一个域名。如果能打开，说明回流配置成功。</p><h2 id=5-配套的防火墙规则也是我自用的>5. 配套的防火墙规则，也是我自用的</h2><h4 id=ipv4防火墙配置>ipv4防火墙配置</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#ae81ff>/ip firewall filter</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># ====================
-</span></span><span style=display:flex><span># 入站链 (INPUT) - 访问路由器本身
-</span></span><span style=display:flex><span># ====================
-</span></span><span style=display:flex><span>add action=accept chain=input comment=&#34;1. Accept established,related,untracked&#34; connection-state=established,related,untracked
-</span></span><span style=display:flex><span>add action=drop chain=input comment=&#34;2. Drop invalid&#34; connection-state=invalid
-</span></span><span style=display:flex><span>add action=accept chain=input comment=&#34;3. Accept bridge1 (Internal Admin)&#34; in-interface=bridge1
+</span></span><span style=display:flex><span><span style=color:#75715e># ====================</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 入站链 (INPUT) - 访问路由器本身</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ====================</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;1. Accept established,related,untracked&#34; connection-state=established,related,untracked</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;2. Drop invalid&#34; connection-state=invalid</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;3. Accept bridge1 (Internal Admin)&#34; in-interface=bridge1</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># 防爆破逻辑 (针对 3981, 2222 端口)
-</span></span><span style=display:flex><span>add action=drop chain=input comment=&#34;4. Drop Bruteforce IPs&#34; dst-port=3981,2222 protocol=tcp src-address-list=bruteforce_blacklist
-</span></span><span style=display:flex><span>add action=accept chain=input comment=&#34;5. Accept limited connections&#34; connection-limit=10,32 dst-port=3981,2222 protocol=tcp
-</span></span><span style=display:flex><span>add action=add-src-to-address-list address-list=bruteforce_blacklist address-list-timeout=3d chain=input comment=&#34;6. Add to Bruteforce List&#34; dst-port=3981,2222 protocol=tcp
-</span></span><span style=display:flex><span>add action=drop chain=input comment=&#34;7. Drop excess packets&#34; dst-port=3981,2222 protocol=tcp
+</span></span><span style=display:flex><span><span style=color:#75715e># 防爆破逻辑 (针对 3981, 2222 端口)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;4. Drop Bruteforce IPs&#34; dst-port=3981,2222 protocol=tcp src-address-list=bruteforce_blacklist</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;5. Accept limited connections&#34; connection-limit=10,32 dst-port=3981,2222 protocol=tcp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=add-src-to-address-list address-list=bruteforce_blacklist address-list-timeout=3d chain=input comment=&#34;6. Add to Bruteforce List&#34; dst-port=3981,2222 protocol=tcp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;7. Drop excess packets&#34; dst-port=3981,2222 protocol=tcp</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># WAN口丢弃与兜底
-</span></span><span style=display:flex><span>add action=drop chain=input comment=&#34;8. Drop ICMP from WAN&#34; in-interface=pppoe-out1 protocol=icmp
-</span></span><span style=display:flex><span>add action=drop chain=input comment=&#34;9. Drop all other input from WAN&#34; in-interface=pppoe-out1
+</span></span><span style=display:flex><span><span style=color:#75715e># WAN口丢弃与兜底</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;8. Drop ICMP from WAN&#34; in-interface=pppoe-out1 protocol=icmp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;9. Drop all other input from WAN&#34; in-interface=pppoe-out1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ====================</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 转发链 (FORWARD) - 穿过路由器 (外网&lt;-&gt;内网)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ====================</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1. 旁路由豁免 (必须放在 Fasttrack 和 Invalid 丢弃之前)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;1. Bypass Fasttrack &amp; Tracking: sing-box out&#34; src-address=10.20.20.6</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;2. Bypass Fasttrack &amp; Tracking: sing-box in&#34; dst-address=10.20.20.6</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. 硬件加速 (处理内网其他正常不走代理的直连流量)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=fasttrack-connection chain=forward comment=&#34;3. Fasttrack&#34; connection-state=established,related</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. 基础状态放行</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;4. Accept established,related,untracked&#34; connection-state=established,related,untracked</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 4. 丢弃无效包 (放在旁路由之后，防止非对称路由回程包被误杀)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=forward comment=&#34;5. Drop invalid&#34; connection-state=invalid</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 5. 内网正常转发与端口映射放行</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;6. Allow bridge1 forward (Internal Outbound)&#34; in-interface=bridge1</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;7. Allow DSTNAT (Port Forwarding)&#34; connection-nat-state=dstnat in-interface=pppoe-out1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 6. 全局兜底拦截 (零信任原则)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=forward comment=&#34;8. Drop all other forward&#34;</span>
+</span></span></code></pre></div><h3 id=转发链-forward特别说明>转发链 (FORWARD)特别说明：</h3><p><strong>第1条</strong>“旁路由豁免”填入你的mos+sb的ip<br><strong>第5条</strong>&ldquo;DST-NAT"规则：在 IPv4 的 Forward 链中，我加入了一条 connection-nat-state=dstnat。这确保了你在 IP -> Firewall -> NAT 中做的端口映射能够穿透 forward 的兜底 drop 规则。
+内网互通：只要数据包进入 bridge1 接口，就会被 Allow bridge1 forward 捕获并放行，不会受到最后一条 drop 的影响。<br>这样配置后，局域网内的 PT 下载、NAS 外部大文件传输等不走 10.20.20.6 的直连流量依然可以享受硬件加速降低 CPU 负载，而 sing-box 进出的流量则由 CPU 稳妥处理，互不干扰</p><h2 id=ipv6防火墙配置>ipv6防火墙配置</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#ae81ff>/ipv6 firewall filter</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ====================</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 入站链 (INPUT) - 保护路由器本体</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ====================</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;1. Accept established,related,untracked&#34; connection-state=established,related,untracked</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;2. Drop invalid&#34; connection-state=invalid</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;3. Accept ICMPv6 (Critical for IPv6)&#34; protocol=icmpv6</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;4. Allow DHCPv6 Client from WAN&#34; dst-port=546 in-interface=pppoe-out1 protocol=udp src-address=fe80::/10</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;5. Allow bridge1 (Internal Admin)&#34; in-interface=bridge1</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;6. Drop all not from bridge1&#34; in-interface=!bridge1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ====================</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 转发链 (FORWARD) - 穿过路由器 (外网&lt;-&gt;内网)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ====================</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1. 旁路由豁免 (必须放在 Fasttrack 和 Invalid 丢弃之前)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;1. Bypass Fasttrack &amp; Tracking: sing-box out&#34; src-address=fd88::6666</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;2. Bypass Fasttrack &amp; Tracking: sing-box in&#34; dst-address=fd88::6666</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. 硬件加速 (处理正常不走代理的 IPv6 直连流量)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=fasttrack-connection chain=forward comment=&#34;3. Fasttrack&#34; connection-state=established,related</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. 基础状态放行</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;4. Accept forward established,related,untracked&#34; connection-state=established,related,untracked</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 4. 丢弃无效包 (防止旁路由非对称回程包被误杀)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=forward comment=&#34;5. Drop invalid&#34; connection-state=invalid</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 5. 核心协议与内网放行</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;6. Accept Forward ICMPv6&#34; protocol=icmpv6</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;7. Allow bridge1 forward (Internal Outbound)&#34; in-interface=bridge1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 暴露内网服务 (注意：替换为实际公网 IPv6 地址后再按需启用) ---</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;8. Allow NPM (HTTP/HTTPS)&#34; disabled=yes dst-address=240e::xxxx:xxxx dst-port=80,443 protocol=tcp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;9. Allow Hysteria2/Proxy&#34; disabled=yes dst-address=240e::xxxx:xxxx dst-port=36789 protocol=udp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;10. Allow Shadowsocks&#34; disabled=yes dst-address=240e::xxxx:xxxx dst-port=36789 protocol=tcp</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 6. 兜底拦截 (零信任原则)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=forward comment=&#34;11. Drop all other forward (Protect LAN)&#34;</span>
+</span></span></code></pre></div><p><strong>关键提醒：</strong>
+修改旁路由的ip为你的ipv6地址<br>如果你的宽带是动态 IPv6 前缀（PD），服务器的完整 IPv6 地址会变化。这种情况下，不应直接写死 dst-address，而是需要结合 MikroTik 的 IPv6 Firewall Address Lists 功能，或者使用 in-interface=pppoe-out1 配合 out-interface=bridge1 加上特定设备的特定匹配规则（比如通过防火墙脚本动态更新）。</p><p>IPv4 依靠 NAT，不主动映射外部进不来；但 IPv6 是端到端直通（没有 NAT）。
+你在 forward 链中放行 dst-port=80,443，却没有指定目标地址 (dst-address)。一旦启用，这代表公网可以访问你局域网内所有设备的 80 和 443 端口（包括光猫、路由器后台、智能家居、其他电脑等）。</p><p>正确做法：必须严格绑定目标服务器的 IPv6 地址（dst-address=服务器IPv6地址），或者通过 MAC 地址自动获取到的 IPv6 后缀。</p><p>##如果我创建了：</p><h4 id=1-创建列表名称>1. 创建列表名称</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>/interface list
+</span></span><span style=display:flex><span>add name=WAN
+</span></span><span style=display:flex><span>add name=LAN
+</span></span></code></pre></div><h4 id=2-将-pppoe-out1-加入-wan-列表>2. 将 pppoe-out1 加入 WAN 列表</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>/interface list member
+</span></span><span style=display:flex><span>add interface=pppoe-out1 list=WAN
+</span></span></code></pre></div><h5 id=3-将-bridge1-加入-lan-列表>3. 将 bridge1 加入 LAN 列表</h5><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>add interface=bridge1 list=LAN
+</span></span></code></pre></div><h2 id=ipv4vsipv6防火墙对应更改>IPV4vsIPV6防火墙对应更改：</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># ==========================================</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 准备工作：清空现有 IPv4 和 IPv6 过滤规则</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ==========================================</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>/ip firewall filter remove [find]</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>/ipv6 firewall filter remove [find]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ==========================================</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 第一部分：IPv4 防火墙规则 (已适配 Interface List)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ==========================================</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>/ip firewall filter</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 入站链 (INPUT) - 保护路由器本体 ---</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;1. Accept established,related,untracked&#34; connection-state=established,related,untracked</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;2. Drop invalid&#34; connection-state=invalid</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;3. Accept LAN (Internal Admin)&#34; in-interface-list=LAN</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 防爆破逻辑</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;4. Drop Bruteforce IPs&#34; dst-port=3981,2222 protocol=tcp src-address-list=bruteforce_blacklist</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;5. Accept limited connections&#34; connection-limit=10,32 dst-port=3981,2222 protocol=tcp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=add-src-to-address-list address-list=bruteforce_blacklist address-list-timeout=3d chain=input comment=&#34;6. Add to Bruteforce List&#34; dst-port=3981,2222 protocol=tcp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;7. Drop excess packets&#34; dst-port=3981,2222 protocol=tcp</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># WAN口丢弃兜底</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;8. Drop ICMP from WAN&#34; in-interface-list=WAN protocol=icmp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;9. Drop all other input from WAN&#34; in-interface-list=WAN</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 转发链 (FORWARD) - 穿过路由器 ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1. 旁路由豁免</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;1. Bypass Fasttrack &amp; Tracking: sing-box out&#34; src-address=10.20.20.6</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;2. Bypass Fasttrack &amp; Tracking: sing-box in&#34; dst-address=10.20.20.6</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. 硬件加速</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=fasttrack-connection chain=forward comment=&#34;3. Fasttrack&#34; connection-state=established,related</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. 基础状态放行与丢弃</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;4. Accept established,related,untracked&#34; connection-state=established,related,untracked</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=forward comment=&#34;5. Drop invalid&#34; connection-state=invalid</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 4. 内网正常转发与端口映射放行</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;6. Allow LAN forward (Internal Outbound)&#34; in-interface-list=LAN</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;7. Allow DSTNAT (Port Forwarding)&#34; connection-nat-state=dstnat in-interface-list=WAN</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 5. 全局兜底拦截</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=forward comment=&#34;8. Drop all other forward&#34;</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># ====================
-</span></span><span style=display:flex><span># 转发链 (FORWARD) - 穿过路由器 (外网&lt;-&gt;内网)
-</span></span><span style=display:flex><span># ====================
-</span></span><span style=display:flex><span>add action=fasttrack-connection chain=forward comment=&#34;1. Fasttrack (Must be top)&#34; connection-state=established,related
-</span></span><span style=display:flex><span>add action=accept chain=forward comment=&#34;2. Accept established,related,untracked&#34; connection-state=established,related,untracked
-</span></span><span style=display:flex><span>add action=drop chain=forward comment=&#34;3. Drop invalid&#34; connection-state=invalid
+</span></span><span style=display:flex><span><span style=color:#75715e># ==========================================</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 第二部分：IPv6 防火墙规则 (已适配 Interface List)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ==========================================</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>/ipv6 firewall filter</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>add action=accept chain=forward comment=&#34;4. Allow bridge1 forward (Internal Outbound)&#34; in-interface=bridge1
-</span></span><span style=display:flex><span>add action=accept chain=forward comment=&#34;5. Allow DSTNAT (Port Forwarding)&#34; connection-nat-state=dstnat in-interface=pppoe-out1
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 入站链 (INPUT) - 保护路由器本体 ---</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;1. Accept established,related,untracked&#34; connection-state=established,related,untracked</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;2. Drop invalid&#34; connection-state=invalid</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;3. Accept ICMPv6 (Critical for IPv6)&#34; protocol=icmpv6</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;4. Allow DHCPv6 Client from WAN&#34; dst-port=546 in-interface-list=WAN protocol=udp src-address=fe80::/10</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=input comment=&#34;5. Allow LAN (Internal Admin)&#34; in-interface-list=LAN</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=input comment=&#34;6. Drop all not from LAN&#34; in-interface-list=!LAN</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># 全局转发兜底丢弃 (拒绝所有未经允许的外网主动访问)
-</span></span><span style=display:flex><span>add action=drop chain=forward comment=&#34;6. Drop all other forward&#34;
-</span></span></code></pre></div><h3 id=特别说明>特别说明：</h3><p>DST-NAT 规则：**（上面倒数第二条）**在 IPv4 的 Forward 链中，我加入了一条 connection-nat-state=dstnat。这确保了你在 IP -> Firewall -> NAT 中做的端口映射能够穿透 forward 的兜底 drop 规则。
-内网互通：只要数据包进入 bridge1 接口，就会被 Allow bridge1 forward 捕获并放行，不会受到最后一条 drop 的影响。</p><h2 id=ipv6防火墙配置>ipv6防火墙配置</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>/ipv6 firewall filter
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 转发链 (FORWARD) - 穿过路由器 ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1. 旁路由豁免</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;1. Bypass Fasttrack &amp; Tracking: sing-box out&#34; src-address=fd88::6666</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;2. Bypass Fasttrack &amp; Tracking: sing-box in&#34; dst-address=fd88::6666</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># ====================
-</span></span><span style=display:flex><span># 入站链 (INPUT) - 保护路由器本体
-</span></span><span style=display:flex><span># ====================
-</span></span><span style=display:flex><span>add action=accept chain=input comment=&#34;1. Accept established,related,untracked&#34; connection-state=established,related,untracked
-</span></span><span style=display:flex><span>add action=drop chain=input comment=&#34;2. Drop invalid&#34; connection-state=invalid
-</span></span><span style=display:flex><span>add action=accept chain=input comment=&#34;3. Accept ICMPv6 (Critical for IPv6)&#34; protocol=icmpv6
-</span></span><span style=display:flex><span>add action=accept chain=input comment=&#34;4. Allow DHCPv6 Client from WAN&#34; dst-port=546 in-interface=pppoe-out1 protocol=udp src-address=fe80::/10
-</span></span><span style=display:flex><span>add action=accept chain=input comment=&#34;5. Allow bridge1 (Internal Admin)&#34; in-interface=bridge1
-</span></span><span style=display:flex><span>add action=drop chain=input comment=&#34;6. Drop all not from bridge1&#34; in-interface=!bridge1
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. 硬件加速</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=fasttrack-connection chain=forward comment=&#34;3. Fasttrack&#34; connection-state=established,related</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># ====================
-</span></span><span style=display:flex><span># 转发链 (FORWARD) - 保护内网设备 / 端口开放
-</span></span><span style=display:flex><span># ====================
-</span></span><span style=display:flex><span># 注意: IPv6 Fasttrack 仅 RouterOS v7 系统生效
-</span></span><span style=display:flex><span>add action=fasttrack-connection chain=forward comment=&#34;1. Fasttrack (Must be top)&#34; connection-state=established,related
-</span></span><span style=display:flex><span>add action=accept chain=forward comment=&#34;2. Accept forward established,related,untracked&#34; connection-state=established,related,untracked
-</span></span><span style=display:flex><span>add action=drop chain=forward comment=&#34;3. Drop invalid&#34; connection-state=invalid
-</span></span><span style=display:flex><span>add action=accept chain=forward comment=&#34;4. Accept Forward ICMPv6&#34; protocol=icmpv6
-</span></span><span style=display:flex><span>add action=accept chain=forward comment=&#34;5. Allow bridge1 forward (Internal Outbound)&#34; in-interface=bridge1
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. 基础状态放行与丢弃</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;4. Accept forward established,related,untracked&#34; connection-state=established,related,untracked</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=forward comment=&#34;5. Drop invalid&#34; connection-state=invalid</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># --- 暴露内网服务 (注意：必须替换为服务器实际的 IPv6 地址！) ---
-</span></span><span style=display:flex><span>add action=accept chain=forward comment=&#34;6. Allow NPM (HTTP/HTTPS)&#34; disabled=yes dst-address=240e::xxxx:xxxx dst-port=80,443 protocol=tcp
-</span></span><span style=display:flex><span>add action=accept chain=forward comment=&#34;7. Allow Hysteria2/Proxy&#34; disabled=yes dst-address=240e::xxxx:xxxx dst-port=36789 protocol=udp
-</span></span><span style=display:flex><span>add action=accept chain=forward comment=&#34;8. Allow Shadowsocks&#34; disabled=yes dst-address=240e::xxxx:xxxx dst-port=36789 protocol=tcp
+</span></span><span style=display:flex><span><span style=color:#75715e># 4. 核心协议与内网放行</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;6. Accept Forward ICMPv6&#34; protocol=icmpv6</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;7. Allow LAN forward (Internal Outbound)&#34; in-interface-list=LAN</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># 兜底：拦截所有未经允许的外网主动访问
-</span></span><span style=display:flex><span>add action=drop chain=forward comment=&#34;9. Drop all other forward (Protect LAN)&#34;
-</span></span></code></pre></div><p>关键提醒： 如果你的宽带是动态 IPv6 前缀（PD），服务器的完整 IPv6 地址会变化。这种情况下，不应直接写死 dst-address，而是需要结合 MikroTik 的 IPv6 Firewall Address Lists 功能，或者使用 in-interface=pppoe-out1 配合 out-interface=bridge1 加上特定设备的特定匹配规则（比如通过防火墙脚本动态更新）。</p><p>IPv4 依靠 NAT，不主动映射外部进不来；但 IPv6 是端到端直通（没有 NAT）。
-你在 forward 链中放行 dst-port=80,443，却没有指定目标地址 (dst-address)。一旦启用，这代表公网可以访问你局域网内所有设备的 80 和 443 端口（包括光猫、路由器后台、智能家居、其他电脑等）。</p><p>正确做法：必须严格绑定目标服务器的 IPv6 地址（dst-address=服务器IPv6地址），或者通过 MAC 地址自动获取到的 IPv6 后缀。</p><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>root</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2026-02-27</p><hr>On this page:<nav id=TableOfContents><ol><li><a href=#内网的dst-nat要加外网接口如pppoe-out1>内网的dst-nat要加外网接口如pppoe-out1</a></li><li><a href=#1-为什么需要回流>1. 为什么需要回流？</a></li><li><a href=#2-完整的-ros-nat-脚本包含-web-回流>2. 完整的 ROS NAT 脚本（包含 Web 回流）</a><ol><li></li></ol></li><li><a href=#3-操作建议使用地址列表简化回流>3. 操作建议：使用“地址列表”简化回流</a><ol><li><a href=#在-ip---firewall---nat-中添加这一条确保它在所有-dst-nat-规则之后但在基础-masquerade-规则之前或者紧随其后>在 IP -> Firewall -> NAT 中添加这一条（确保它在所有 dst-nat 规则之后，但在基础 masquerade 规则之前，或者紧随其后）：</a></li></ol></li><li><a href=#4-验证-web-服务>4. 验证 Web 服务</a></li><li><a href=#5-配套的防火墙规则也是我自用的>5. 配套的防火墙规则，也是我自用的</a><ol><li></li><li><a href=#特别说明>特别说明：</a></li></ol></li><li><a href=#ipv6防火墙配置>ipv6防火墙配置</a></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>felix</strong>.</p><p class=advertisement>Powered by <a>bash&sh</a>.</p></footer></div></body></html>
+</span></span><span style=display:flex><span><span style=color:#75715e># 5. 暴露内网服务 (替换为实际公网 IPv6 地址后再按需启用)</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;8. Allow NPM (HTTP/HTTPS)&#34; disabled=yes dst-address=240e::xxxx:xxxx dst-port=80,443 protocol=tcp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;9. Allow Hysteria2/Proxy&#34; disabled=yes dst-address=240e::xxxx:xxxx dst-port=36789 protocol=udp</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;10. Allow Shadowsocks&#34; disabled=yes dst-address=240e::xxxx:xxxx dst-port=36789 protocol=tcp</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 6. 兜底拦截</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>add action=drop chain=forward comment=&#34;11. Drop all other forward (Protect LAN)&#34;</span>
+</span></span></code></pre></div><h2 id=ipv6的nd照着操作即可>IPV6的ND照着操作即可</h2><p><img src=assets/1.png alt=1></p><div id=utterances-comments><script src=https://utteranc.es/client.js repo=hanigege/blog-comments issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer class=content__footer></footer></section><section class=page__aside><div class=aside__about><div class=aside__about><span class=about__logo role=img>🍚</span>&nbsp;<h1 class=about__title>root</h1><p class=about__description>個人自留地，如果能幫到你，我也會很高興。</p></div><ul class=aside__social-links><li><a href=mailto:purodn@gmail.com rel=me aria-label=Email title=Email><i class="fa-solid fa-envelope" aria-hidden=true></i></a>&nbsp;</li></ul></div><hr><div class=aside__content><p>2026-02-27</p><hr>On this page:<nav id=TableOfContents><ol><li><a href=#内网的dst-nat要加外网接口如pppoe-out1>内网的dst-nat要加外网接口如pppoe-out1</a></li><li><a href=#1-为什么需要回流>1. 为什么需要回流？</a></li><li><a href=#2-完整的-ros-nat-脚本包含-web-回流>2. 完整的 ROS NAT 脚本（包含 Web 回流）</a><ol><li></li></ol></li><li><a href=#3-操作建议使用地址列表简化回流>3. 操作建议：使用“地址列表”简化回流</a><ol><li><a href=#在-ip---firewall---nat-中添加这一条确保它在所有-dst-nat-规则之后但在基础-masquerade-规则之前或者紧随其后>在 IP -> Firewall -> NAT 中添加这一条（确保它在所有 dst-nat 规则之后，但在基础 masquerade 规则之前，或者紧随其后）：</a></li></ol></li><li><a href=#4-验证-web-服务>4. 验证 Web 服务</a></li><li><a href=#5-配套的防火墙规则也是我自用的>5. 配套的防火墙规则，也是我自用的</a><ol><li></li><li><a href=#转发链-forward特别说明>转发链 (FORWARD)特别说明：</a></li></ol></li><li><a href=#ipv6防火墙配置>ipv6防火墙配置</a><ol><li></li></ol></li><li><a href=#ipv4vsipv6防火墙对应更改>IPV4vsIPV6防火墙对应更改：</a></li><li><a href=#ipv6的nd照着操作即可>IPV6的ND照着操作即可</a></li></ol></nav></div></section><footer class=page__footer><p class=copyright>© <strong>felix</strong>.</p><p class=advertisement>Powered by <a>bash&sh</a>.</p></footer></div></body></html>
