@@ -257,7 +257,7 @@
 </span></span><span style=display:flex><span><span style=color:#75715e># 2. 硬件加速</span>
 </span></span><span style=display:flex><span><span style=color:#ae81ff>add action=fasttrack-connection chain=forward comment=&#34;3. Fasttrack&#34; connection-state=established,related</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 3. 基础状态放行与丢弃</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. 基础状态放行</span>
 </span></span><span style=display:flex><span><span style=color:#ae81ff>add action=accept chain=forward comment=&#34;4. Accept forward established,related,untracked&#34; connection-state=established,related,untracked</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#75715e># 4. 核心协议与内网放行</span>
