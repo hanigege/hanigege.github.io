@@ -119,7 +119,7 @@
 </span></span><span style=display:flex><span>add name=LAN
 </span></span></code></pre></div><h4 id=2-将-pppoe-out1-加入-wan-列表>2. 将 pppoe-out1 加入 WAN 列表</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>/interface list member
 </span></span><span style=display:flex><span>add interface=pppoe-out1 list=WAN
-</span></span></code></pre></div><h5 id=3-将-bridge1-加入-lan-列表>3. 将 bridge1 加入 LAN 列表</h5><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>add interface=bridge1 list=LAN
+</span></span></code></pre></div><h4 id=3-将-bridge1-加入-lan-列表>3. 将 bridge1 加入 LAN 列表</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>add interface=bridge1 list=LAN
 </span></span></code></pre></div><h2 id=ipv4vsipv6防火墙对应更改>IPV4vsIPV6防火墙对应更改：</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># ==========================================</span>
 </span></span><span style=display:flex><span><span style=color:#75715e># 准备工作：清空现有 IPv4 和 IPv6 过滤规则</span>
 </span></span><span style=display:flex><span><span style=color:#75715e># ==========================================</span>
