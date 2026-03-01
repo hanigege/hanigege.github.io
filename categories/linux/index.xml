@@ -279,8 +279,13 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hash -r
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim -v
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="安装格式化与剪贴板依赖环境"&gt;安装格式化与剪贴板依赖环境&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;要让 conform.nvim 成功调用 prettier，以及保证系统与 Neovim 之间的剪贴板交互顺畅，必须在操作系统层面安装以下工具：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>CK佬的wg-Easy一键脚本程序</title><link>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link><pubDate>Mon, 12 May 2025 16:09:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p&gt;&lt;img src="assets/1.png" alt="图示"&gt;&lt;/p&gt;
-&lt;p&gt;pve下安装ubuntu或者debian.然后看下面ck佬的教程操作：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;要让 conform.nvim 成功调用 prettier，以及保证系统与 Neovim 之间的剪贴板交互顺畅，必须在操作系统层面安装以下工具：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>wg-Easy（wireguard可视管理）程序</title><link>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link><pubDate>Mon, 12 May 2025 16:09:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p&gt;&lt;img src="assets/1.png" alt="图示"&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;安装这个程序主要是方便人在外面，连接自己服务器使用～&lt;/li&gt;
+&lt;li&gt;可以理解为wireguard带web管理页面的。&lt;/li&gt;
+&lt;li&gt;pve下安装ubuntu或者debian&lt;/li&gt;
+&lt;li&gt;下载下面的主程序然后根据教程操作&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;&lt;a href="https://drive.google.com/file/d/1ETrZhXvuLgmXs_-6rdMwsPHz0QJ2JmqY/view?usp=sharing"&gt;wg-easy.zip&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="安装教程"&gt;安装教程&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# vm ubuntu22.04测试通过，新版本注意下面改了个组件，即：npm@11.6.2&lt;/span&gt;
