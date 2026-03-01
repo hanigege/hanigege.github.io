@@ -145,3 +145,44 @@ pre {
 code {
   color: #d33682 !important;
 }
+
+/* --- 极简中性版：淡色表头与清晰线条 --- */
+
+/* 1. 强制表格容器：线条稍微加深一点，增强整体结构感 */
+.content__body table {
+    display: table !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border: 1px solid #cfd8dc !important; /* 使用中性浅灰色线条 */
+    margin: 1.5rem 0 !important;
+    background-color: #ffffff !important;
+}
+/* --- 协调进阶版：强化表头区分度 --- */
+
+/* 1. 表头（th）：进一步加深灰色，使其与斑马纹数据行产生明显对比 */
+.content__body th {
+    /* 将背景色从 #f1f3f4 加深至 #e0e4e7，增强视觉“重感” */
+    background-color: #e0e4e7 !important; 
+    color: #2c3e50 !important;            /* 使用更深的文字颜色 */
+    font-weight: 700 !important;
+    border: 1px solid #b0bec5 !important; /* 线条稍微加深，与深色表头更协调 */
+    padding: 12px 15px !important;
+    text-align: left !important;
+}
+
+/* 2. 单元格（td）：保持现有的清晰线条 */
+.content__body td {
+    border: 1px solid #cfd8dc !important; 
+    padding: 10px 15px !important;
+    color: #374151 !important;
+}
+
+/* 3. 斑马纹：保持极淡的底色，确保与加深后的表头有明显台阶感 */
+.content__body tr:nth-child(even) td {
+    background-color: #f7f8f9 !important; /* 维持极浅灰色 */
+}
+
+/* 4. 强制表格外框，使其整体感更强 */
+.content__body table {
+    border: 1px solid #b0bec5 !important;
+}
