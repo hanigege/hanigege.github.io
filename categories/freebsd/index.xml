@@ -1,4 +1,27 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Freebsd on bash</title><link>https://hanigege.github.io/categories/freebsd/</link><description>Recent content in Freebsd on bash</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **Gary**.</copyright><lastBuildDate>Fri, 27 Feb 2026 08:44:18 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/categories/freebsd/index.xml" rel="self" type="application/rss+xml"/><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</guid><description>&lt;br&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Freebsd on bash</title><link>https://hanigege.github.io/categories/freebsd/</link><description>Recent content in Freebsd on bash</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **Gary**.</copyright><lastBuildDate>Sun, 01 Mar 2026 09:42:19 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/categories/freebsd/index.xml" rel="self" type="application/rss+xml"/><item><title>FreeBSD15现代化Neovim生产力环境部署指南</title><link>https://hanigege.github.io/posts/freebsd/freebsd15%E7%8E%B0%E4%BB%A3%E5%8C%96neovim%E7%94%9F%E4%BA%A7%E5%8A%9B%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/</link><pubDate>Sun, 01 Mar 2026 09:42:19 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15%E7%8E%B0%E4%BB%A3%E5%8C%96neovim%E7%94%9F%E4%BA%A7%E5%8A%9B%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/</guid><description>&lt;h2 id="第一步安装系统依赖与源码编译-neovim-010"&gt;第一步：安装系统依赖与源码编译 Neovim 0.10+&lt;/h2&gt;
+&lt;p&gt;FreeBSD 使用 pkg 管理二进制包，编译 Neovim 需要额外的 gmake。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. 安装编译所需的工具和依赖&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 注意：FreeBSD 下编译 Neovim 建议使用 gmake&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 强制同步并更新所有软件包，这是解决 ld-elf.so.1 错误最直接的方法，确保所有依赖库版本一致。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;pkg update -f&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;pkg upgrade -y&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;pkg install -y ninja cmake gettext-tools gmake unzip curl git gcc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. 拉取 Neovim 源码&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;git clone https://github.com/neovim/neovim.git ~/neovim-src&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;cd ~/neovim-src&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;git checkout stable&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. 编译并全局安装&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FreeBSD 环境下必须明确使用 gmake&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;gmake CMAKE_BUILD_TYPE=Release -j$(sysctl -n hw.ncpu)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;sudo gmake install&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. 验证版本&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;hash -r&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;nvim -v&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="第二步安装格式化所需的环境依赖"&gt;第二步：安装格式化所需的环境依赖&lt;/h2&gt;
+&lt;p&gt;FreeBSD 的 Node.js 包名通常带有版本号，我们选择主流的 LTS 版本。&lt;/p&gt;</description></item><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</guid><description>&lt;br&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202026-02-27%20at%2009.05.03@2x.png" alt="列表"&gt;&lt;/p&gt;
 &lt;h2 id="新建脚本文件"&gt;新建脚本文件&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim pf_manager.sh
