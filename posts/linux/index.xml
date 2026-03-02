@@ -478,32 +478,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x iptables_manager.sh
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./iptables_manager.sh
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="使用注意"&gt;使用注意&lt;/h2&gt;
-&lt;h4 id="执行后选择-5系统将只根据你真实安装的组件写入必需的转发规则"&gt;执行后选择 5，系统将只根据你真实安装的组件写入必需的转发规则。&lt;/h4&gt;</description></item><item><title>Debian下nvim格式化全家桶安装</title><link>https://hanigege.github.io/posts/linux/debianmac%E4%B8%8Bnvim%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%85%A8%E5%AE%B6%E6%A1%B6%E5%AE%89%E8%A3%85/</link><pubDate>Fri, 27 Feb 2026 13:04:22 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/debianmac%E4%B8%8Bnvim%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%85%A8%E5%AE%B6%E6%A1%B6%E5%AE%89%E8%A3%85/</guid><description>&lt;h2 id="全网唯一都是自已配置平时自己用的独乐乐不如众乐乐拿去用吧很方便"&gt;全网唯一，都是自已配置，平时自己用的，独乐乐不如众乐乐，拿去用吧，很方便&lt;/h2&gt;
-&lt;br&gt;
-安装 Neovim (&gt;= 0.10.0)
-&lt;h2 id="1-安装neovim-debian13ubuntu2510自动获取最新版必须是默认--010x"&gt;1. 安装neovim (Debian13&amp;amp;Ubuntu25.10+)(自动获取最新版，必须是默认 &amp;gt;= 0.10.x)&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update &amp;amp;&amp;amp; apt install neovim
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="验证版本信息"&gt;验证版本信息&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim --version | grep ^NVIM
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="如果是低版本系统也可自行编译安装最新版"&gt;如果是低版本系统，也可自行编译安装（最新版）&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 1. 安装编译所必须的基础工具和系统依赖
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install ninja-build gettext cmake unzip curl build-essential git -y
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 2. 拉取 Neovim 源码并切换到稳定版分支 (规避开发版的潜在 bug)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/neovim/neovim.git ~/neovim-src
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd ~/neovim-src
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 3. 编译并全局安装 (利用多核加速)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make CMAKE_BUILD_TYPE=Release -j$(nproc)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo make install
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 4. 清理路径缓存并验证版本
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hash -r
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvim -v
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="安装格式化与剪贴板依赖环境"&gt;安装格式化与剪贴板依赖环境&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;要让 conform.nvim 成功调用 prettier，以及保证系统与 Neovim 之间的剪贴板交互顺畅，必须在操作系统层面安装以下工具：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>wg-Easy（wireguard可视管理）程序</title><link>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link><pubDate>Mon, 12 May 2025 16:09:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p&gt;&lt;img src="assets/1.png" alt="图示"&gt;&lt;/p&gt;
+&lt;h4 id="执行后选择-5系统将只根据你真实安装的组件写入必需的转发规则"&gt;执行后选择 5，系统将只根据你真实安装的组件写入必需的转发规则。&lt;/h4&gt;</description></item><item><title>wg-Easy（wireguard可视管理）程序</title><link>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</link><pubDate>Mon, 12 May 2025 16:09:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/ck%E4%BD%AC%E7%9A%84wg-easy%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p&gt;&lt;img src="assets/1.png" alt="图示"&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;安装这个程序主要是方便人在外面，连接自己服务器使用～&lt;/li&gt;
 &lt;li&gt;可以理解为wireguard带web管理页面的。&lt;/li&gt;
