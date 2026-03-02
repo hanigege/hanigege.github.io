@@ -276,7 +276,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. 编译并全局安装&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FreeBSD 环境下必须明确使用 gmake&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;gmake CMAKE_BUILD_TYPE=Release -j$(sysctl -n hw.ncpu)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;sudo gmake install&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;gmake install&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. 验证版本&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;hash -r&lt;/span&gt;
@@ -787,9 +787,33 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="使用注意"&gt;使用注意&lt;/h2&gt;
 &lt;h4 id="执行后选择-5系统将只根据你真实安装的组件写入必需的转发规则"&gt;执行后选择 5，系统将只根据你真实安装的组件写入必需的转发规则。&lt;/h4&gt;</description></item><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</guid><description>&lt;br&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202026-02-27%20at%2009.05.03@2x.png" alt="列表"&gt;&lt;/p&gt;
-&lt;h2 id="一键执行脚本"&gt;一键执行脚本&lt;/h2&gt;
+&lt;h2 id="开启防火墙的步骤"&gt;开启防火墙的步骤&lt;/h2&gt;
+&lt;h3 id="第一步启用-pf-模块"&gt;第一步：启用 PF 模块&lt;/h3&gt;
+&lt;p&gt;执行以下命令，确保重启后自动开启：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysrc pf_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysrc pflog_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="第二步创建一个基础配置文件-可选一般都有"&gt;第二步：创建一个基础配置文件 （可选，一般都有）&lt;/h3&gt;
+&lt;p&gt;如果 /etc/pf.conf 不存在，pf 将无法启动。先创建一个最简单的配置（只放行 SSH，假设你的网卡是 vtnet0，请根据 ifconfig 实际名称修改）：&lt;/p&gt;
+&lt;p&gt;PF&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# /etc/pf.conf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ext_if &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;vtnet0&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set skip on lo0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scrub in all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 默认拒绝所有入站，允许所有出站&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;block in all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pass out all keep state
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 放行 SSH (22 端口)，防止断开连接 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pass in on $ext_if proto tcp from any to any port &lt;span style="color:#ae81ff"&gt;22&lt;/span&gt; keep state
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="第三步手动加载并启动"&gt;第三步：手动加载并启动&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-Bash" data-lang="Bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 加载内核模块&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kldload pf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 启动服务&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;service pf start
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="一键执行脚本"&gt;一键执行脚本&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://raw.githubusercontent.com/hanigege/scripts/main/pf_manager.sh -o pf_manager.sh &amp;amp;&amp;amp; sh pf_manager.sh
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Vyos Wireguard Ipv4</title><link>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</link><pubDate>Sun, 01 Jun 2025 20:42:39 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</guid><description>&lt;h1 id="vyos上配置wireguard-ipv4"&gt;vyos上配置wireguard （IPV4）&lt;/h1&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;成功的步骤方法（写进教程的最后一步）：&lt;/p&gt;</description></item><item><title>Vyos Wireguard Ipv4</title><link>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</link><pubDate>Sun, 01 Jun 2025 20:42:39 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos-wireguard-ipv4/</guid><description>&lt;h1 id="vyos上配置wireguard-ipv4"&gt;vyos上配置wireguard （IPV4）&lt;/h1&gt;
 &lt;h2 id="1-生成-wireguard-密钥"&gt;1. 生成 WireGuard 密钥&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wg genkey | tee privatekey | wg pubkey &amp;gt; publickey
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;• privatekey 文件中存储 私钥&lt;/p&gt;

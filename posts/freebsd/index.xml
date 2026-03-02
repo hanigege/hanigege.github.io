@@ -55,7 +55,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. 编译并全局安装&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FreeBSD 环境下必须明确使用 gmake&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;gmake CMAKE_BUILD_TYPE=Release -j$(sysctl -n hw.ncpu)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;sudo gmake install&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;gmake install&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. 验证版本&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;hash -r&lt;/span&gt;
@@ -63,9 +63,33 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="第二步安装格式化所需的环境依赖"&gt;第二步：安装格式化所需的环境依赖&lt;/h2&gt;
 &lt;p&gt;FreeBSD 的 Node.js 包名通常带有版本号，我们选择主流的 LTS 版本。&lt;/p&gt;</description></item><item><title>FreeBSD 15 PF 终极交互式管理脚本</title><link>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</link><pubDate>Fri, 27 Feb 2026 08:44:18 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15-pf-js/</guid><description>&lt;br&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202026-02-27%20at%2009.05.03@2x.png" alt="列表"&gt;&lt;/p&gt;
-&lt;h2 id="一键执行脚本"&gt;一键执行脚本&lt;/h2&gt;
+&lt;h2 id="开启防火墙的步骤"&gt;开启防火墙的步骤&lt;/h2&gt;
+&lt;h3 id="第一步启用-pf-模块"&gt;第一步：启用 PF 模块&lt;/h3&gt;
+&lt;p&gt;执行以下命令，确保重启后自动开启：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysrc pf_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysrc pflog_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="第二步创建一个基础配置文件-可选一般都有"&gt;第二步：创建一个基础配置文件 （可选，一般都有）&lt;/h3&gt;
+&lt;p&gt;如果 /etc/pf.conf 不存在，pf 将无法启动。先创建一个最简单的配置（只放行 SSH，假设你的网卡是 vtnet0，请根据 ifconfig 实际名称修改）：&lt;/p&gt;
+&lt;p&gt;PF&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# /etc/pf.conf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ext_if &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;vtnet0&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set skip on lo0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scrub in all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 默认拒绝所有入站，允许所有出站&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;block in all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pass out all keep state
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 放行 SSH (22 端口)，防止断开连接 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pass in on $ext_if proto tcp from any to any port &lt;span style="color:#ae81ff"&gt;22&lt;/span&gt; keep state
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="第三步手动加载并启动"&gt;第三步：手动加载并启动&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-Bash" data-lang="Bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 加载内核模块&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kldload pf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 启动服务&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;service pf start
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="一键执行脚本"&gt;一键执行脚本&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://raw.githubusercontent.com/hanigege/scripts/main/pf_manager.sh -o pf_manager.sh &amp;amp;&amp;amp; sh pf_manager.sh
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd15下配置服务器端hysteria2"&gt;FreeBSD15下配置服务器端Hysteria2&lt;/h2&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;成功的步骤方法（写进教程的最后一步）：&lt;/p&gt;</description></item><item><title>Freebsd安装Hysteria2服务端</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</link><pubDate>Mon, 12 May 2025 14:31:26 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E5%AE%89%E8%A3%85hysteria2%E6%9C%8D%E5%8A%A1%E7%AB%AF/</guid><description>&lt;h2 id="freebsd15下配置服务器端hysteria2"&gt;FreeBSD15下配置服务器端Hysteria2&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;建议用root用户运行：&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;特权端口限制：非 root 用户无法监听 1024 以下的端口（如 443）。
 Hysteria2设置简单，性能强劲，强力推荐，只自己用，很方便。&lt;/p&gt;
