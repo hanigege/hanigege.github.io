@@ -2,9 +2,6 @@
 &lt;p&gt;&lt;img src="assets/CleanShot%202026-03-01%20at%2020.56.31@2x.png" alt="CleanShot 2026-03-01 at 20.56.31@2x"&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;h2 id="脚本只能是root用户运行"&gt;脚本只能是&lt;code&gt;root用户&lt;/code&gt;运行～&lt;/h2&gt;
-&lt;/li&gt;
-&lt;li&gt;
 &lt;h2 id="脚本会自动修改sshd_config的配置省心省力基本上就两步导入查看一下完事"&gt;脚本会自动修改sshd_config的配置，省心省力，基本上就两步，导入，查看一下，完事！&lt;/h2&gt;
 &lt;/li&gt;
 &lt;li&gt;
@@ -13,12 +10,13 @@
 &lt;li&gt;
 &lt;h2 id="下面执行一键命令freebsd"&gt;下面执行一键命令（FreeBSD）&lt;/h2&gt;
 &lt;/li&gt;
+&lt;li&gt;
+&lt;h2 id="仅限root用户登录使用配置的是root用户的证书请在root下执行脚本"&gt;仅限&lt;code&gt;root用户&lt;/code&gt;登录使用，配置的是&lt;code&gt;root用户&lt;/code&gt;的证书，请在root下执行脚本&lt;/h2&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://raw.githubusercontent.com/hanigege/scripts/main/freebsd_ssh_key_manage.sh &lt;span style="color:#ae81ff"&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-o freebsd_ssh_key_manage.sh &lt;span style="color:#ae81ff"&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x freebsd_ssh_key_manage.sh &lt;span style="color:#ae81ff"&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sh freebsd_ssh_key_manage.sh
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="配置项核对"&gt;配置项核对&lt;/h2&gt;
+&lt;h3 id="1-仅限root用户登录使用配置的是root用户的证书"&gt;1. 仅限root用户登录使用，配置的是root用户的证书&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch -o freebsd_ssh_key_manage.sh https://raw.githubusercontent.com/hanigege/scripts/main/freebsd_ssh_key_manage.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x freebsd_ssh_key_manage.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./freebsd_ssh_key_manage.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="root用户配置项核对"&gt;root用户配置项核对&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;UsePAM no: 正确。在 FreeBSD 中，关闭 PAM 是防止系统通过其他交互方式询问密码的最彻底手段。&lt;/li&gt;
 &lt;li&gt;PermitRootLogin prohibit-password: 正确。这允许 Root 用户通过密钥登录，但绝对禁止使用密码。&lt;/li&gt;
@@ -26,7 +24,21 @@
 &lt;li&gt;PubkeyAuthentication yes: 核心正确。这是开启密钥登录的开关。&lt;/li&gt;
 &lt;li&gt;ChallengeResponseAuthentication no: 正确。关闭挑战响应认证。&lt;/li&gt;
 &lt;li&gt;KbdInteractiveAuthentication no: 非常正确。这是 FreeBSD 环境下的关键，关闭了键盘交互式认证，彻底堵死密码入口。&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>FreeBSD15现代化Neovim生产力环境部署指南</title><link>https://hanigege.github.io/posts/freebsd/freebsd15%E7%8E%B0%E4%BB%A3%E5%8C%96neovim%E7%94%9F%E4%BA%A7%E5%8A%9B%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/</link><pubDate>Sun, 01 Mar 2026 09:42:19 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15%E7%8E%B0%E4%BB%A3%E5%8C%96neovim%E7%94%9F%E4%BA%A7%E5%8A%9B%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/</guid><description>&lt;h2 id="第一步安装系统依赖与源码编译-neovim-010"&gt;第一步：安装系统依赖与源码编译 Neovim 0.10+&lt;/h2&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="2-仅限普通用户登录使用配置的是普通用户的证书请在root下执行脚本"&gt;2. 仅限&lt;code&gt;普通用户&lt;/code&gt;登录使用，配置的是&lt;code&gt;普通用户&lt;/code&gt;的证书，请在root下执行脚本&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch -o ssh_manager.sh https://raw.githubusercontent.com/hanigege/scripts/main/freebsd_user_ssh_manager.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x ssh_manager.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./ssh_manager.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="普通用户配置项核对"&gt;普通用户配置项核对&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;UsePAM no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PermitRootLogin no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PasswordAuthentication no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PubkeyAuthentication yes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ChallengeResponseAuthentication no
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;KbdInteractiveAuthentication no
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个结果正是你所需要的终极安全状态：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;PermitRootLogin no：彻底掐断了 Root 直接登录。&lt;/p&gt;</description></item><item><title>FreeBSD15现代化Neovim生产力环境部署指南</title><link>https://hanigege.github.io/posts/freebsd/freebsd15%E7%8E%B0%E4%BB%A3%E5%8C%96neovim%E7%94%9F%E4%BA%A7%E5%8A%9B%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/</link><pubDate>Sun, 01 Mar 2026 09:42:19 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15%E7%8E%B0%E4%BB%A3%E5%8C%96neovim%E7%94%9F%E4%BA%A7%E5%8A%9B%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/</guid><description>&lt;h2 id="第一步安装系统依赖与源码编译-neovim-010"&gt;第一步：安装系统依赖与源码编译 Neovim 0.10+&lt;/h2&gt;
 &lt;p&gt;FreeBSD 使用 pkg 管理二进制包，编译 Neovim 需要额外的 gmake。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. 安装编译所需的工具和依赖&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 注意：FreeBSD 下编译 Neovim 建议使用 gmake&lt;/span&gt;
