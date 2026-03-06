@@ -12,11 +12,12 @@
 
     <path d="M55 40 Q 150 50 245 40 L 245 60 Q 150 70 55 60 Z" fill="#ffffff" opacity="0.04"/>
 
-    <g font-family="'JetBrains Mono', 'Fira Code', 'Courier New', monospace" font-size="12" fill="#4af626">
-      <text x="65" y="60">GARY_OS v1.0</text>
-      <text x="65" y="78">Memory: 640K OK</text>
-      <text x="65" y="96">Loading kernel...</text>
-      <text x="65" y="114">root@freebsd _</text>
+    <g font-family="'JetBrains Mono', 'Fira Code', 'Courier New', monospace" font-size="13" fill="#4af626" xml:space="preserve">
+      <text x="65" y="60">   /\_/\</text>
+      <text x="65" y="76">  ( o.o )  meow!</text>
+      <text x="65" y="92">   &gt; ^ &lt;</text>
+      <text x="65" y="110"> GARY_OS loaded.</text>
+      <text x="65" y="128"> root@freebsd:~# _</text>
     </g>
 
     <rect x="200" y="152" width="35" height="5" rx="2" fill="#4a4a4a"/>

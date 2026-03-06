@@ -1,11 +1,54 @@
 /* Risotto 现代极简终极版 - 护眼与排版优化 */
 
 :root {
+  /* 强制覆盖主题内置颜色变量，防止切换时出现原始颜色幽灵 */
+  --base00: var(--bg-color) !important;
+  --base01: var(--bg-color) !important;
+  --base02: var(--bg-color) !important;
+  --bg: var(--bg-color) !important;
+  --off-bg: var(--bg-color) !important;
+  --inner-bg: var(--bg-color) !important;
+  --fg: var(--text-main) !important;
+  --off-fg: var(--text-sub) !important;
+  --muted: var(--text-sub) !important;
+
   /* 护眼优化：将纯白改为极淡的暖灰纸张色，降低屏幕眩光 */
   --bg-color: #fcfcfc;
   --text-main: #2d3436;
   --text-sub: #586e75;
   --logo-green: #859900;
+  
+  --table-border: #cfd8dc;
+  --table-bg: #ffffff;
+  --th-bg: #e0e4e7;
+  --td-text: #374151;
+  --tr-even-bg: #f7f8f9;
+  --search-bg: #ffffff;
+  --list-border: #f0f2f5;
+  --list-hover: #f4f6f8;
+}
+
+/* 深色模式下的变量重写 */
+html[data-theme="dark"] {
+  --bg-color: #1a1b1e;
+  --text-main: #e0e0e0;
+  --text-sub: #a0a0a0;
+  
+  --table-border: #333333;
+  --table-bg: #1e1e1e;
+  --th-bg: #2d2d2d;
+  --td-text: #c0c0c0;
+  --tr-even-bg: #252525;
+  --search-bg: #252525;
+  --list-border: #333333;
+  --list-hover: #2a2a2a;
+  
+  /* 强制覆盖主题内置颜色变量，双重保险 */
+  --base00: #1a1b1e !important;
+  --base01: #1a1b1e !important;
+  --base02: #2d2d2d !important;
+  --off-bg: #1a1b1e !important;
+  --bg: #1a1b1e !important;
 }
 
 /* 1. 核心排版：底色统一，护眼击穿 */
@@ -21,12 +64,19 @@ section,
 .wrapper,
 .search,
 #search,
-.search-container {
+.search-container,
+.page,
+.page__body,
+.page__aside,
+.page__header,
+.page__footer {
   background-color: var(--bg-color) !important;
+  background-image: none !important;
   background: var(--bg-color) !important;
   color: var(--text-main) !important;
   box-shadow: none !important;
   border: none !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* 2. 列表美学：增加垂直呼吸感，避免拥挤 */
@@ -36,13 +86,13 @@ section,
 li {
   background-color: transparent !important;
   background: transparent !important;
-  border-bottom: 1px solid #f0f2f5 !important;
+  border-bottom: 1px solid var(--list-border) !important;
   padding: 8px 0 !important; /* 新增：扩大上下间距，提升扫读体验 */
   line-height: 1.6 !important;
 }
 
 #search-results li a:hover {
-  background-color: #f4f6f8 !important;
+  background-color: var(--list-hover) !important;
   border-radius: 4px;
 }
 
@@ -92,9 +142,9 @@ a:active {
 .search-wrapper {
   display: flex !important;
   align-items: center !important;
-  border: 1px solid #e5e7eb !important;
+  border: 1px solid var(--list-border) !important;
   padding: 0 12px !important;
-  background-color: #ffffff !important; /* 搜索框内部保持纯白，形成微小层次 */
+  background-color: var(--search-bg) !important; /* 搜索框内部保持纯白，形成微小层次 */
   border-radius: 8px !important;
   width: 100% !important;
   box-sizing: border-box !important;
@@ -103,7 +153,7 @@ a:active {
 #search-input {
   background: transparent !important;
   border: none !important;
-  color: #111827 !important;
+  color: var(--text-main) !important;
   padding: 12px 0 !important;
   outline: none !important;
   flex-grow: 1 !important;
@@ -116,8 +166,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
-  -webkit-text-fill-color: #111827 !important;
+  -webkit-box-shadow: 0 0 0 30px var(--search-bg) inset !important;
+  -webkit-text-fill-color: var(--text-main) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -135,11 +185,9 @@ footer,
 }
 
 /* 5. 代码块：保持柔和对比 */
-pre {
+html[data-theme="light"] pre {
   background-color: #fdf6e3 !important;
   border: 1px solid #eee8d5 !important;
-  border-radius: 8px !important;
-  padding: 1.5em !important;
 }
 
 code {
@@ -153,36 +201,78 @@ code {
     display: table !important;
     width: 100% !important;
     border-collapse: collapse !important;
-    border: 1px solid #cfd8dc !important; /* 使用中性浅灰色线条 */
+    border: 1px solid var(--table-border) !important; /* 使用中性浅灰色线条 */
     margin: 1.5rem 0 !important;
-    background-color: #ffffff !important;
+    background-color: var(--table-bg) !important;
 }
 /* --- 协调进阶版：强化表头区分度 --- */
 
 /* 1. 表头（th）：进一步加深灰色，使其与斑马纹数据行产生明显对比 */
 .content__body th {
     /* 将背景色从 #f1f3f4 加深至 #e0e4e7，增强视觉“重感” */
-    background-color: #e0e4e7 !important; 
-    color: #2c3e50 !important;            /* 使用更深的文字颜色 */
+    background-color: var(--th-bg) !important; 
+    color: var(--text-main) !important;            /* 使用更深的文字颜色 */
     font-weight: 700 !important;
-    border: 1px solid #b0bec5 !important; /* 线条稍微加深，与深色表头更协调 */
+    border: 1px solid var(--table-border) !important; /* 线条稍微加深，与深色表头更协调 */
     padding: 12px 15px !important;
     text-align: left !important;
 }
 
 /* 2. 单元格（td）：保持现有的清晰线条 */
 .content__body td {
-    border: 1px solid #cfd8dc !important; 
+    border: 1px solid var(--table-border) !important; 
     padding: 10px 15px !important;
-    color: #374151 !important;
+    color: var(--td-text) !important;
 }
 
 /* 3. 斑马纹：保持极淡的底色，确保与加深后的表头有明显台阶感 */
 .content__body tr:nth-child(even) td {
-    background-color: #f7f8f9 !important; /* 维持极浅灰色 */
+    background-color: var(--tr-even-bg) !important; /* 维持极浅灰色 */
 }
 
 /* 4. 强制表格外框，使其整体感更强 */
 .content__body table {
-    border: 1px solid #b0bec5 !important;
+    border: 1px solid var(--table-border) !important;
+}
+/* --- 6. 左上角 Logo 极简重绘 --- */
+.page__logo-inner {
+    background: transparent !important; /* 完全透明，不要任何底框或底色 */
+    padding: 0 !important; /* 既然没有底框，就不需要额外的内边距了 */
+    color: var(--text-main) !important; /* 文字跟随主题颜色，不刺眼 */
+    font-size: 1.2rem;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.page__logo-inner:hover {
+    background: transparent !important; /* 悬停时依然透明 */
+    color: #268bd2 !important; /* 悬停时文字变为您的点缀色（如蓝色），增强交互感 */
+}
+
+/* 将终端修饰符 [ 和 ] $ 调整为不那么刺眼的灰色 */
+.page__logo-inner:before {
+    content: "[ " !important;
+    color: var(--text-sub) !important;
+    font-weight: 400;
+}
+
+.page__logo-inner:after {
+    content: " ] $" !important;
+    color: var(--text-sub) !important;
+    font-weight: 400;
+}
+
+/* --- 7. 隐藏侧边栏(目录)的滚动条，保留滚动功能 --- */
+.page__aside {
+    /* Firefox */
+    scrollbar-width: none !important;
+    /* IE 10+ */
+    -ms-overflow-style: none !important;
+}
+
+/* Chrome, Edge, Safari, Opera */
+.page__aside::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
