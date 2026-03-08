@@ -23,7 +23,11 @@
 限制容器日志文件大小, 单个容器最多 5 个日志文件, 单个日志文件最大 10m, 防止容器 stdout 过量输出导致占满磁盘空间
 开启 live-restore 防止 docker daemon 意外重启导致容器重启
 Debian、Redhat 系列系统默认 CGroups Driver 切换为 systemd, Alpine 系统保持默认 cgroupfs v2
-该脚本安装完成后默认会 Pin 住 docker 相关软件包, 防止自动升级导致容器重启或出现不可逆故障.</p><h2 id=1-宿主机底层网络与内核准备-tun--iptables>1. 宿主机底层网络与内核准备 (TUN & iptables)</h2><p>在部署 Tailscale 容器前，必须确保宿主机内核支持虚拟网卡和底层防火墙路由。</p><p>针对 Alpine 系统（当前环境）：
+该脚本安装完成后默认会 Pin 住 docker 相关软件包, 防止自动升级导致容器重启或出现不可逆故障.</p><p><strong>如果是linux下的普通用户，请记的添加到docker组：</strong></p><ul><li>一步解决</li></ul><p>把用户加入 docker 组：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>sudo usermod -aG docker $USER
+</span></span></code></pre></div><p>然后 重新登录一次系统（很重要）。</p><p>如果是 SSH：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>exit
+</span></span></code></pre></div><p>再重新登录。</p><p>然后再测试</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>docker ps
+</span></span></code></pre></div><p>如果成功，会显示：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>CONTAINER ID   IMAGE   COMMAND   CREATED   STATUS   PORTS   NAMES
+</span></span></code></pre></div><h2 id=1-宿主机底层网络与内核准备-tun--iptables>1. 宿主机底层网络与内核准备 (TUN & iptables)</h2><p>在部署 Tailscale 容器前，必须确保宿主机内核支持虚拟网卡和底层防火墙路由。</p><p>针对 Alpine 系统（当前环境）：
 Alpine 内核精简，需手动加载模块并设置开机自启。在宿主机终端执行：</p><p>Bash</p><h1 id=加载虚拟网卡与防火墙模块>加载虚拟网卡与防火墙模块</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>modprobe tun
 </span></span><span style=display:flex><span>modprobe ip_tables
 </span></span><span style=display:flex><span>modprobe iptable_filter
