@@ -1,39 +1,201 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 250" width="100%" height="100%">
-  <g transform="translate(150, 10)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 375" width="500" height="375">
+  <defs>
+    <linearGradient id="roomBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d3436"/>
+      <stop offset="100%" style="stop-color:#636e72"/>
+    </linearGradient>
     
-    <path d="M40 0 h220 a15 15 0 0 1 15 15 v140 a15 15 0 0 1 -15 15 h-220 a15 15 0 0 1 -15 -15 v-140 a15 15 0 0 1 15 -15 z" fill="#e2e2d9" stroke="#c5c5b5" stroke-width="2"/>
-
-    <line x1="60" y1="15" x2="240" y2="15" stroke="#c5c5b5" stroke-width="2" stroke-linecap="round"/>
-    <line x1="60" y1="22" x2="240" y2="22" stroke="#c5c5b5" stroke-width="2" stroke-linecap="round"/>
-
-    <rect x="50" y="35" width="200" height="110" rx="8" fill="#b0b0a0" stroke="#909080" stroke-width="2"/>
-
-    <rect x="55" y="40" width="190" height="100" rx="5" fill="#1e1e1e"/>
-
-    <path d="M55 40 Q 150 50 245 40 L 245 60 Q 150 70 55 60 Z" fill="#ffffff" opacity="0.04"/>
-
-    <g font-family="'JetBrains Mono', 'Fira Code', 'Courier New', monospace" font-size="13" fill="#4af626" xml:space="preserve">
-      <text x="65" y="60">   /\_/\</text>
-      <text x="65" y="76">  ( o.o )  meow!</text>
-      <text x="65" y="92">   &gt; ^ &lt;</text>
-      <text x="65" y="110"> GARY_OS loaded.</text>
-      <text x="65" y="128"> root@freebsd:~# _</text>
-    </g>
-
-    <rect x="200" y="152" width="35" height="5" rx="2" fill="#4a4a4a"/>
-    <circle cx="245" cy="154.5" r="2.5" fill="#909080"/>
-
-    <path d="M120 170 h60 l15 20 h-90 z" fill="#d5d5cd" stroke="#c5c5b5" stroke-width="2"/>
-    <rect x="105" y="190" width="90" height="10" rx="3" fill="#c5c5b5"/>
-
-    <path d="M10 205 h280 l10 25 h-300 z" fill="#e2e2d9" stroke="#c5c5b5" stroke-width="2"/>
-    <rect x="5" y="210" width="290" height="15" fill="#d5d5cd"/>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
     
-    <rect x="15" y="212" width="15" height="10" rx="1" fill="#f4f4f0"/>
-    <rect x="35" y="212" width="15" height="10" rx="1" fill="#f4f4f0"/>
-    <rect x="55" y="212" width="15" height="10" rx="1" fill="#f4f4f0"/>
-    <rect x="75" y="212" width="15" height="10" rx="1" fill="#f4f4f0"/>
-    <rect x="95" y="212" width="110" height="10" rx="1" fill="#f4f4f0"/> <rect x="210" y="212" width="15" height="10" rx="1" fill="#f4f4f0"/>
-    <rect x="230" y="212" width="35" height="10" rx="1" fill="#f4f4f0"/> <rect x="270" y="212" width="15" height="10" rx="1" fill="#f4f4f0"/>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="500" height="375" fill="url(#roomBg)"/>
+  
+  <!-- 窗户 -->
+  <rect x="380" y="40" width="100" height="125" rx="4" fill="#74b9ff" opacity="0.3"/>
+  <rect x="380" y="100" width="100" height="4" fill="#2d3436"/>
+  <rect x="430" y="40" width="4" height="125" fill="#2d3436"/>
+  <!-- 月亮 -->
+  <circle cx="450" cy="65" r="12" fill="#ffeaa7" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;0.5;0.8" dur="5s" repeatCount="indefinite"/>
+  </circle>
+  <!-- 星星 -->
+  <circle cx="400" cy="55" r="1.5" fill="#fff" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="440" cy="90" r="1.5" fill="#fff" opacity="0.5">
+    <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- 地板 -->
+  <rect x="0" y="310" width="500" height="65" fill="#2d3436"/>
+  <line x1="0" y1="310" x2="500" y2="310" stroke="#636e72" stroke-width="3"/>
+  
+  <!-- 靠背椅 -->
+  <g filter="url(#shadow)">
+    <!-- 椅子底座 -->
+    <ellipse cx="225" cy="335" rx="40" ry="10" fill="#2d3436"/>
+    <rect x="218" y="285" width="14" height="50" fill="#636e72"/>
+    <rect x="205" y="320" width="40" height="15" rx="3" fill="#636e72"/>
+    
+    <!-- 椅子背 -->
+    <rect x="165" y="125" width="100" height="165" rx="12" fill="#636e72"/>
+    <rect x="178" y="138" width="75" height="140" rx="6" fill="#4a5568"/>
   </g>
+  
+  <!-- 秃头程序员（背对我们）- 无头发 -->
+  <g filter="url(#shadow)">
+    <!-- 身体 -->
+    <ellipse cx="210" cy="260" rx="45" ry="50" fill="#0984e3"/>
+    
+    <!-- 肩膀 -->
+    <ellipse cx="210" cy="215" rx="50" ry="20" fill="#0984e3"/>
+    
+    <!-- 脖子 -->
+    <rect x="198" y="160" width="24" height="25" fill="#f5cba7"/>
+    
+    <!-- 头 - 背对 - 完全秃 -->
+    <ellipse cx="210" cy="135" rx="40" ry="35" fill="#f5cba7"/>
+    
+    <!-- 秃头区域 - 光亮 -->
+    <ellipse cx="210" cy="122" rx="32" ry="22" fill="#ffe0b2"/>
+    
+    <!-- 耳朵 -->
+    <ellipse cx="170" cy="142" rx="6" ry="10" fill="#f5cba7"/>
+    <ellipse cx="250" cy="142" rx="6" ry="10" fill="#f5cba7"/>
+    
+    <!-- 背部条纹 -->
+    <line x1="210" y1="185" x2="210" y2="290" stroke="#74b9ff" stroke-width="3" opacity="0.3"/>
+    
+    <!-- 手臂 - 敲键盘 -->
+    <path d="M175 235 Q120 250 135 285" stroke="#0984e3" stroke-width="22" fill="none" stroke-linecap="round">
+      <animate attributeName="d" values="M175 235 Q120 250 135 285;M175 235 Q115 245 130 280;M175 235 Q120 250 135 285" dur="0.3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M245 235 Q300 250 285 285" stroke="#0984e3" stroke-width="22" fill="none" stroke-linecap="round">
+      <animate attributeName="d" values="M245 235 Q300 250 285 285;M245 235 Q305 245 290 280;M245 235 Q300 250 285 285" dur="0.3s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- 手 -->
+    <circle cx="135" cy="288" r="12" fill="#f5cba7">
+      <animate attributeName="cx" values="135;128;135" dur="0.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="285" cy="288" r="12" fill="#f5cba7">
+      <animate attributeName="cx" values="285;292;285" dur="0.3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- 电脑桌 -->
+  <rect x="70" y="290" width="250" height="12" rx="2" fill="#a1887f"/>
+  <rect x="85" y="302" width="18" height="65" fill="#bcaaa4"/>
+  <rect x="295" y="302" width="18" height="65" fill="#bcaaa4"/>
+  
+  <!-- 电脑 -->
+  <g>
+    <rect x="130" y="230" width="4" height="18" fill="#2d3436"/>
+    <rect x="140" y="242" width="60" height="6" fill="#2d3436"/>
+    
+    <rect x="90" y="125" width="150" height="105" rx="5" fill="#2d3436" stroke="#4a5568" stroke-width="3"/>
+    <rect x="97" y="132" width="136" height="90" fill="#0d0d1a"/>
+    
+    <!-- 屏幕代码 -->
+    <g font-family="monospace" font-size="8">
+      <text x="105" y="150" fill="#00ff88" opacity="0.9">
+        <tspan>vim main.cpp</tspan>
+        <animate attributeName="opacity" values="0.9;0.5;0.9" dur="1s" repeatCount="indefinite"/>
+      </text>
+      <text x="105" y="165" fill="#ff6b6b" opacity="0.8">
+        <tspan>#include &lt;iostream&gt;</tspan>
+        <animate attributeName="opacity" values="0.8;0.4;0.8" dur="1.2s" repeatCount="indefinite"/>
+      </text>
+      <text x="105" y="180" fill="#48dbfb" opacity="0.7">
+        <tspan>sudo apt update</tspan>
+        <animate attributeName="opacity" values="0.7;0.3;0.7" dur="1.4s" repeatCount="indefinite"/>
+      </text>
+      <text x="105" y="195" fill="#feca57" opacity="0.6">
+        <tspan>git push -u origin</tspan>
+        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="1.6s" repeatCount="indefinite"/>
+      </text>
+      <text x="105" y="210" fill="#ff9ff3">
+        <tspan>docker-compose up</tspan>
+        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="1.8s" repeatCount="indefinite"/>
+      </text>
+    </g>
+    
+    <!-- 屏幕光晕 -->
+    <rect x="97" y="132" width="136" height="25" fill="white" opacity="0.05"/>
+  </g>
+  
+  <!-- 键盘 -->
+  <rect x="130" y="260" width="100" height="6" rx="1" fill="#4a5568"/>
+  
+  <!-- 猫咪 - 坐在旁边 -->
+  <g filter="url(#shadow)">
+    <ellipse cx="360" cy="310" rx="25" ry="18" fill="#ff9f43">
+      <animate attributeName="rx" values="25;28;25" dur="2s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <circle cx="360" cy="285" r="18" fill="#ff9f43"/>
+    
+    <!-- 耳朵 -->
+    <polygon points="345,270 350,283 358,277" fill="#ff9f43"/>
+    <polygon points="375,270 370,283 362,277" fill="#ff9f43"/>
+    <polygon points="346,272 350,280 357,275" fill="#ffb8b8"/>
+    <polygon points="374,272 370,280 363,275" fill="#ffb8b8"/>
+    
+    <!-- 眼睛 - 眯眼 -->
+    <ellipse cx="352" cy="283" rx="4" ry="2.5" fill="#2d3436"/>
+    <ellipse cx="368" cy="283" rx="4" ry="2.5" fill="#2d3436">
+      <animate attributeName="ry" values="2.5;0.5;2.5" dur="3s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <!-- 鼻子 -->
+    <polygon points="360,290 357,294 363,294" fill="#ffb8b8"/>
+    
+    <!-- 嘴巴 -->
+    <path d="M356 295 Q360 299 364 295" stroke="#2d3436" stroke-width="1.5" fill="none"/>
+    
+    <!-- 尾巴 - 摇尾巴 -->
+    <path d="M385 322 Q410 310 403" stroke="#ff9f43" stroke-width="6" fill="none" stroke-linecap="round">
+      <animate attributeName="d" values="M385 322 Q410 310 403;M385 322 Q415 315 407;M385 322 Q410 310 403" dur="0.8s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- 爪子 -->
+    <ellipse cx="345" cy="325" rx="5" ry="3" fill="#fff"/>
+    <ellipse cx="375" cy="325" rx="5" ry="3" fill="#fff"/>
+  </g>
+  
+  <!-- 咖啡 -->
+  <g transform="translate(55, 265)">
+    <rect x="0" y="0" width="15" height="12" rx="1" fill="#795548"/>
+    <rect x="1" y="1" width="13" height="10" fill="#5d4037"/>
+    <path d="M15 2 Q20 2 20 6 Q20 10 15 10" stroke="#795548" stroke-width="2" fill="none"/>
+    <path d="M5 -3 Q7 -5 5 -7" stroke="#aaa" stroke-width="1.5" fill="none" opacity="0.5">
+      <animate attributeName="d" values="M5 -3 Q7 -5 5 -7;M5 -5 Q3 -6 5 -7;M5 -3 Q7 -5 5 -7" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M10 -2 Q12 -4 10 -6" stroke="#aaa" stroke-width="1.5" fill="none" opacity="0.4">
+      <animate attributeName="d" values="M10 -2 Q12 -4 10 -6;M10 -4 Q8 -5 10 -6;M10 -2 Q12 -4 10 -6" dur="2.2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- 地板上的东西 -->
+  <circle cx="420" cy="335" r="10" fill="#e17055" opacity="0.3"/>
+  <rect x="445" y="320" width="18" height="25" rx="2" fill="#74b9ff" opacity="0.3"/>
+  
+  <!-- 漂浮光点 -->
+  <circle cx="70" cy="100" r="3" fill="#fdcb6e" opacity="0.4" filter="url(#glow)">
+    <animate attributeName="cy" values="100;80;100" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="330" cy="75" r="3" fill="#00cec9" opacity="0.4" filter="url(#glow)">
+    <animate attributeName="cy" values="75;55;75" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
 </svg>

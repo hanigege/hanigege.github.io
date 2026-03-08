@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs>
+    <!-- 渐变 -->
+    <linearGradient id="shellGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    
+    <linearGradient id="screenGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f23"/>
+      <stop offset="100%" style="stop-color:#1a1a2e"/>
+    </linearGradient>
+    
+    <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b6b"/>
+      <stop offset="20%" style="stop-color:#feca57"/>
+      <stop offset="40%" style="stop-color:#48dbfb"/>
+      <stop offset="60%" style="stop-color:#ff9ff3"/>
+      <stop offset="80%" style="stop-color:#54a0ff"/>
+      <stop offset="100%" style="stop-color:#5f27cd"/>
+    </linearGradient>
+    
+    <!-- 发光效果 -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- 背景光晕 -->
+  <circle cx="200" cy="150" r="120" fill="url(#rainbow)" opacity="0.15">
+    <animate attributeName="r" values="110;130;110" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.15;0.25;0.15" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- 笔记本电脑 -->
+  <g filter="url(#shadow)">
+    <!-- 底座 -->
+    <path d="M60 220 L340 220 L360 240 L40 240 Z" fill="#2d3436">
+      <animate attributeName="d" values="M60 220 L340 220 L360 240 L40 240 Z;M65 220 L335 220 L355 240 L45 240 Z;M60 220 L340 220 L360 240 L40 240 Z" dur="2s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- 屏幕边框 -->
+    <rect x="70" y="50" width="260" height="170" rx="8" fill="url(#shellGradient)" stroke="#4a4a4a" stroke-width="2">
+      <animate attributeName="stroke" values="#4a4a4a;#6a6a8a;#4a4a4a" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- 屏幕 -->
+    <rect x="80" y="60" width="240" height="150" rx="4" fill="url(#screenGradient)"/>
+    
+    <!-- 动态代码流 -->
+    <g font-family="monospace" font-size="10">
+      <text x="90" y="80" fill="#00ff88" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1.5s" repeatCount="indefinite"/>$ ls -la
+      </text>
+      <text x="90" y="95" fill="#ff6b6b" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/>drwxr-xr-x 1
+      </text>
+      <text x="90" y="110" fill="#48dbfb" opacity="0.6">
+        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.1s" repeatCount="indefinite"/>-rw-r--r-- 1 root
+      </text>
+      <text x="90" y="125" fill="#feca57" opacity="0.5">
+        <animate attributeName="opacity" values="0.5;0.2;0.5" dur="1.4s" repeatCount="indefinite"/>-rw-r--r-- 2 user
+      </text>
+      <text x="90" y="140" fill="#ff9ff3" opacity="0.4">
+        <animate attributeName="opacity" values="0.4;0.1;0.4" dur="1.7s" repeatCount="indefinite"/>-rwxr-xr-x 1 root
+      </text>
+      <text x="90" y="155" fill="#54a0ff" opacity="0.6">
+        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>_cursor█
+      </text>
+    </g>
+    
+    <!-- 屏幕上的彩色光点 -->
+    <circle cx="100" cy="75" r="3" fill="#ff6b6b" filter="url(#glow)">
+      <animate attributeName="cx" values="100;300;100" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="300" cy="180" r="3" fill="#48dbfb" filter="url(#glow)">
+      <animate attributeName="cx" values="300;100;300" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.3;1" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- 键盘装饰 -->
+    <g transform="translate(80, 225)">
+      <rect x="0" y="0" width="240" height="15" rx="2" fill="#1a1a2e" opacity="0.8"/>
+      <!-- 键帽 -->
+      <rect x="5" y="3" width="20" height="10" rx="2" fill="#3d3d5c">
+        <animate attributeName="fill" values="#3d3d5c;#5a5a8a;#3d3d5c" dur="0.5s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="30" y="3" width="15" height="10" rx="2" fill="#3d3d5c"/>
+      <rect x="50" y="3" width="15" height="10" rx="2" fill="#3d3d5c"/>
+      <rect x="70" y="3" width="15" height="10" rx="2" fill="#3d3d5c"/>
+      <rect x="90" y="3" width="15" height="10" rx="2" fill="#3d3d5c"/>
+      <rect x="110" y="3" width="15" height="10" rx="2" fill="#3d3d5c"/>
+      <rect x="130" y="3" width="15" height="10" rx="2" fill="#3d3d5c"/>
+      <rect x="150" y="3" width="15" height="10" rx="2" fill="#3d3d5c"/>
+      <rect x="170" y="3" width="15" height="10" rx="2" fill="#3d3d5c"/>
+      <rect x="190" y="3" width="15" height="10" rx="2" fill="#3d3d5c"/>
+      <rect x="210" y="3" width="25" height="10" rx="2" fill="#4a4aff">
+        <animate attributeName="fill" values="#4a4aff;#6a6aff;#4a4aff" dur="0.3s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+  </g>
+  
+  <!-- 漂浮的彩色圆点 -->
+  <circle cx="50" cy="50" r="8" fill="#ff6b6b" opacity="0.6" filter="url(#glow)">
+    <animate attributeName="cy" values="50;40;50" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="cx" values="50;60;50" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="350" cy="60" r="6" fill="#48dbfb" opacity="0.6" filter="url(#glow)">
+    <animate attributeName="cy" values="60;50;60" dur="3.5s" repeatCount="indefinite"/>
+    <animate attributeName="cx" values="350;340;350" dur="4.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="370" cy="200" r="7" fill="#feca57" opacity="0.6" filter="url(#glow)">
+    <animate attributeName="cy" values="200;190;200" dur="2.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="30" cy="180" r="5" fill="#ff9ff3" opacity="0.6" filter="url(#glow)">
+    <animate attributeName="cy" values="180;170;180" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- 浮动符号 -->
+  <text x="320" y="100" font-size="20" fill="#54a0ff" opacity="0.5" font-family="monospace">
+    <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/>&lt;/&gt;
+  </text>
+  <text x="40" y="150" font-size="16" fill="#5f27cd" opacity="0.5" font-family="monospace">
+    <animate attributeName="opacity" values="0.5;0.8;0.5" dur="2.5s" repeatCount="indefinite"/>#!
+  </text>
+  <text x="350" y="140" font-size="14" fill="#ff6b6b" opacity="0.4" font-family="monospace">
+    <animate attributeName="opacity" values="0.4;0.7;0.4" dur="1.8s" repeatCount="indefinite"/>$
+  </text>
+  
+  <!-- 底部装饰线 -->
+  <line x1="20" y1="260" x2="380" y2="260" stroke="url(#rainbow)" stroke-width="2" stroke-linecap="round" opacity="0.4">
+    <animate attributeName="stroke-dashoffset" values="0;400;0" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;0.7;0.4" dur="2s" repeatCount="indefinite"/>
+  </line>
+  
+  <!-- 动画定义 -->
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+</svg>
