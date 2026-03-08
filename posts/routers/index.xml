@@ -1,36 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Routers on bash</title><link>https://hanigege.github.io/posts/routers/</link><description>Recent content in Routers on bash</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **Gary**.</copyright><lastBuildDate>Fri, 27 Feb 2026 17:20:17 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/posts/routers/index.xml" rel="self" type="application/rss+xml"/><item><title>05.RouterOS如何nat回流及包含配套防火墙规则</title><link>https://hanigege.github.io/posts/routers/05.routeros%E5%A6%82%E4%BD%95nat%E5%9B%9E%E6%B5%81/</link><pubDate>Fri, 27 Feb 2026 17:20:17 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/05.routeros%E5%A6%82%E4%BD%95nat%E5%9B%9E%E6%B5%81/</guid><description>&lt;h2 id="内网的dst-nat要加外网接口如pppoe-out1"&gt;内网的dst-nat要加外网接口如pppoe-out1&lt;/h2&gt;
-&lt;h2 id="1-为什么需要回流"&gt;1. 为什么需要回流？&lt;/h2&gt;
-&lt;p&gt;当你从内网请求公网 IP 时，ROS 收到包后转发给内网服务器，但服务器发现请求方和自己在同一个网段，会直接把回包传给手机。手机发现自己发给公网 IP 的请求却收到了来自内网私有 IP 的响应，会因为安全机制直接丢弃该包。回流规则通过让 ROS 中转这个“回头包”来解决这个问题。&lt;/p&gt;
-&lt;h2 id="2-完整的-ros-nat-脚本包含-web-回流"&gt;2. 完整的 ROS NAT 脚本（包含 Web 回流）&lt;/h2&gt;
-&lt;h4 id="请根据你的实际端口修改-12335-web-和-21-ftp-等"&gt;请根据你的实际端口修改 12335 (Web) 和 21 (FTP) 等。&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/ip firewall nat
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# --- 基础规则 ---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 1. 核心上网伪装（必须限制在 WAN 口，防止干扰其他转发）
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=srcnat action=masquerade out-interface=pppoe-out1 comment=&amp;#34;Standard Internet Access&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# --- 端口转发 (DST-NAT) ---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 2. DERP 转发
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=dstnat protocol=tcp dst-port=12340 action=dst-nat to-addresses=10.20.20.4 to-ports=12340 comment=&amp;#34;DERP TCP&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=dstnat protocol=udp dst-port=3478 action=dst-nat to-addresses=10.20.20.4 to-ports=3478 comment=&amp;#34;DERP STUN&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 3. Web 服务转发 (示例)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=dstnat protocol=tcp dst-port=12335 action=dst-nat to-addresses=10.20.20.x to-ports=12335 comment=&amp;#34;web&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 4. FTP 服务转发 (示例)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=dstnat protocol=tcp dst-port=21 action=dst-nat to-addresses=10.20.20.x to-ports=21 comment=&amp;#34;vsftpd&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# --- 回流规则 (Hairpin NAT) ---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 只有当内网访问内网服务器时才触发。建议将所有内网服务器放在一个规则里，或者逐个添加。
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 给 DERP 添加回流
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=srcnat src-address=10.20.20.0/24 dst-address=10.20.20.4 protocol=tcp dst-port=12340 action=masquerade comment=&amp;#34;Hairpin DERP TCP&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=srcnat src-address=10.20.20.0/24 dst-address=10.20.20.4 protocol=udp dst-port=3478 action=masquerade comment=&amp;#34;Hairpin DERP STUN&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 给 Web 服务添加回流 (假设内网 IP 为 10.20.20.5)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add chain=srcnat src-address=10.20.20.0/24 dst-address=10.20.20.5 protocol=tcp dst-port=12335 action=masquerade comment=&amp;#34;Hairpin Web&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-操作建议使用地址列表简化回流"&gt;3. 操作建议：使用“地址列表”简化回流&lt;/h2&gt;
-&lt;p&gt;如果你有很多内网服务器需要回流，一条条加 srcnat 很麻烦。你可以这样做：&lt;/p&gt;</description></item><item><title>04.RouterOS使用queue_tree配置流量整形</title><link>https://hanigege.github.io/posts/routers/04.routeros%E4%BD%BF%E7%94%A8queue_tree%E9%85%8D%E7%BD%AE%E6%B5%81%E9%87%8F%E6%95%B4%E5%BD%A2/</link><pubDate>Fri, 27 Feb 2026 16:59:27 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/04.routeros%E4%BD%BF%E7%94%A8queue_tree%E9%85%8D%E7%BD%AE%E6%B5%81%E9%87%8F%E6%95%B4%E5%BD%A2/</guid><description>&lt;h1 id="本教程介绍使用-queue-tree-开启-ros-的流控功能"&gt;本教程介绍使用 queue tree 开启 ROS 的流控功能&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Routers on bash</title><link>https://hanigege.github.io/posts/routers/</link><description>Recent content in Routers on bash</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **Gary**.</copyright><lastBuildDate>Fri, 27 Feb 2026 16:59:27 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/posts/routers/index.xml" rel="self" type="application/rss+xml"/><item><title>04.RouterOS使用queue_tree配置流量整形</title><link>https://hanigege.github.io/posts/routers/04.routeros%E4%BD%BF%E7%94%A8queue_tree%E9%85%8D%E7%BD%AE%E6%B5%81%E9%87%8F%E6%95%B4%E5%BD%A2/</link><pubDate>Fri, 27 Feb 2026 16:59:27 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/04.routeros%E4%BD%BF%E7%94%A8queue_tree%E9%85%8D%E7%BD%AE%E6%B5%81%E9%87%8F%E6%95%B4%E5%BD%A2/</guid><description>&lt;h1 id="本教程介绍使用-queue-tree-开启-ros-的流控功能"&gt;本教程介绍使用 queue tree 开启 ROS 的流控功能&lt;/h1&gt;
 &lt;p&gt;本教程介绍如何使用 RouterOS 的 &lt;code&gt;queue tree&lt;/code&gt; 实现流量整形。
 文章分成两种方案：&lt;/p&gt;
 &lt;ol&gt;
@@ -257,63 +225,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set interfaces wireguard wg0 peer iphone allowed-ips &amp;#39;10.20.30.2/32&amp;#39;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set interfaces wireguard wg0 peer iphone public-key &amp;#39;public-key&amp;#39;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set interfaces wireguard wg0 peer iphone preshared-key &amp;#39;preshared-key&amp;#39;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上面这是添加过peer的。&lt;/p&gt;</description></item><item><title>自用ROS的MANGLE小包规则</title><link>https://hanigege.github.io/posts/routers/ros%E7%9A%84mangle%E5%B0%8F%E5%8C%85%E8%A7%84%E5%88%99/</link><pubDate>Sun, 11 May 2025 19:23:13 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/ros%E7%9A%84mangle%E5%B0%8F%E5%8C%85%E8%A7%84%E5%88%99/</guid><description>&lt;h2 id="为了让网络低延迟小包优先真正生效科学的做法是禁用-fasttrack"&gt;为了让网络低延迟、小包优先真正生效，科学的做法是：&lt;code&gt;禁用 Fasttrack。&lt;/code&gt;&lt;/h2&gt;
-&lt;p&gt;执行以下指令，找到并禁用 Fasttrack 规则：&lt;/p&gt;
-&lt;p&gt;代码段&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;/ip firewall filter&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 查找带有 fasttrack-connection 动作的规则并禁用它&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;disable [find action=fasttrack-connection]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;注意：禁用后，所有流量将交由 CPU 进行 Mangle 标记和 Queue 树排队。你的小包优先和限速机制将立刻 100% 生效。&lt;/p&gt;
-&lt;h2 id="例外网下行是300m上行是30m的带宽"&gt;例：外网下行是300m，上行是30m的带宽&lt;/h2&gt;
-&lt;p&gt;下行队列的挂载接口精准替换为 bridge1，上行接口保持 pppoe-out1&lt;/p&gt;
-&lt;p&gt;成功的步骤与科学计算
-预留缓冲避免光猫排队： 必须扣除运营商标称带宽的 5% 到 10%，将排队机制强行拉回到 RouterOS 本地处理，以彻底消除缓冲膨胀（Bufferbloat）带来的高延迟。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;上行严格阈值： 30M × 0.95 = 28M&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;下行严格阈值： 300M × 0.95 = 285M&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;重构挂载点： 将上行队列挂载在拨号接口，下行队列挂载在内网接口。Mangle 标记只需在 prerouting 和 postrouting 抓取一次，即可被上下行队列同时调用。&lt;/p&gt;
-&lt;h2 id="1代码导入的方法"&gt;1、代码导入的方法&lt;/h2&gt;
-&lt;p&gt;导入代码：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;/ip firewall mangle&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. 优先 DNS&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting protocol=udp dst-port=53 new-packet-mark=dns passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting protocol=tcp dst-port=53 new-packet-mark=dns passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. 优先 ICMP&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting protocol=icmp new-packet-mark=small-packet passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. 根据包大小标记中小包 (覆盖 TCP ACK 和游戏数据)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting packet-size=0-128 new-packet-mark=small-packet passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting packet-size=129-512 new-packet-mark=medium-packet passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. 剩余大包兜底 (下载、视频等)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting new-packet-mark=large-packet passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 5. MSS 钳制&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=change-mss chain=forward protocol=tcp tcp-flags=syn new-mss=clamp-to-pmtu passthrough=yes&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;/queue tree&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 清理旧队列&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;remove [find]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ================= 上行队列 (Upload) =================&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 挂载到外网拨号接口 pppoe-out1，总带宽 28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=Upload-Total parent=pppoe-out1 max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=U1-Dns parent=Upload-Total packet-mark=dns priority=1 queue=default-small limit-at=2M max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=U2-Small parent=Upload-Total packet-mark=small-packet priority=2 queue=default-small limit-at=5M max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=U3-Medium parent=Upload-Total packet-mark=medium-packet priority=3 queue=default-small limit-at=10M max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=U4-Large parent=Upload-Total packet-mark=large-packet priority=8 queue=default-small limit-at=11M max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ================= 下行队列 (Download) =================&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 挂载到内网桥接接口 bridge1，总带宽 285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=Download-Total parent=bridge1 max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=D1-Dns parent=Download-Total packet-mark=dns priority=1 queue=default-small limit-at=5M max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=D2-Small parent=Download-Total packet-mark=small-packet priority=2 queue=default-small limit-at=20M max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=D3-Medium parent=Download-Total packet-mark=medium-packet priority=3 queue=default-small limit-at=50M max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=D4-Large parent=Download-Total packet-mark=large-packet priority=8 queue=default-small limit-at=210M max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;要让以上 QoS 规则真正生效，必须处理（禁用）防火墙中的 Fasttrack（硬件加速）规则，否则所有数据包都会直接绕过 Mangle 和 Queue 树。&lt;/p&gt;</description></item><item><title>Vyos下安装ddns-Go</title><link>https://hanigege.github.io/posts/routers/vyos%E4%B8%8B%E5%AE%89%E8%A3%85ddns-go/</link><pubDate>Sun, 11 May 2025 14:51:24 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos%E4%B8%8B%E5%AE%89%E8%A3%85ddns-go/</guid><description>&lt;br&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上面这是添加过peer的。&lt;/p&gt;</description></item><item><title>Vyos下安装ddns-Go</title><link>https://hanigege.github.io/posts/routers/vyos%E4%B8%8B%E5%AE%89%E8%A3%85ddns-go/</link><pubDate>Sun, 11 May 2025 14:51:24 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos%E4%B8%8B%E5%AE%89%E8%A3%85ddns-go/</guid><description>&lt;br&gt;
 &lt;h2 id="这里使用vyos自管理容器的方法可以获取到网卡公网ip"&gt;这里使用vyos自管理容器的方法,可以获取到网卡公网ip&lt;/h2&gt;
 &lt;h3 id="操作前vyos本机先科学不然没法接docker镜像"&gt;操作前，vyos本机先科学，不然没法接docker镜像&lt;/h3&gt;
 &lt;p&gt;    这种模式不可以设置单独的IP,因为使用的是vyos主机的ip&lt;/p&gt;
