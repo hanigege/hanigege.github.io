@@ -8,7 +8,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── derps/ &lt;span style="color:#75715e"&gt;# 中继服务器&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── tailscale/ &lt;span style="color:#75715e"&gt;# 网关节点&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;|—— Nginx Proxy Manager / &lt;span style="color:#75715e"&gt;# 反向代理服务 后面引用会简称npm&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="域名只供参考只是举例"&gt;域名只供参考，只是举例&lt;/h3&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="域名只供参考只是举例-域名可以在内网搭建好npm容器后通过npm申请证书下面有教程"&gt;域名只供参考，只是举例 ，域名可以在内网搭建好npm容器后，通过npm申请证书，下面有教程。&lt;/h3&gt;
 &lt;table&gt;
  &lt;thead&gt;
  &lt;tr&gt;
