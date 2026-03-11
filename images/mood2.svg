@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <!-- 渐变 -->
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB"/>
+      <stop offset="100%" style="stop-color:#E0F7FA"/>
+    </linearGradient>
+    <linearGradient id="grassGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#90EE90"/>
+      <stop offset="100%" style="stop-color:#228B22"/>
+    </linearGradient>
+    <linearGradient id="wingGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB6C1;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#FF69B4;stop-opacity:0.6"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- 天空 -->
+  <rect width="800" height="500" fill="url(#skyGradient)"/>
+  
+  <!-- 白云 - 动画 -->
+  <g class="clouds">
+    <g style="animation: cloudMove 20s linear infinite;">
+      <ellipse cx="100" cy="60" rx="50" ry="25" fill="white" opacity="0.9"/>
+      <ellipse cx="140" cy="50" rx="40" ry="20" fill="white" opacity="0.9"/>
+      <ellipse cx="70" cy="55" rx="30" ry="18" fill="white" opacity="0.9"/>
+    </g>
+    <g style="animation: cloudMove 25s linear infinite; animation-delay: -10s;">
+      <ellipse cx="400" cy="80" rx="60" ry="30" fill="white" opacity="0.8"/>
+      <ellipse cx="450" cy="70" rx="45" ry="22" fill="white" opacity="0.8"/>
+      <ellipse cx="360" cy="75" rx="35" ry="20" fill="white" opacity="0.8"/>
+    </g>
+    <g style="animation: cloudMove 30s linear infinite; animation-delay: -5s;">
+      <ellipse cx="700" cy="50" rx="45" ry="22" fill="white" opacity="0.85"/>
+      <ellipse cx="740" cy="45" rx="35" ry="18" fill="white" opacity="0.85"/>
+    </g>
+  </g>
+  
+  <!-- 飞鸟 - 动画 -->
+  <g class="birds" style="animation: birdFly 15s linear infinite;">
+    <path d="M50 120 Q55 115 60 120 Q65 115 70 120" stroke="#333" stroke-width="2" fill="none"/>
+    <path d="M80 140 Q85 135 90 140 Q95 135 100 140" stroke="#333" stroke-width="2" fill="none"/>
+    <path d="M30 150 Q35 145 40 150 Q45 145 50 150" stroke="#333" stroke-width="2" fill="none"/>
+  </g>
+  <g class="birds" style="animation: birdFly 12s linear infinite; animation-delay: -6s;">
+    <path d="M600 100 Q605 95 610 100 Q615 95 620 100" stroke="#333" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- 草地 -->
+  <ellipse cx="400" cy="520" rx="500" ry="150" fill="url(#grassGradient)"/>
+  
+  <!-- 草地纹理 -->
+  <g class="grass-blades" style="animation: grassWave 3s ease-in-out infinite;">
+    <path d="M50 420 Q55 400 60 420" stroke="#228B22" stroke-width="3" fill="none"/>
+    <path d="M150 430 Q155 410 160 430" stroke="#228B22" stroke-width="3" fill="none"/>
+    <path d="M250 425 Q255 405 260 425" stroke="#228B22" stroke-width="3" fill="none"/>
+    <path d="M350 435 Q355 415 360 435" stroke="#228B22" stroke-width="3" fill="none"/>
+    <path d="M450 420 Q455 400 460 420" stroke="#228B22" stroke-width="3" fill="none"/>
+    <path d="M550 430 Q555 410 560 430" stroke="#228B22" stroke-width="3" fill="none"/>
+    <path d="M650 425 Q655 405 660 425" stroke="#228B22" stroke-width="3" fill="none"/>
+    <path d="M750 435 Q755 415 760 435" stroke="#228B22" stroke-width="3" fill="none"/>
+  </g>
+  
+  <!-- 骑自行车的小伙 -->
+  <g class="biker" style="animation: bikeRide 8s ease-in-out infinite;">
+    <!-- 自行车 -->
+    <g transform="translate(0, 10)">
+      <!-- 后轮 -->
+      <circle cx="200" cy="400" r="35" stroke="#333" stroke-width="4" fill="none"/>
+      <circle cx="200" cy="400" r="30" stroke="#666" stroke-width="1" fill="none"/>
+      <!-- 前轮 -->
+      <circle cx="320" cy="400" r="35" stroke="#333" stroke-width="4" fill="none"/>
+      <circle cx="320" cy="400" r="30" stroke="#666" stroke-width="1" fill="none"/>
+      <!-- 车架 -->
+      <line x1="200" y1="400" x2="260" y2="340" stroke="#E53935" stroke-width="5"/>
+      <line x1="260" y1="340" x2="320" y2="400" stroke="#E53935" stroke-width="5"/>
+      <line x1="200" y1="400" x2="260" y2="400" stroke="#E53935" stroke-width="5"/>
+      <line x1="260" y1="340" x2="260" y2="400" stroke="#E53935" stroke-width="5"/>
+      <line x1="260" y1="340" x2="280" y2="400" stroke="#E53935" stroke-width="5"/>
+      <!-- 车把 -->
+      <line x1="310" y1="330" x2="330" y2="320" stroke="#333" stroke-width="4"/>
+      <!-- 座椅 -->
+      <ellipse cx="220" cy="330" rx="15" ry="5" fill="#333"/>
+      <!-- 脚踏 -->
+      <line x1="260" y1="400" x2="250" y2="420" stroke="#333" stroke-width="3"/>
+      <circle cx="250" cy="420" r="5" fill="#666"/>
+    </g>
+    
+    <!-- 骑手 -->
+    <g transform="translate(0, 10)">
+      <!-- 身体 -->
+      <line x1="245" y1="330" x2="235" y2="280" stroke="#1565C0" stroke-width="12" stroke-linecap="round"/>
+      <!-- 头 -->
+      <circle cx="235" cy="260" r="18" fill="#FFCCBC"/>
+      <!-- 头发 -->
+      <ellipse cx="235" cy="248" rx="16" ry="10" fill="#5D4037"/>
+      <!-- 眼睛 -->
+      <circle cx="240" cy="258" r="2" fill="#333"/>
+      <!-- 嘴巴 -->
+      <path d="M238 268 Q242 272 246 268" stroke="#333" stroke-width="1" fill="none"/>
+      <!-- 手臂 -->
+      <line x1="240" y1="300" x2="280" y2="315" stroke="#1565C0" stroke-width="8" stroke-linecap="round"/>
+      <line x1="280" y1="315" x2="325" y2="325" stroke="#FFCCBC" stroke-width="6" stroke-linecap="round"/>
+      <!-- 腿 -->
+      <line x1="245" y1="330" x2="255" y2="370" stroke="#1565C0" stroke-width="10" stroke-linecap="round"/>
+      <line x1="255" y1="370" x2="250" y2="415" stroke="#333" stroke-width="6" stroke-linecap="round"/>
+    </g>
+  </g>
+  
+  <!-- 飞行的女生 -->
+  <g class="flyer" style="animation: flyMove 8s ease-in-out infinite;">
+    <!-- 翅膀 -->
+    <g style="animation: wingFlap 0.3s ease-in-out infinite;">
+      <path d="M580 200 Q540 150 500 180 Q540 190 580 210" fill="url(#wingGradient)" opacity="0.7"/>
+      <path d="M620 200 Q660 150 700 180 Q660 190 620 210" fill="url(#wingGradient)" opacity="0.7"/>
+    </g>
+    
+    <!-- 身体 -->
+    <ellipse cx="590" cy="260" rx="20" ry="40" fill="#FFB6C1"/>
+    <!-- 裙子 -->
+    <path d="M570 280 Q590 320 610 280" fill="#FF69B4"/>
+    
+    <!-- 头 -->
+    <circle cx="590" cy="210" r="22" fill="#FFCCBC"/>
+    <!-- 长发 -->
+    <path d="M570 200 Q560 230 565 260" stroke="#5D4037" stroke-width="8" fill="none"/>
+    <path d="M610 200 Q620 230 615 260" stroke="#5D4037" stroke-width="8" fill="none"/>
+    <!-- 花环 -->
+    <circle cx="590" cy="195" r="25" stroke="#FF69B4" stroke-width="2" fill="none" stroke-dasharray="5,3"/>
+    <!-- 眼睛 -->
+    <ellipse cx="583" cy="208" rx="3" ry="4" fill="#333"/>
+    <ellipse cx="597" cy="208" rx="3" ry="4" fill="#333"/>
+    <!-- 睫毛 -->
+    <line x1="580" y1="205" x2="578" y2="202" stroke="#333" stroke-width="1"/>
+    <line x1="586" y1="203" x2="585" y2="200" stroke="#333" stroke-width="1"/>
+    <line x1="594" y1="203" x2="595" y2="200" stroke="#333" stroke-width="1"/>
+    <line x1="600" y1="205" x2="602" y2="202" stroke="#333" stroke-width="1"/>
+    <!-- 嘴巴 -->
+    <path d="M587 220 Q590 223 593 220" stroke="#E53935" stroke-width="2" fill="none"/>
+    <!-- 脸颊红晕 -->
+    <circle cx="575" cy="215" r="5" fill="#FFCDD2" opacity="0.6"/>
+    <circle cx="605" cy="215" r="5" fill="#FFCDD2" opacity="0.6"/>
+    
+    <!-- 手臂 -->
+    <path d="M570 250 Q540 230 520 200" stroke="#FFCCBC" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M610 250 Q640 230 660 200" stroke="#FFCCBC" stroke-width="6" fill="none" stroke-linecap="round"/>
+    
+    <!-- 腿 -->
+    <path d="M580 300 Q575 330 570 350" stroke="#FFCCBC" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M600 300 Q605 330 610 350" stroke="#FFCCBC" stroke-width="5" fill="none" stroke-linecap="round"/>
+    
+    <!-- 脚 -->
+    <ellipse cx="570" cy="355" rx="8" ry="4" fill="#FF69B4"/>
+    <ellipse cx="610" cy="355" rx="8" ry="4" fill="#FF69B4"/>
+  </g>
+  
+  <!-- 动画定义 -->
+  <style>
+    @keyframes cloudMove {
+      0% { transform: translateX(-150px); }
+      100% { transform: translateX(950px); }
+    }
+    
+    @keyframes birdFly {
+      0% { transform: translateX(0) translateY(0); }
+      25% { transform: translateX(100px) translateY(-20px); }
+      50% { transform: translateX(200px) translateY(0); }
+      75% { transform: translateX(300px) translateY(-15px); }
+      100% { transform: translateX(400px) translateY(0); }
+    }
+    
+    @keyframes bikeRide {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(30px); }
+    }
+    
+    @keyframes flyMove {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(20px, -15px) rotate(3deg); }
+      50% { transform: translate(40px, 0) rotate(0deg); }
+      75% { transform: translate(60px, -10px) rotate(-3deg); }
+      100% { transform: translate(80px, 0) rotate(0deg); }
+    }
+    
+    @keyframes wingFlap {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.7); }
+    }
+    
+    @keyframes grassWave {
+      0%, 100% { transform: skewX(0deg); }
+      50% { transform: skewX(3deg); }
+    }
+  </style>
+</svg>
