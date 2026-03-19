@@ -15,7 +15,7 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="1-仅限root用户登录使用配置的是root用户的证书"&gt;1. 仅限root用户登录使用，配置的是root用户的证书&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch -o freebsd_ssh_key_manage.sh https://raw.githubusercontent.com/hanigege/scripts/main/freebsd_ssh_key_manage.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x freebsd_ssh_key_manage.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./freebsd_ssh_key_manage.sh
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch -o freebsd_ssh_key_manage.sh https://raw.githubusercontent.com/hanigege/scripts/main/freebsd_ssh_key_manage.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x freebsd_ssh_key_manage.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./freebsd_ssh_key_manage.sh
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="root用户配置项核对"&gt;root用户配置项核对&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;UsePAM no: 正确。在 FreeBSD 中，关闭 PAM 是防止系统通过其他交互方式询问密码的最彻底手段。&lt;/li&gt;
@@ -27,9 +27,9 @@
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;h3 id="2-仅限普通用户登录使用配置的是普通用户的证书请在root下执行脚本"&gt;2. 仅限&lt;code&gt;普通用户&lt;/code&gt;登录使用，配置的是&lt;code&gt;普通用户&lt;/code&gt;的证书，请在root下执行脚本&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch -o ssh_manager.sh https://raw.githubusercontent.com/hanigege/scripts/main/freebsd_user_ssh_manager.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x ssh_manager.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./ssh_manager.sh
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch -o ssh_manager.sh https://raw.githubusercontent.com/hanigege/scripts/main/freebsd_user_ssh_manager.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod +x ssh_manager.sh &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./ssh_manager.sh
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="普通用户配置项核对"&gt;普通用户配置项核对&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;UsePAM no
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;UsePAM no
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PermitRootLogin no
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PasswordAuthentication no
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PubkeyAuthentication yes
@@ -40,7 +40,7 @@
 &lt;li&gt;
 &lt;p&gt;PermitRootLogin no：彻底掐断了 Root 直接登录。&lt;/p&gt;</description></item><item><title>FreeBSD15现代化Neovim生产力环境部署指南</title><link>https://hanigege.github.io/posts/freebsd/freebsd15%E7%8E%B0%E4%BB%A3%E5%8C%96neovim%E7%94%9F%E4%BA%A7%E5%8A%9B%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/</link><pubDate>Sun, 01 Mar 2026 09:42:19 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd15%E7%8E%B0%E4%BB%A3%E5%8C%96neovim%E7%94%9F%E4%BA%A7%E5%8A%9B%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/</guid><description>&lt;h2 id="第一步安装系统依赖与源码编译-neovim-010"&gt;第一步：安装系统依赖与源码编译 Neovim 0.10+&lt;/h2&gt;
 &lt;p&gt;FreeBSD 使用 pkg 管理二进制包，编译 Neovim 需要额外的 gmake。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. 安装编译所需的工具和依赖&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. 安装编译所需的工具和依赖&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 注意：FreeBSD 下编译 Neovim 建议使用 gmake&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 强制同步并更新所有软件包，这是解决 ld-elf.so.1 错误最直接的方法，确保所有依赖库版本一致。&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;pkg update -f&lt;/span&gt;
@@ -66,12 +66,12 @@
 &lt;h2 id="开启防火墙的步骤"&gt;开启防火墙的步骤&lt;/h2&gt;
 &lt;h3 id="第一步启用-pf-模块"&gt;第一步：启用 PF 模块&lt;/h3&gt;
 &lt;p&gt;执行以下命令，确保重启后自动开启：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysrc pf_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysrc pf_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysrc pflog_enable&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;YES&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="第二步创建一个基础配置文件-可选一般都有"&gt;第二步：创建一个基础配置文件 （可选，一般都有）&lt;/h3&gt;
 &lt;p&gt;如果 /etc/pf.conf 不存在，pf 将无法启动。先创建一个最简单的配置（只放行 SSH，假设你的网卡是 vtnet0，请根据 ifconfig 实际名称修改）：&lt;/p&gt;
 &lt;p&gt;PF&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# /etc/pf.conf&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# /etc/pf.conf&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ext_if &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;vtnet0&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set skip on lo0
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scrub in all
@@ -83,55 +83,55 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 放行 SSH (22 端口)，防止断开连接 &lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pass in on $ext_if proto tcp from any to any port &lt;span style="color:#ae81ff"&gt;22&lt;/span&gt; keep state
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="第三步手动加载并启动"&gt;第三步：手动加载并启动&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-Bash" data-lang="Bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 加载内核模块&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-Bash" data-lang="Bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 加载内核模块&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kldload pf
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 启动服务&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;service pf start
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="一键执行脚本"&gt;一键执行脚本&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://raw.githubusercontent.com/hanigege/scripts/main/pf_manager.sh -o pf_manager.sh &amp;amp;&amp;amp; sh pf_manager.sh
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://raw.githubusercontent.com/hanigege/scripts/main/pf_manager.sh -o pf_manager.sh &amp;amp;&amp;amp; sh pf_manager.sh
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;成功的步骤方法（写进教程的最后一步）：&lt;/p&gt;</description></item><item><title>Freebsd更改默认编辑器vi</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E6%9B%B4%E6%94%B9%E9%BB%98%E8%AE%A4%E7%BC%96%E8%BE%91%E5%99%A8vi/</link><pubDate>Mon, 12 May 2025 12:52:04 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E6%9B%B4%E6%94%B9%E9%BB%98%E8%AE%A4%E7%BC%96%E8%BE%91%E5%99%A8vi/</guid><description>&lt;h2 id="前提是新编辑器已经安装"&gt;前提是新编辑器已经安装&lt;/h2&gt;
 &lt;p&gt;FreeBSD 下你可以通过设置环境变量 EDITOR 来更改 crontab -e 使用的默认编辑器。下面是几种常见方法：&lt;/p&gt;
 &lt;h2 id="-临时更改当前-shell-有效"&gt;✅ 临时更改（当前 shell 有效）&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EDITOR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;nano crontab -e
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EDITOR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;nano crontab -e
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;或者用其他你喜欢的编辑器，如：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EDITOR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;micro crontab -e
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EDITOR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;micro crontab -e
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EDITOR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ee crontab -e
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EDITOR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vim crontab -e
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="-永久更改加到-shell-启动文件"&gt;✅ 永久更改（加到 shell 启动文件）&lt;/h2&gt;
 &lt;p&gt;如果你使用的是 sh 或 bash，可以将以下内容加到 &lt;code&gt;~/.profile&lt;/code&gt; 或 &lt;code&gt;~/.bashrc&lt;/code&gt;或 &lt;code&gt;~/bash_profile&lt;/code&gt;：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export EDITOR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;nano
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export EDITOR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;nano
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果你使用的是 tcsh（FreeBSD 默认），请加到 ~/.cshrc 文件中：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;setenv EDITOR nano
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;setenv EDITOR nano
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后执行：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source ~/.cshrc
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source ~/.cshrc
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="-补充提示安装简易编辑器"&gt;📦 补充提示：安装简易编辑器&lt;/h2&gt;
 &lt;p&gt;如果你想用 nano 但系统没有，可以用 pkg 安装：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo pkg install nano
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo pkg install nano
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Freebsd-Ipfirewall(IPFW)防火墙介绍</title><link>https://hanigege.github.io/posts/freebsd/freebsd-ipfirewallipfw/</link><pubDate>Mon, 12 May 2025 10:32:24 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd-ipfirewallipfw/</guid><description>&lt;h4 id="ipfirewall-ipfwip-防火墙-是一款由-freebsd-发起的防火墙应用软件它由-freebsd-项目编写和维护"&gt;IPFIREWALL (IPFW，IP 防火墙) 是一款由 FreeBSD 发起的防火墙应用软件，它由 FreeBSD 项目编写和维护。&lt;/h4&gt;
 &lt;p&gt;ipfw 在基本系统的内核（GENERIC）作为可加载模块而存在。&lt;/p&gt;
 &lt;h1 id="警告"&gt;&lt;code&gt;警告&lt;/code&gt;&lt;/h1&gt;
 &lt;p&gt;IPFW 默认会有一条规则，规则号为 &lt;code&gt;65535&lt;/code&gt;，是不可以删除的：这条规则会把所有流量都切断。故在未配置好防火墙前，请勿启动 IPFW，否则就会面临被阻挡在防火墙之外的麻烦。&lt;/p&gt;
 &lt;h2 id="服务项"&gt;服务项&lt;/h2&gt;
 &lt;p&gt;开机自动启动防火墙相应的内核模块：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# sysrc firewall_enable=&amp;#34;YES&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# sysrc firewall_enable=&amp;#34;YES&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;参见 &lt;a href="https://github.com/freebsd/freebsd-src/blob/main/libexec/rc/rc.d/routing#L387"&gt;官方网址&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;或者&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# service ipfw enable # 须重启后生效&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# service ipfw enable # 须重启后生效&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;保存所需编辑后，启动防火墙。要立即启用日志记录限制，还请设置sysctl上面指定的值：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# service ipfw start&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# service ipfw start&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启动 ipfw：（启动前需要先添加放开22端口的规则，先执行下面的）&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# service ipfw start&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# service ipfw start&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Firewall rules loaded.
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Firewall logging enabled.
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ifconfig: interface ipfw0 already exists
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Firewall logging pseudo-interface &lt;span style="color:#f92672"&gt;(&lt;/span&gt;ipfw0&lt;span style="color:#f92672"&gt;)&lt;/span&gt; created.
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;查看 ipfw 状态：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# service ipfw status&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# service ipfw status&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ipfw is enabled
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其他 RC 配置&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# sysrc firewall_type=&amp;#34;open&amp;#34; # 允许任何访问。如果不这么做，会调用默认规则 65535——deny ip from any to any，拒绝所有 IP。你就只能去物理机上再操作了。基本等同于 net.inet.ip.fw.default_to_accept=&amp;#34;1&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# sysrc firewall_type=&amp;#34;open&amp;#34; # 允许任何访问。如果不这么做，会调用默认规则 65535——deny ip from any to any，拒绝所有 IP。你就只能去物理机上再操作了。基本等同于 net.inet.ip.fw.default_to_accept=&amp;#34;1&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# sysrc firewall_script=&amp;#34;/usr/local/etc/ipfw.rules&amp;#34; # 指定 ipfw 规则的路径，在此处编辑规则&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# sysrc firewall_logging=&amp;#34;YES&amp;#34; # 这样 ipfw 就可以打印日志&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# sysrc firewall_logif=&amp;#34;YES&amp;#34; # 把日志打印到 `ipfw0` 这个设备里&lt;/span&gt;
@@ -144,7 +144,7 @@
 &lt;p&gt;&lt;code&gt;filtering — 包过滤规则。&lt;/code&gt;&lt;/p&gt;
 &lt;h4 id="pfpacket-filter包过滤器是一款由-openbsd-移植而来的防火墙提供了大量功能包括-altq-alternate-queuing交错队列-等"&gt;PF（Packet Filter，包过滤器）是一款由 OpenBSD 移植而来的防火墙，提供了大量功能，包括 ALTQ (Alternate Queuing，交错队列) 等。&lt;/h4&gt;
 &lt;p&gt;启用 PF&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# kldload pf # ① 加载内核模块&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# kldload pf # ① 加载内核模块&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 示例文件作为默认配置规则集文件，否则 pf 无法启动 ②&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# cp /usr/share/examples/pf/pf.conf /etc/&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# service pf enable # 设置 pf 开机启动&lt;/span&gt;
@@ -152,22 +152,22 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;① 如不做，则提示 pfctl: /dev/pf: No such file or directory。或者你重启再 service pf start。&lt;/p&gt;</description></item><item><title>Freebsd14.2拉取源码安装sing-Box(包含pf防火墙配置)</title><link>https://hanigege.github.io/posts/freebsd/freebsd14.2%E6%8B%89%E5%8F%96%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85sing-box/</link><pubDate>Mon, 12 May 2025 09:18:31 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd14.2%E6%8B%89%E5%8F%96%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85sing-box/</guid><description>&lt;h4 id="在-freebsd-上编译并安装-sing-box可以按照以下步骤进行操作我们将使用-git-拉取源代码并编译以下是详细步骤"&gt;在 FreeBSD 上编译并安装 sing-box，可以按照以下步骤进行操作。我们将使用 git 拉取源代码并编译，以下是详细步骤：&lt;/h4&gt;
 &lt;h2 id="1-安装依赖工具"&gt;1. 安装依赖工具&lt;/h2&gt;
 &lt;p&gt;首先，你需要安装一些基础工具，例如 git 和 go（Go 语言环境），以便能编译和构建 sing-box。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkg update
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkg update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkg install git
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;点击安装最新版本go1.23.1&lt;/p&gt;
 &lt;h2 id="2-获取-sing-box-源代码"&gt;2. 获取 Sing-Box 源代码&lt;/h2&gt;
 &lt;p&gt;然后，使用 git 克隆 sing-box 的源码库：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 下面是root用户安装&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 下面是root用户安装&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir /usr/local/opt
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/SagerNet/sing-box.git /usr/local/opt/sing-box
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /usr/local/opt/sing-box
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 下面是普通用户安装，只能安装本级目录下~/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 下面是普通用户安装，只能安装本级目录下~/&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir .usr/local/opt
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/SagerNet/sing-box.git .usr/local/opt/sing-box
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd .usr/local/opt/sing-box
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-编译-sing-box"&gt;3. 编译 Sing-Box&lt;/h2&gt;
 &lt;p&gt;确保你的系统上安装了 Go 语言环境后，运行以下命令来编译 sing-box：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 执行构建，没有任何输出就是构建完&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 执行构建，没有任何输出就是构建完&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go build -tags &lt;span style="color:#e6db74"&gt;&amp;#34;with_quic with_dhcp with_wireguard with_utls with_acme with_clash_api with_gvisor with_grpc with_v2ray_api&amp;#34;&lt;/span&gt; ./cmd/sing-box
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 这会编译 sing-box 并启用 QUIC协议支持。&lt;/span&gt;
@@ -176,7 +176,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 如果你还想把它安装到系统路径中，可以执行（需要 root 权限）：&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo install -m &lt;span style="color:#ae81ff"&gt;755&lt;/span&gt; sing-box /usr/local/bin/sing-box 
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 普通用户执行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 普通用户执行&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go build -tags &lt;span style="color:#e6db74"&gt;&amp;#34;with_quic with_dhcp with_wireguard with_utls with_acme with_clash_api with_gvisor with_grpc with_v2ray_api&amp;#34;&lt;/span&gt; ./cmd/sing-box
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 这会编译 sing-box 并启用 QUIC协议支持。&lt;/span&gt;
@@ -190,65 +190,65 @@
 &lt;p&gt;从 Go &lt;a href="https://go.dev/dl/"&gt;官方网站&lt;/a&gt;下载最新版本的 Go 语言：&lt;/p&gt;
 &lt;p&gt;访问 Go 语言官网 下载最新版本的 Go。选择适合 FreeBSD 的版本，例如 go1.23.1.freebsd-amd64.tar.gz，后面如需版本更新，请自行修改新版本下载链接，一般情况下只修改版本号就可以了。&lt;/p&gt;
 &lt;h2 id="root用户安装方法"&gt;root用户安装方法：&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch https://golang.org/dl/go1.26.0.freebsd-amd64.tar.gz 
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch https://golang.org/dl/go1.26.0.freebsd-amd64.tar.gz 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar -C /usr/local -xzf go1.26.0.freebsd-amd64.tar.gz
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如需修改安装路径：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /usr/local/opt/
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /usr/local/opt/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch -o /usr/local/opt/go1.26.0.freebsd-amd64.tar.gz https://golang.org/dl/go1.26.0.freebsd-amd64.tar.gz
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /usr/local/opt/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar -C /usr/local/opt/ -xzf go1.26.0.freebsd-amd64.tar.gz
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="普通用户的安装方法只能在自己目录中操作好处安全隔离推荐"&gt;普通用户的安装方法：(只能在自己目录中操作，好处:安全，隔离）{推荐}&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p .usr/local/opt/
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p .usr/local/opt/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fetch -o .usr/local/opt/go1.26.0.freebsd-amd64.tar.gz https://golang.org/dl/go1.26.0.freebsd-amd64.tar.gz
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd .usr/local/opt/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar -C ~/.usr/local/opt/ -xzf go1.26.0.freebsd-amd64.tar.gz
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;设置 Go 环境变量：&lt;/p&gt;
 &lt;p&gt;打开&lt;code&gt;~/.profile&lt;/code&gt; 文件，添加 Go 的环境变量：&lt;/p&gt;
 &lt;p&gt;原方式：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$PATH:/usr/local/go/bin
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$PATH:/usr/local/go/bin
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;改路径后：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$PATH:/usr/local/opt/go/bin
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$PATH:/usr/local/opt/go/bin
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="普通用户下在bash_profile-文件中添加变量普通用户已改为bash指令如用提sh指令那就在profile文件中改"&gt;普通用户下：在.bash_profile 文件中添加变量（普通用户已改为bash指令）如用提sh指令，那就在.profile文件中改：&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$PATH:~/.usr/local/opt/go/bin
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$PATH:~/.usr/local/opt/go/bin
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;刷新配置或重启终端：在 FreeBSD 中，默认使用的 shell 是 sh，而 sh 不支持 source 命令。相反，sh 使用 . 来代替 source。因此，如果你使用的是 sh，需要改为使用以下命令来加载配置文件：&lt;/p&gt;</description></item><item><title>Freebsd普通用户如何使用sudo</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8sudo/</link><pubDate>Sun, 11 May 2025 17:44:04 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8sudo/</guid><description>&lt;h3 id="我个人不建议安装开启sudo因为普通用户用自己的密码就可以提升管理权限个人理解还是完全隔离的好"&gt;我个人不建议安装开启sudo,因为普通用户用自己的密码就可以提升管理权限。个人理解还是完全隔离的好&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;**下面只提供知识点参考**～&lt;/code&gt;&lt;/p&gt;
 &lt;h3 id="安装freebsd时已经添加好普通用户的可以直接从下面可以用-visudo-打开-sudo-配置文件-这里直接修改配置文件就可以了"&gt;安装freebsd时已经添加好普通用户的，可以直接从下面&lt;code&gt;可以用 visudo 打开 sudo 配置文件&lt;/code&gt; 这里直接修改配置文件就可以了。&lt;/h3&gt;
 &lt;p&gt;你看到的提示：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gary is not in the sudoers file.
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gary is not in the sudoers file.
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;This incident has been reported to the administrator.
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;意思是：当前用户 gary 没有权限使用 sudo，因此不能安装软件或执行需要管理员权限的操作。&lt;/p&gt;
 &lt;p&gt;解决办法（需要 root 用户操作）
 你需要切换到 root 用户，然后把 gary 添加到 sudo 权限组。步骤如下：&lt;/p&gt;
 &lt;p&gt;✅ 1. 用 root 用户登录，或者用 su 切换到 root：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;su -
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;su -
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;系统会提示你输入 root 的密码，不是 gary 的密码。&lt;/p&gt;
 &lt;p&gt;✅ 2. 安装 sudo（如果还没装）：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkg install sudo
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkg install sudo
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;✅ 3. 把 gary 用户添加到 wheel 组：(如果安装系统时已加入wheel组就不需要下面的再次操作）&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pw usermod gary -G wheel
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pw usermod gary -G wheel
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;默认 FreeBSD 的 sudoers 文件允许 wheel 组的用户使用 sudo。&lt;/p&gt;</description></item><item><title>让freebsd在终端下换源</title><link>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%8D%A2%E6%BA%90/</link><pubDate>Sun, 11 May 2025 13:52:12 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%8D%A2%E6%BA%90/</guid><description>&lt;br&gt;
 &lt;h2 id="pkg-换源"&gt;pkg 换源&lt;/h2&gt;
 &lt;p&gt;若要获取滚动更新的包，请将 quarterly 修改为 latest。二者区别见 FreeBSD 手册。请注意，CURRENT 版本只有 latest。&lt;/p&gt;
 &lt;p&gt;使用命令修改系统级 pkg 源使用 latest：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sed -i &amp;#39;&amp;#39; &amp;#39;s/quarterly/latest/g&amp;#39; /etc/pkg/FreeBSD.conf
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sed -i &amp;#39;&amp;#39; &amp;#39;s/quarterly/latest/g&amp;#39; /etc/pkg/FreeBSD.conf
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;创建用户级源目录和文件：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# mkdir -p /usr/local/etc/pkg/repos
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# mkdir -p /usr/local/etc/pkg/repos
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# nano /usr/local/etc/pkg/repos/mirrors.conf
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;中国科学技术大学开源软件镜像站（USTC）&lt;/p&gt;
 &lt;p&gt;写入以下内容：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ustc: {
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ustc: {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url: &amp;#34;http://mirrors.ustc.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FreeBSD: { enabled: no }
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;南京大学开源镜像站&lt;/p&gt;
 &lt;p&gt;写入以下内容：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nju: {
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nju: {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url: &amp;#34;http://mirrors.nju.edu.cn/freebsd-pkg/${ABI}/latest&amp;#34;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FreeBSD: { enabled: no }
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;网易开源镜像站&lt;/p&gt;
 &lt;p&gt;写入以下内容：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;163: {
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;163: {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url: &amp;#34;http://mirrors.163.com/freebsd-pkg/${ABI}/latest&amp;#34;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FreeBSD: { enabled: no }
@@ -256,13 +256,13 @@
 &lt;p&gt;下载 ports
 这个源是下载 ports 本身的源。等同于以前的 portsnap。&lt;/p&gt;</description></item><item><title>让freebsd在终端下支持中文</title><link>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</link><pubDate>Sun, 11 May 2025 13:48:46 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/%E8%AE%A9freebsd%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87/</guid><description>&lt;br&gt;
 &lt;h2 id="编辑etcloginconf结尾处我一般在russian段落后面添加"&gt;编辑/etc/login.conf，结尾处（我一般在russian段落后面）添加&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chinese|Chinese Users Accounts:&lt;span style="color:#ae81ff"&gt;\
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chinese|Chinese Users Accounts:&lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :charset&lt;span style="color:#f92672"&gt;=&lt;/span&gt;UTF-8:&lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :lang&lt;span style="color:#f92672"&gt;=&lt;/span&gt;zh_CN.UTF-8:&lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :setenv&lt;span style="color:#f92672"&gt;=&lt;/span&gt;LC_ALL&lt;span style="color:#f92672"&gt;=&lt;/span&gt;zh_CN.UTF-8:&lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :tc&lt;span style="color:#f92672"&gt;=&lt;/span&gt;default:
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="之后运行"&gt;之后运行&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cap_mkdb /etc/login.conf
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cap_mkdb /etc/login.conf
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pw usermod root -L chinese
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Freebsd编译安装和使用bash</title><link>https://hanigege.github.io/posts/freebsd/freebsd%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8bash/</link><pubDate>Sun, 11 May 2025 13:33:20 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8bash/</guid><description>&lt;br&gt;
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;freebsd系统我建议是用普通用户登录使用，bash指令集只修改普通用户使用，root用户不要改。
@@ -277,14 +277,14 @@
 &lt;p&gt;    系统启动早期可能 bash 还没被加载，root 就必须依赖 /bin/sh 之类的最基本 shell。
     如果你用的是 bash，而 bash 又不可用，那你甚至连 shell 都打不开。&lt;/p&gt;
 &lt;h2 id="1安装bash"&gt;1.安装bash&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /usr/ports/shells/bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /usr/ports/shells/bash
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make install clean
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在/bin目录下面做一个符号连接。（这一步可以不做，可选）&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ln -s /usr/local/bin/bash /bin/bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ln -s /usr/local/bin/bash /bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="加入bash如果上一步做了"&gt;加入bash,如果上一步做了&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#39;/bin/bash&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; /etc/shells
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#39;/bin/bash&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; /etc/shells
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;保持默认路径的用下面的&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#39;/usr/local/bin/bash&amp;#39;&lt;/span&gt; | sudo tee -a /etc/shells
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#39;/usr/local/bin/bash&amp;#39;&lt;/span&gt; | sudo tee -a /etc/shells
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;4.更改用户shell(root用户不建议修改）&lt;/p&gt;</description></item><item><title>安装freebsd13.1流程(14.2版本的一样)</title><link>https://hanigege.github.io/posts/freebsd/freebsd-install/</link><pubDate>Sun, 11 May 2025 13:12:51 +0800</pubDate><guid>https://hanigege.github.io/posts/freebsd/freebsd-install/</guid><description>&lt;br&gt;
 &lt;h2 id="开始安装回车"&gt;开始安装，回车&lt;/h2&gt;
 &lt;p&gt;&lt;img src="assets/CleanShot%202025-05-05%20at%2007.07.59@2x.png" alt="CleanShot 2025-05-05 at 07.07.59@2x"&gt;&lt;/p&gt;
