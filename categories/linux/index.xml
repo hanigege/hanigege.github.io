@@ -1,4 +1,139 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on bash</title><link>https://hanigege.github.io/categories/linux/</link><description>Recent content in Linux on bash</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **Gary**.</copyright><lastBuildDate>Mon, 02 Mar 2026 10:58:56 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker版headscale&amp;derp&amp;tailscale配合npm反向代理回家的方法</title><link>https://hanigege.github.io/posts/linux/docker%E7%89%88headscalederptailscale%E9%85%8D%E5%90%88npm%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E9%83%A8%E7%BD%B2%E7%9A%84%E6%96%B9%E6%B3%95/</link><pubDate>Mon, 02 Mar 2026 10:58:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/docker%E7%89%88headscalederptailscale%E9%85%8D%E5%90%88npm%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E9%83%A8%E7%BD%B2%E7%9A%84%E6%96%B9%E6%B3%95/</guid><description>&lt;h2 id="说明-这教程全网应该是唯一的-内网部署"&gt;说明 这教程全网应该是唯一的 内网部署。&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on bash</title><link>https://hanigege.github.io/categories/linux/</link><description>Recent content in Linux on bash</description><generator>Hugo</generator><language>zh-CN</language><copyright>© **Gary**.</copyright><lastBuildDate>Thu, 19 Mar 2026 10:33:13 +0800</lastBuildDate><atom:link href="https://hanigege.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker版headscale&amp;derp&amp;tailscale&amp;npm&amp;pve&amp;ros附一键安装脚本</title><link>https://hanigege.github.io/posts/linux/docker%E7%89%88headscalederptailscalenpmpveros%E9%99%84%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC/</link><pubDate>Thu, 19 Mar 2026 10:33:13 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/docker%E7%89%88headscalederptailscalenpmpveros%E9%99%84%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC/</guid><description>&lt;h2 id="三合一脚本支持alpineubuntudebian系统"&gt;三合一脚本支持alpine&amp;amp;ubuntu&amp;amp;debian系统&lt;/h2&gt;
+&lt;h2 id="docker"&gt;Docker&lt;/h2&gt;
+&lt;h3 id="安装与准备"&gt;安装与准备：&lt;/h3&gt;
+&lt;h4 id="docker一键安装脚本"&gt;docker一键安装脚本&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://raw.githubusercontent.com/hanigege/scripts/main/docker.sh -o docker.sh &amp;amp;&amp;amp; sh docker.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="nginx-proxy-manager-简称npm"&gt;Nginx Proxy Manager (简称：npm)&lt;/h2&gt;
+&lt;h3 id="安装与准备-1"&gt;安装与准备&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p ~/data/docker_data/nginxproxymanager # 创建一个npm的文件夹
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd ~/data/docker_data/nginxproxymanager # 进入该文件夹
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nano docker-compose.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;docker-compose.yaml&lt;/code&gt; 配置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;services:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; app:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; image: &amp;#39;docker.io/jc21/nginx-proxy-manager:latest&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; restart: unless-stopped
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ports:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &amp;#39;12332:80&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &amp;#39;81:81&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &amp;#39;12335:443&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; volumes:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - ./data:/data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - ./letsencrypt:/etc/letsencrypt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;默认登陆的用户名：&lt;code&gt;admin@example.com&lt;/code&gt; 密码：&lt;code&gt;changeme&lt;/code&gt; 第一次登陆会提示更改用户名和密码，建议修改一个复杂一点的密码。 至此，我们已经完成了Nginx Proxy Manager的搭建。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(修改为你的内网对应的vm地址）&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;登录平台内网地址：http://10.20.20.8:81&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="添加三个对应域名开启https由于是内网上面的配置中可以看到443端口映射到12335端口了例"&gt;&lt;em&gt;添加三个对应域名，开启https:由于是内网，上面的配置中可以看到，443端口映射到12335端口了。例：&lt;/em&gt;&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;域名&lt;/th&gt;
+ &lt;th&gt;ip&lt;/th&gt;
+ &lt;th&gt;功能&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;hs.jgaga.tk&lt;/td&gt;
+ &lt;td&gt;10.20.20.8&lt;/td&gt;
+ &lt;td&gt;headscale的注册服务&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;derps.jgaga.tk&lt;/td&gt;
+ &lt;td&gt;10.20.20.8&lt;/td&gt;
+ &lt;td&gt;derp的服务地址&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;hs-ui.jgaga.tk&lt;/td&gt;
+ &lt;td&gt;10.20.20.8&lt;/td&gt;
+ &lt;td&gt;headscale的管理平台地址&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="npm域名配置功能里里添加各域名的高级配置右上脚的小齿轮图标必须"&gt;npm域名配置功能里里添加各域名的高级配置（右上脚的小齿轮图标）（必须）&lt;/h2&gt;
+&lt;h3 id="hsjgagatk"&gt;hs.jgaga.tk&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. 针对 UI 的 API 请求，允许跨域（解决你说的保存密钥问题）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;location ~ ^/(admin|web|api) {&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_pass http://10.20.20.8:8080;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_http_version 1.1;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header Host $http_host;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 跨域头只在这些路径生效&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;add_header Access-Control-Allow-Origin * always;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;add_header Access-Control-Allow-Methods &amp;#34;GET, POST, OPTIONS, PUT, DELETE&amp;#34; always;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;add_header Access-Control-Allow-Headers * always;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;if ($request_method = OPTIONS) {&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;return 204;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. 针对手机客户端的 Noise 协议通讯，保持纯净（解决 Out of sync）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;location / {&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_pass http://10.20.20.8:8080;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_http_version 1.1;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 核心：必须使用动态 Upgrade，不要硬编码 Connection &amp;#34;upgrade&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header Upgrade $http_upgrade;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header Connection $http_upgrade; &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header Host $http_host;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header X-Real-IP $remote_addr;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header X-Forwarded-Proto $scheme;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 实时性优化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_buffering off;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_request_buffering off;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_socket_keepalive on;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;tcp_nodelay on;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 延长超时&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_connect_timeout 60s;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_read_timeout 600s;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_send_timeout 600s;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="derpsjgagatk"&gt;derps.jgaga.tk&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;location / {&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_pass http://10.20.20.8:8082;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_http_version 1.1;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# --- 关键修正：去掉端口号，仅透传域名 ---&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 这样可以匹配 DERP 容器内部的证书/域名校验&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header Host $host; &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header X-Real-IP $remote_addr;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header X-Forwarded-Proto $scheme;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# --- 保持长连接稳定性 ---&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_buffering off;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_request_buffering off;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_socket_keepalive on;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;tcp_nodelay on;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 超时设置，防止感叹号&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_connect_timeout 60s;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_read_timeout 600s;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_send_timeout 600s;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# --- 必须：WebSocket 协议升级 ---&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header Upgrade $http_upgrade;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;proxy_set_header Connection &amp;#34;upgrade&amp;#34;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="headscalederptailscale"&gt;headscale&amp;amp;derp&amp;amp;tailscale&lt;/h2&gt;
+&lt;h3 id="安装与准备-2"&gt;安装与准备&lt;/h3&gt;
+&lt;h4 id="headscalederptailscale一键安装脚本包含开启tun及ip转发功能"&gt;headscale&amp;amp;derp&amp;amp;tailscale一键安装脚本(包含开启tun及ip转发功能）&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;mkdir -p ~/data/docker_data/hdt&lt;/span&gt; &lt;span style="color:#75715e"&gt;# 创建一个npm的文件夹&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;cd ~/data/docker_data/hdt &lt;/span&gt; &lt;span style="color:#75715e"&gt;# 进入该文件夹&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;nano hdt.sh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;添加以下内容：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Docker版headscale&amp;derp&amp;tailscale配合npm反向代理回家的方法</title><link>https://hanigege.github.io/posts/linux/docker%E7%89%88headscalederptailscale%E9%85%8D%E5%90%88npm%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E9%83%A8%E7%BD%B2%E7%9A%84%E6%96%B9%E6%B3%95/</link><pubDate>Mon, 02 Mar 2026 10:58:56 +0800</pubDate><guid>https://hanigege.github.io/posts/linux/docker%E7%89%88headscalederptailscale%E9%85%8D%E5%90%88npm%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E9%83%A8%E7%BD%B2%E7%9A%84%E6%96%B9%E6%B3%95/</guid><description>&lt;h2 id="说明-这教程全网应该是唯一的-内网部署"&gt;说明 这教程全网应该是唯一的 内网部署。&lt;/h2&gt;
 &lt;h3 id="因为太实用了不管是回家还是建立私有隧道或者是添加节点等等吧都行不过也有硬性要求就是家里要使用pve或其它虚拟系统软路由是ros其它的路由系统道理也是相通的才可以部署"&gt;因为太实用了，不管是回家，还是建立私有隧道，或者是添加节点等等吧都行,不过也有硬性要求，就是家里要使用pve或其它虚拟系统，&lt;code&gt;软路由是ros&lt;/code&gt;（其它的路由系统道理也是相通的）才可以部署！&lt;/h3&gt;
 &lt;h2 id="pve下新建一个vm虚拟机-ubuntu-2404为例"&gt;pve下新建一个vm虚拟机 ubuntu 24.04为例：&lt;/h2&gt;
 &lt;h3 id="目录结构需要建立4个容器"&gt;目录结构(需要建立4个容器）&lt;/h3&gt;
