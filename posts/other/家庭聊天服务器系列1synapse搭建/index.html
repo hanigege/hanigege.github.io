@@ -55,7 +55,6 @@ host synapse synapse_user all trust</p><h2 id=安装synapse>安装synapse</h2><p
 </span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#34;8008:8008&#34;</span>
 </span></span><span style=display:flex><span>    volumes:
 </span></span><span style=display:flex><span>      - ./data:/data
-</span></span><span style=display:flex><span>      - ./html:/usr/local/lib/python3.11/site-packages/synapse/static
 </span></span><span style=display:flex><span>    networks:
 </span></span><span style=display:flex><span>      - matrix
 </span></span><span style=display:flex><span>    restart: always
@@ -74,7 +73,6 @@ host synapse synapse_user all trust</p><h2 id=安装synapse>安装synapse</h2><p
 </span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#34;8008:8008&#34;</span>
 </span></span><span style=display:flex><span>    volumes:
 </span></span><span style=display:flex><span>      - ./data:/data
-</span></span><span style=display:flex><span>      - ./html:/usr/local/lib/python3.11/site-packages/synapse/static
 </span></span><span style=display:flex><span>    networks:
 </span></span><span style=display:flex><span>      - matrix
 </span></span><span style=display:flex><span>    restart: always
@@ -113,7 +111,6 @@ pg库我选择了16版本，选择的镜像是postgres:16-alpine。</p><div clas
 </span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#34;8008:8008&#34;</span>
 </span></span><span style=display:flex><span>    volumes:
 </span></span><span style=display:flex><span>      - /root/data/docker_data/synapse/data/:/data/
-</span></span><span style=display:flex><span>      - /root/data/docker_data/synapse/html/:/usr/local/lib/python3.11/site-packages/synapse/static/
 </span></span><span style=display:flex><span>    networks:
 </span></span><span style=display:flex><span>      - matrix
 </span></span><span style=display:flex><span>    restart: always
