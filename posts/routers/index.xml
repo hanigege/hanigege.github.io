@@ -266,56 +266,189 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 查找带有 fasttrack-connection 动作的规则并禁用它&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;disable [find action=fasttrack-connection]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;注意：禁用后，所有流量将交由 CPU 进行 Mangle 标记和 Queue 树排队。你的小包优先和限速机制将立刻 100% 生效。&lt;/p&gt;
-&lt;h2 id="例外网下行是300m上行是30m的带宽"&gt;例：外网下行是300m，上行是30m的带宽&lt;/h2&gt;
-&lt;p&gt;下行队列的挂载接口精准替换为 bridge1，上行接口保持 pppoe-out1&lt;/p&gt;
-&lt;p&gt;成功的步骤与科学计算
-预留缓冲避免光猫排队： 必须扣除运营商标称带宽的 5% 到 10%，将排队机制强行拉回到 RouterOS 本地处理，以彻底消除缓冲膨胀（Bufferbloat）带来的高延迟。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;上行严格阈值： 30M × 0.95 = 28M&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;下行严格阈值： 300M × 0.95 = 285M&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;重构挂载点： 将上行队列挂载在拨号接口，下行队列挂载在内网接口。Mangle 标记只需在 prerouting 和 postrouting 抓取一次，即可被上下行队列同时调用。&lt;/p&gt;
-&lt;h2 id="1代码导入的方法"&gt;1、代码导入的方法&lt;/h2&gt;
-&lt;p&gt;导入代码：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;/ip firewall mangle&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. 优先 DNS&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting protocol=udp dst-port=53 new-packet-mark=dns passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting protocol=tcp dst-port=53 new-packet-mark=dns passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. 优先 ICMP&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting protocol=icmp new-packet-mark=small-packet passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. 根据包大小标记中小包 (覆盖 TCP ACK 和游戏数据)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting packet-size=0-128 new-packet-mark=small-packet passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting packet-size=129-512 new-packet-mark=medium-packet passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. 剩余大包兜底 (下载、视频等)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=mark-packet chain=prerouting new-packet-mark=large-packet passthrough=no&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 5. MSS 钳制&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add action=change-mss chain=forward protocol=tcp tcp-flags=syn new-mss=clamp-to-pmtu passthrough=yes&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;/queue tree&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 清理旧队列&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;remove [find]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ================= 上行队列 (Upload) =================&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 挂载到外网拨号接口 pppoe-out1，总带宽 28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=Upload-Total parent=pppoe-out1 max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=U1-Dns parent=Upload-Total packet-mark=dns priority=1 queue=default-small limit-at=2M max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=U2-Small parent=Upload-Total packet-mark=small-packet priority=2 queue=default-small limit-at=5M max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=U3-Medium parent=Upload-Total packet-mark=medium-packet priority=3 queue=default-small limit-at=10M max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=U4-Large parent=Upload-Total packet-mark=large-packet priority=8 queue=default-small limit-at=11M max-limit=28M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ================= 下行队列 (Download) =================&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 挂载到内网桥接接口 bridge1，总带宽 285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=Download-Total parent=bridge1 max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=D1-Dns parent=Download-Total packet-mark=dns priority=1 queue=default-small limit-at=5M max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=D2-Small parent=Download-Total packet-mark=small-packet priority=2 queue=default-small limit-at=20M max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=D3-Medium parent=Download-Total packet-mark=medium-packet priority=3 queue=default-small limit-at=50M max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;add name=D4-Large parent=Download-Total packet-mark=large-packet priority=8 queue=default-small limit-at=210M max-limit=285M&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;要让以上 QoS 规则真正生效，必须处理（禁用）防火墙中的 Fasttrack（硬件加速）规则，否则所有数据包都会直接绕过 Mangle 和 Queue 树。&lt;/p&gt;</description></item><item><title>Vyos下安装ddns-Go</title><link>https://hanigege.github.io/posts/routers/vyos%E4%B8%8B%E5%AE%89%E8%A3%85ddns-go/</link><pubDate>Sun, 11 May 2025 14:51:24 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos%E4%B8%8B%E5%AE%89%E8%A3%85ddns-go/</guid><description>&lt;br&gt;
+&lt;h2 id="队列类型调整从-default-small-改为-default"&gt;队列类型调整：从 &lt;code&gt;default-small&lt;/code&gt; 改为 &lt;code&gt;default&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;之前这套规则里子队列使用的是 &lt;code&gt;default-small&lt;/code&gt;。实际使用下来，&lt;code&gt;default-small&lt;/code&gt; 的队列长度更小，更偏向压低小包排队延迟，但在 300M、350M 这类家用宽带下，测速或大流量下载时更容易把吞吐压得过紧。这里统一改成 RouterOS 自带的 &lt;code&gt;default&lt;/code&gt;，保留 Queue Tree 的优先级控制，同时让大流量吞吐更稳。&lt;/p&gt;
+&lt;p&gt;如果你的线路带宽很低，或者目标就是极端压低延迟，可以再按实际情况单独测试 &lt;code&gt;default-small&lt;/code&gt;；但作为默认分享配置，我现在更建议先用 &lt;code&gt;default&lt;/code&gt;，再靠 &lt;code&gt;priority&lt;/code&gt;、&lt;code&gt;limit-at&lt;/code&gt;、&lt;code&gt;max-limit&lt;/code&gt; 来控制不同包标记的优先级。&lt;/p&gt;
+&lt;h2 id="按自己的带宽生成-queue-tree-配置"&gt;按自己的带宽生成 Queue Tree 配置&lt;/h2&gt;
+&lt;p&gt;不同人的宽带上下行、拨号接口、内网桥接口都不一样，直接照抄固定数值容易不准。下面这个生成器只在浏览器本地运行，不需要后端；输入自己的带宽后，会自动按预留比例生成 RouterOS 命令。&lt;/p&gt;
+&lt;p&gt;使用建议：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;先确认自己的真实上行、下行带宽，以及 RouterOS 里的接口名。&lt;/li&gt;
+&lt;li&gt;预留比例默认填 &lt;code&gt;95%&lt;/code&gt;，意思是只用标称带宽的 95% 做队列上限，把排队留在 RouterOS 里处理。&lt;/li&gt;
+&lt;li&gt;如果以前已经导入过这篇文章的旧配置，勾选“兼容清理旧版无注释规则”后再生成。&lt;/li&gt;
+&lt;li&gt;复制生成结果到 RouterOS 终端执行。&lt;/li&gt;
+&lt;li&gt;执行后重新测速，并观察满速下载/上传时的延迟。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;字段说明：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;字段&lt;/th&gt;
+ &lt;th&gt;作用&lt;/th&gt;
+ &lt;th&gt;小白建议&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;下行带宽&lt;/td&gt;
+ &lt;td&gt;运营商给你的下载带宽，比如 300M、500M、1000M&lt;/td&gt;
+ &lt;td&gt;按套餐或实测值填写&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;上行带宽&lt;/td&gt;
+ &lt;td&gt;运营商给你的上传带宽，比如 30M、50M、100M&lt;/td&gt;
+ &lt;td&gt;上行更容易影响游戏和视频通话，尽量填准&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;预留比例&lt;/td&gt;
+ &lt;td&gt;Queue Tree 实际使用的带宽比例&lt;/td&gt;
+ &lt;td&gt;默认 95%，网络仍然卡顿可试 90%-93%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;上行接口&lt;/td&gt;
+ &lt;td&gt;外网出口接口，常见是 &lt;code&gt;pppoe-out1&lt;/code&gt;、&lt;code&gt;wan&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;不确定就去 Interfaces 里看拨号或 WAN 名称&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;下行接口&lt;/td&gt;
+ &lt;td&gt;内网侧接口，常见是 &lt;code&gt;bridge1&lt;/code&gt;、&lt;code&gt;bridge&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;一般是 LAN 桥接口&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IPv6 Mangle&lt;/td&gt;
+ &lt;td&gt;是否同时生成 IPv6 小包标记规则&lt;/td&gt;
+ &lt;td&gt;家里有 IPv6 就保留开启&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;清理旧版无注释规则&lt;/td&gt;
+ &lt;td&gt;删除旧文可能留下的同名队列、同包标记规则&lt;/td&gt;
+ &lt;td&gt;已经导入过旧配置就勾选&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;sing-box 代理队列&lt;/td&gt;
+ &lt;td&gt;给内网代理机器单独一个高优先级队列&lt;/td&gt;
+ &lt;td&gt;没有内网代理机器就关闭&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="ros-qos-generator" id="ros-qos-generator"&gt;
+ &lt;style&gt;
+ .ros-qos-generator {
+ border: 1px solid rgba(255, 255, 255, 0.18);
+ border-radius: 8px;
+ padding: 1rem;
+ margin: 1.5rem 0;
+ background: rgba(255, 255, 255, 0.04);
+ }
+ .ros-qos-generator * {
+ box-sizing: border-box;
+ }
+ .ros-qos-generator .ros-qos-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+ gap: 0.75rem;
+ margin-bottom: 0.75rem;
+ }
+ .ros-qos-generator label {
+ display: grid;
+ gap: 0.35rem;
+ font-size: 0.95rem;
+ }
+ .ros-qos-generator input[type="number"],
+ .ros-qos-generator input[type="text"] {
+ width: 100%;
+ min-height: 2.4rem;
+ padding: 0.45rem 0.55rem;
+ border: 1px solid rgba(255, 255, 255, 0.22);
+ border-radius: 6px;
+ background: rgba(0, 0, 0, 0.22);
+ color: inherit;
+ font: inherit;
+ }
+ .ros-qos-generator .ros-qos-checks {
+ display: grid;
+ gap: 0.45rem;
+ margin: 0.8rem 0;
+ }
+ .ros-qos-generator .ros-qos-checks label {
+ display: flex;
+ align-items: center;
+ gap: 0.5rem;
+ }
+ .ros-qos-generator .ros-qos-actions {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 0.6rem;
+ margin: 0.8rem 0;
+ }
+ .ros-qos-generator button {
+ min-height: 2.3rem;
+ padding: 0.45rem 0.8rem;
+ border: 1px solid rgba(255, 255, 255, 0.22);
+ border-radius: 6px;
+ background: rgba(255, 255, 255, 0.12);
+ color: inherit;
+ cursor: pointer;
+ font: inherit;
+ }
+ .ros-qos-generator button:hover {
+ background: rgba(255, 255, 255, 0.18);
+ }
+ .ros-qos-generator .ros-qos-summary {
+ margin: 0.5rem 0;
+ font-size: 0.95rem;
+ opacity: 0.9;
+ }
+ .ros-qos-generator textarea {
+ width: 100%;
+ min-height: 30rem;
+ padding: 0.75rem;
+ border: 1px solid rgba(255, 255, 255, 0.22);
+ border-radius: 6px;
+ background: rgba(0, 0, 0, 0.28);
+ color: inherit;
+ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+ font-size: 0.88rem;
+ line-height: 1.45;
+ letter-spacing: 0;
+ resize: vertical;
+ }
+ &lt;/style&gt;
+ &lt;div class="ros-qos-grid"&gt;
+ &lt;label&gt;下行带宽 Mbps
+ &lt;input id="ros-qos-down" type="number" min="1" step="1" value="300"&gt;
+ &lt;/label&gt;
+ &lt;label&gt;上行带宽 Mbps
+ &lt;input id="ros-qos-up" type="number" min="1" step="1" value="30"&gt;
+ &lt;/label&gt;
+ &lt;label&gt;预留比例 %
+ &lt;input id="ros-qos-ratio" type="number" min="80" max="99" step="1" value="95"&gt;
+ &lt;/label&gt;
+ &lt;label&gt;上行接口
+ &lt;input id="ros-qos-up-iface" type="text" value="pppoe-out1"&gt;
+ &lt;/label&gt;
+ &lt;label&gt;下行接口
+ &lt;input id="ros-qos-down-iface" type="text" value="bridge1"&gt;
+ &lt;/label&gt;
+ &lt;/div&gt;
+ &lt;div class="ros-qos-checks"&gt;
+ &lt;label&gt;&lt;input id="ros-qos-ipv6" type="checkbox" checked&gt; 生成 IPv6 Mangle 规则&lt;/label&gt;
+ &lt;label&gt;&lt;input id="ros-qos-legacy-clean" type="checkbox" checked&gt; 兼容清理旧版无注释规则&lt;/label&gt;
+ &lt;label&gt;&lt;input id="ros-qos-proxy" type="checkbox"&gt; 生成 sing-box 代理高优先级队列&lt;/label&gt;
+ &lt;/div&gt;
+ &lt;div class="ros-qos-grid" id="ros-qos-proxy-fields" hidden&gt;
+ &lt;label&gt;sing-box IPv4
+ &lt;input id="ros-qos-proxy-ipv4" type="text" value="10.20.20.6"&gt;
+ &lt;/label&gt;
+ &lt;label&gt;sing-box IPv6
+ &lt;input id="ros-qos-proxy-ipv6" type="text" value="fd88::6666"&gt;
+ &lt;/label&gt;
+ &lt;/div&gt;
+ &lt;div class="ros-qos-actions"&gt;
+ &lt;button type="button" id="ros-qos-generate"&gt;生成配置&lt;/button&gt;
+ &lt;button type="button" id="ros-qos-copy"&gt;复制配置&lt;/button&gt;
+ &lt;/div&gt;
+ &lt;p class="ros-qos-summary" id="ros-qos-summary"&gt;&lt;/p&gt;</description></item><item><title>Vyos下安装ddns-Go</title><link>https://hanigege.github.io/posts/routers/vyos%E4%B8%8B%E5%AE%89%E8%A3%85ddns-go/</link><pubDate>Sun, 11 May 2025 14:51:24 +0800</pubDate><guid>https://hanigege.github.io/posts/routers/vyos%E4%B8%8B%E5%AE%89%E8%A3%85ddns-go/</guid><description>&lt;br&gt;
 &lt;h2 id="这里使用vyos自管理容器的方法可以获取到网卡公网ip"&gt;这里使用vyos自管理容器的方法,可以获取到网卡公网ip&lt;/h2&gt;
 &lt;h3 id="操作前vyos本机先科学不然没法接docker镜像"&gt;操作前，vyos本机先科学，不然没法接docker镜像&lt;/h3&gt;
 &lt;p&gt;    这种模式不可以设置单独的IP,因为使用的是vyos主机的ip&lt;/p&gt;
